@@ -1,0 +1,19 @@
+
+import testing ;
+
+project missio/logging/test ;
+
+unit-test missio_logging_test
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+        ../build//missio_logging
+    :
+        ## build requirements ##
+        <toolset>msvc:<exception-handling>on
+        <toolset>msvc:<asynch-exceptions>on
+        <library>/boost/system//boost_system
+        <library>/boost/date_time//boost_date_time
+    ;
+
+always missio_logging_test ;

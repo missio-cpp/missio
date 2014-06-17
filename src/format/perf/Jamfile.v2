@@ -1,0 +1,8 @@
+
+project missio/format/perf ;
+
+exe missio_format_perf
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+    ;

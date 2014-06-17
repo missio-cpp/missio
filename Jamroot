@@ -1,0 +1,130 @@
+
+import modules ;
+
+path-constant TOP : . ;
+path-constant SRC : src ;
+path-constant LIB : lib ;
+
+BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+
+if ! $(BOOST_ROOT)
+{
+    echo ;
+    echo "Required environment variable BOOST_ROOT is not set" ;
+    echo "Please set it to point to the root of BOOST distribution" ;
+    exit ;
+}
+
+use-project /boost : $(BOOST_ROOT) ;
+
+project missio
+    :
+        requirements
+        <warnings>all
+        <include>$(TOP)
+        <include>$(BOOST_ROOT)
+        <define>BOOST_ALL_NO_LIB
+        <define>BOOST_FILESYSTEM_VERSION=3
+        <define>BOOST_FILESYSTEM_NO_DEPRECATED
+        <define>BOOST_SYSTEM_NO_DEPRECATED
+        <toolset>msvc:<define>WIN32
+        <toolset>msvc:<define>_WIN32
+        <toolset>msvc:<define>NOMINMAX
+        <toolset>msvc:<define>_WIN32_WINNT=0x0501
+        <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+        <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+        <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+        <toolset>msvc:<define>_CRT_NONSTDC_NO_DEPRECATE
+        <toolset>msvc:<cxxflags>/wd4100
+        <toolset>msvc:<cxxflags>/wd4127
+        <toolset>msvc:<cxxflags>/wd4244
+        <toolset>msvc:<cxxflags>/wd4345
+        <toolset>msvc:<cxxflags>/wd4512
+        <toolset>msvc:<cxxflags>/wd4702
+        <toolset>msvc:<cxxflags>/wd4714
+        <toolset>msvc:<cxxflags>/wd4800
+        <toolset>gcc:<runtime-link>shared
+        <toolset>gcc:<cxxflags>-std=c++0x
+        <toolset>gcc:<cxxflags>-Wno-long-long
+        <toolset>gcc:<cxxflags>-Wno-attributes
+        <toolset>gcc:<cxxflags>-Wno-strict-aliasing
+        <toolset>gcc:<cxxflags>-Wno-unused-parameter
+    :
+        usage-requirements
+        <include>$(TOP)
+    :
+        default-build
+        release debug
+        <threading>multi
+        <runtime-link>static
+        <link>static
+    :
+        build-dir
+        obj
+    ;
+
+use-project /missio : $(TOP) ;
+
+use-project /missio/logging : $(SRC)/logging/build ;
+#use-project /missio/config : $(SRC)/config/build ;
+use-project /missio/json : $(SRC)/json/build ;
+
+use-project /missio/logging/test : $(SRC)/logging/test ;
+use-project /missio/unicode/test : $(SRC)/unicode/test ;
+#use-project /missio/config/test : $(SRC)/config/test ;
+use-project /missio/format/test : $(SRC)/format/test ;
+use-project /missio/json/test : $(SRC)/json/test ;
+
+#use-project /missio/logging/perf : $(SRC)/logging/perf ;
+#use-project /missio/unicode/perf : $(SRC)/unicode/perf ;
+use-project /missio/format/perf : $(SRC)/format/perf ;
+#use-project /missio/json/perf : $(SRC)/json/perf ;
+
+build-project $(SRC)/logging/build ;
+#build-project $(SRC)/config/build ;
+build-project $(SRC)/json/build ;
+
+build-project $(SRC)/logging/test ;
+build-project $(SRC)/unicode/test ;
+#build-project $(SRC)/config/test ;
+build-project $(SRC)/format/test ;
+build-project $(SRC)/json/test ;
+
+#build-project $(SRC)/logging/perf ;
+#build-project $(SRC)/unicode/perf ;
+build-project $(SRC)/format/perf ;
+#build-project $(SRC)/json/perf ;
+
+alias /missio/test
+    :
+        ## sources ##
+        /missio/logging/test
+        /missio/unicode/test
+        #/missio/config/test
+        /missio/format/test
+        /missio/json/test
+    ;
+
+alias /missio/perf
+    :
+        ## sources ##
+        #/missio/logging/perf
+        #/missio/unicode/perf
+        /missio/format/perf
+        #/missio/json/perf
+    ;
+
+install missio
+    :
+        ## sources ##
+        /missio/logging
+        #/missio/config
+        /missio/json
+    :
+        ## build requirements ##
+        <variant>release:<location>$(LIB)/release
+        <variant>profile:<location>$(LIB)/profile
+        <variant>debug:<location>$(LIB)/debug
+    ;

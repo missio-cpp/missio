@@ -1,0 +1,11 @@
+
+project missio/logging
+    :
+        source-location ../src
+    ;
+
+lib missio_logging
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+    ;

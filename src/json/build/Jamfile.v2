@@ -1,0 +1,11 @@
+
+project missio/json
+    :
+        source-location ../src
+    ;
+
+lib missio_json
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+    ;
