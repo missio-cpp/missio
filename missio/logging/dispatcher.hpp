@@ -16,7 +16,7 @@
 #include <missio/logging/detail/message_queue.hpp>
 
 // BOOST headers
-#include <boost/asio.hpp>
+#include <boost/asio/steady_timer.hpp>
 
 // STL headers
 #include <thread>
@@ -60,7 +60,7 @@ private:
 
 private:
     boost::asio::io_service io_service_;
-    boost::asio::deadline_timer timer_;
+    boost::asio::steady_timer timer_;
 
     detail::message_queue messages_;
 

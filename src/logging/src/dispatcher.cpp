@@ -8,12 +8,10 @@
 // Application headers
 #include <missio/logging/dispatcher.hpp>
 
-// BOOST headers
-#include <boost/date_time.hpp>
-
 // STL headers
 #include <functional>
 #include <utility>
+#include <chrono>
 
 
 namespace missio
@@ -109,7 +107,7 @@ void dispatcher::run()
 
 void dispatcher::start_flush_timer()
 {
-    timer_.expires_from_now(boost::posix_time::seconds(5));
+    timer_.expires_from_now(std::chrono::seconds(5));
     timer_.async_wait(std::bind(&dispatcher::handle_flush, this, std::placeholders::_1));
 }
 
