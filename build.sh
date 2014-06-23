@@ -2,27 +2,18 @@
 
 BUILD_ROOT=`cd "$(dirname "$0")/build" && pwd`  
 
-OS_NAME=`uname -s`
 CPU_TYPE=`uname -p`
 
-case "$OS_NAME:$CPU_TYPE" in
-    Linux:x86_64)
-        echo Detected 64-bit Linux operating system
-        "$BUILD_ROOT/linux/build64.sh" $*
+case "$CPU_TYPE" in
+    x86_64|amd64)
+        echo Detected 64-bit operating system
+        "$BUILD_ROOT/unix/build.sh" address-model=64 $*
         ;;
-    Linux:i*86)
-        echo Detected 32-bit Linux operating system
-        "$BUILD_ROOT/linux/build32.sh" $*
+    i*86)
+        echo Detected 32-bit operating system
+        "$BUILD_ROOT/unix/build.sh" address-model=32 $*
         ;;
-    FreeBSD:amd64)
-        echo Detected 64-bit FreeBSD operating system
-        "$BUILD_ROOT/freebsd/build64.sh" $*
-        ;;
-    FreeBSD:i*86)
-        echo Detected 32-bit FreeBSD operating system
-        "$BUILD_ROOT/freebsd/build32.sh" $*
-        ;;
-    *:*)
+    *)
         echo Current operating system is not supported
         exit 1
         ;;

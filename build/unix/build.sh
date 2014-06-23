@@ -54,19 +54,26 @@ then
     popd > /dev/null
 fi
 
-pushd "$MISSIO_ROOT" > /dev/null
+OS_NAME=`uname -s`
 
-JOBS_NUM=`grep -c processor /proc/cpuinfo`
-
-if [ $JOBS_NUM -le 0 ]
-then
-    JOBS_NUM=2
-fi
+case "$OS_NAME" in
+    Linux)
+        JOBS_NUM=`getconf _NPROCESSORS_ONLN`
+        ;;
+    *BSD)
+        JOBS_NUM=`sysctl -n hw.ncpu`
+        ;;
+    *)
+        JOBS_NUM=2
+        ;;
+esac 
 
 export BOOST_ROOT="\"$BOOST_ROOT\""
 export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 
+pushd "$MISSIO_ROOT" > /dev/null
+
 echo Starting build of missio
-"$BOOST_JAM" -q -j$JOBS_NUM toolset=gcc $*
+"$BOOST_JAM" -q -j$JOBS_NUM $*
 
 popd > /dev/null

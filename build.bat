@@ -5,11 +5,11 @@ SET BUILD_ROOT=%CD%
 popd
 
 IF /I "%PROCESSOR_ARCHITECTURE%" == "amd64" (
-    ECHO Detected 64-bit Windows operating system
-    CALL "%BUILD_ROOT%/windows/build64.bat" %*
+    ECHO Detected 64-bit operating system
+    CALL "%BUILD_ROOT%/win/build.bat" address-model=64 %*
 ) ELSE IF /I "%PROCESSOR_ARCHITECTURE%" == "x86" (
-    ECHO Detected 32-bit Windows operating system
-    CALL "%BUILD_ROOT%/windows/build32.bat" %*
+    ECHO Detected 32-bit operating system
+    CALL "%BUILD_ROOT%/win/build.bat" address-model=32 %*
 ) ELSE (
     ECHO Current operating system is not supported
     EXIT /B 1
