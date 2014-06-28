@@ -14,7 +14,9 @@
 // Application headers
 #include <missio/logging/severity.hpp>
 #include <missio/logging/location.hpp>
-#include <missio/logging/detail/timestamp.hpp>
+
+// STL headers
+#include <chrono>
 
 
 namespace missio
@@ -32,9 +34,13 @@ public:
     scope_tracer& operator=(scope_tracer const&) = delete;
 
 private:
+    typedef std::chrono::high_resolution_clock clock;
+    typedef clock::time_point clock_time_point;
+
+private:
     severity severity_;
     location location_;
-    detail::timestamp timestamp_;
+    clock_time_point start_;
 };
 
 }   // namespace logging

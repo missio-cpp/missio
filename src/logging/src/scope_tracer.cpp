@@ -7,10 +7,7 @@
 
 // Application headers
 #include <missio/logging/scope_tracer.hpp>
-#include <missio/logging/common.hpp>
-
-// STL headers
-#include <cstdint>
+#include <missio/logging/detail/dispatch.hpp>
 
 
 namespace missio
@@ -20,15 +17,16 @@ namespace logging
 
 scope_tracer::scope_tracer(severity severity, location const& location) :
     severity_(severity),
-    location_(location)
+    location_(location),
+    start_(clock::now())
 {
-    LOG_MESSAGE(severity_, location_, "enter");
+    detail::dispatch(severity_, location_, "enter");
 }
 
 scope_tracer::~scope_tracer()
 {
-    std::int64_t const total_milliseconds(timestamp_.elapsed().total_milliseconds());
-    LOG_MESSAGE(severity_, location_, "exit, elapsed time: ", total_milliseconds, " ms");
+    auto const elapsed = std::chrono::milliseconds(clock::now() - start_).count();
+    detail::dispatch(severity_, location_, "exit, elapsed time: ", elapsed, " ms");
 }
 
 }   // namespace logging

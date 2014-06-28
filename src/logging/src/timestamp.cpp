@@ -26,11 +26,6 @@ boost::posix_time::ptime const& timestamp::value() const
     return value_;
 }
 
-boost::posix_time::time_duration timestamp::elapsed() const
-{
-    return get_current_time() - value_;
-}
-
 boost::posix_time::ptime timestamp::get_current_time()
 {
     return boost::posix_time::microsec_clock::local_time();

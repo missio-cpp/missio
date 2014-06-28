@@ -36,6 +36,9 @@ public:
     template <typename ... Args>
     message(severity severity, location const& location, Args const& ... args);
 
+    template <typename Format, typename ... Args>
+    message(Format const& format, severity severity, location const& location, Args const& ... args);
+
     message(message const&) = delete;
     message& operator=(message const&) = delete;
 
@@ -80,7 +83,15 @@ message::message(severity severity, location const& location, Args const& ... ar
     severity_(severity),
     location_(location)
 {
-    format::write(buffer_, args...);
+    missio::format::write(buffer_, args...);
+}
+
+template <typename Format, typename ...Args>
+message::message(Format const& format, severity severity, location const& location, Args const& ... args):
+    severity_(severity),
+    location_(location)
+{
+    missio::format::print(buffer_, format, args...);
 }
 
 inline severity message::get_severity() const

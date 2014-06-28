@@ -15,6 +15,7 @@
 #include <boost/date_time.hpp>
 
 
+//TODO: reuse std::chrono instead of boost::date_time
 namespace missio
 {
 namespace logging
@@ -31,7 +32,6 @@ public:
     timestamp& operator=(timestamp const&) = default;
 
     boost::posix_time::ptime const& value() const;
-    boost::posix_time::time_duration elapsed() const;
 
 private:
     static boost::posix_time::ptime get_current_time();

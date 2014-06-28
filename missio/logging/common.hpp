@@ -12,8 +12,8 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
+#include <missio/logging/detail/dispatch.hpp>
 #include <missio/logging/scope_tracer.hpp>
-#include <missio/logging/message.hpp>
 
 
 #define LOG_UNKNOWN                 <unknown>
@@ -28,13 +28,11 @@
 #define LOG_SEV_INFO                missio::logging::info
 #define LOG_SEV_DEBUG               missio::logging::debug
 
-#ifndef LOG_MAX_SEVERITY
-#define LOG_MAX_SEVERITY            LOG_SEV_DEBUG
-#endif
-
 #define LOG_LOCATION(component)     missio::logging::location(LOG_STRINGIZE(component), __FUNCTION__, __FILE__, LOG_STRINGIZE(__LINE__))
 
-#define LOG_MESSAGE(severity, component, ...)     missio::logging::dispatch(severity, LOG_LOCATION(component), __VA_ARGS__)
+#define LOG_MESSAGE(severity, component, ...)     missio::logging::detail::dispatch(severity, LOG_LOCATION(component), __VA_ARGS__)
+
+#define LOGF_MESSAGE(severity, component, format, ...)      missio::logging::detail::dispatch(format, severity, LOG_LOCATION(component), __VA_ARGS__)
 
 #define LOG_FAILURE(...)    LOG_MESSAGE(LOG_SEV_FAILURE, LOG_UNKNOWN, __VA_ARGS__)
 #define LOG_ERROR(...)      LOG_MESSAGE(LOG_SEV_ERROR, LOG_UNKNOWN, __VA_ARGS__)
@@ -43,7 +41,12 @@
 #define LOG_INFO(...)       LOG_MESSAGE(LOG_SEV_INFO, LOG_UNKNOWN, __VA_ARGS__)
 #define LOG_DEBUG(...)      LOG_MESSAGE(LOG_SEV_DEBUG, LOG_UNKNOWN, __VA_ARGS__)
 
-#define LOG_TRACE_SCOPE()           missio::logging::scope_tracer scope_tracer(LOG_SEV_DEBUG, LOG_LOCATION(LOG_UNKNOWN))
+#define LOGF_FAILURE(format, ...)     LOGF_MESSAGE(LOG_SEV_FAILURE, LOG_UNKNOWN, format, __VA_ARGS__)
+#define LOGF_ERROR(format, ...)       LOGF_MESSAGE(LOG_SEV_ERROR, LOG_UNKNOWN, format, __VA_ARGS__)
+#define LOGF_WARNING(format, ...)     LOGF_MESSAGE(LOG_SEV_WARNING, LOG_UNKNOWN, format, __VA_ARGS__)
+#define LOGF_NOTICE(format, ...)      LOGF_MESSAGE(LOG_SEV_NOTICE, LOG_UNKNOWN, format, __VA_ARGS__)
+#define LOGF_INFO(format, ...)        LOGF_MESSAGE(LOG_SEV_INFO, LOG_UNKNOWN, format, __VA_ARGS__)
+#define LOGF_DEBUG(format, ...)       LOGF_MESSAGE(LOG_SEV_DEBUG, LOG_UNKNOWN, format, __VA_ARGS__)
 
 #define LOG_COMP_FAILURE(component, ...)    LOG_MESSAGE(LOG_SEV_FAILURE, component, __VA_ARGS__)
 #define LOG_COMP_ERROR(component, ...)      LOG_MESSAGE(LOG_SEV_ERROR, component, __VA_ARGS__)
@@ -52,7 +55,16 @@
 #define LOG_COMP_INFO(component, ...)       LOG_MESSAGE(LOG_SEV_INFO, component, __VA_ARGS__)
 #define LOG_COMP_DEBUG(component, ...)      LOG_MESSAGE(LOG_SEV_DEBUG, component, __VA_ARGS__)
 
-#define LOG_COMP_TRACE_SCOPE(component)     missio::logging::scope_tracer scope_tracer(LOG_SEV_DEBUG, LOG_LOCATION(component))
+#define LOGF_COMP_FAILURE(component, format, ...)     LOGF_MESSAGE(LOG_SEV_FAILURE, component, format, __VA_ARGS__)
+#define LOGF_COMP_ERROR(component, format, ...)       LOGF_MESSAGE(LOG_SEV_ERROR, component, format, __VA_ARGS__)
+#define LOGF_COMP_WARNING(component, format, ...)     LOGF_MESSAGE(LOG_SEV_WARNING, component, format, __VA_ARGS__)
+#define LOGF_COMP_NOTICE(component, format, ...)      LOGF_MESSAGE(LOG_SEV_NOTICE, component, format, __VA_ARGS__)
+#define LOGF_COMP_INFO(component, format, ...)        LOGF_MESSAGE(LOG_SEV_INFO, component, format, __VA_ARGS__)
+#define LOGF_COMP_DEBUG(component, format, ...)       LOGF_MESSAGE(LOG_SEV_DEBUG, component, format, __VA_ARGS__)
+
+#define LOG_TRACE_SCOPE()       missio::logging::scope_tracer scope_tracer(LOG_SEV_DEBUG, LOG_LOCATION(LOG_UNKNOWN))
+
+#define LOG_COMP_TRACE_SCOPE(component)       missio::logging::scope_tracer scope_tracer(LOG_SEV_DEBUG, LOG_LOCATION(component))
 
 
 namespace missio
@@ -66,16 +78,7 @@ void shutdown();
 void start();
 void stop();
 
-void dispatch(message&& message);
-
-template <typename ... Args>
-void dispatch(severity severity, location const& location, Args const& ... args)
-{
-    if(severity <= LOG_MAX_SEVERITY)
-        dispatch(message(severity, location, args...));
-}
-
-} // namespace logging
-} // namespace missio
+}   // namespace logging
+}   // namespace missio
 
 #endif  // _missio_logging_common_hpp

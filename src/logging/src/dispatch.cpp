@@ -6,7 +6,7 @@
 //---------------------------------------------------------------------------
 
 // Application headers
-#include <missio/logging/common.hpp>
+#include <missio/logging/detail/dispatch.hpp>
 #include <missio/logging/factory.hpp>
 
 // STL headers
@@ -17,26 +17,14 @@ namespace missio
 {
 namespace logging
 {
-
-void initialize()
+namespace detail
 {
-    factory::create_dispatcher();
+
+void dispatch(message&& message)
+{
+    factory::get_dispatcher().dispatch_message(std::forward<logging::message>(message));
 }
 
-void shutdown()
-{
-    factory::destroy_dispatcher();
-}
-
-void start()
-{
-    factory::get_dispatcher().start();
-}
-
-void stop()
-{
-    factory::get_dispatcher().stop();
-}
-
+}   // namespace detail
 }   // namespace logging
 }   // namespace missio
