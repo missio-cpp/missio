@@ -25,8 +25,8 @@ scope_tracer::scope_tracer(severity severity, location const& location) :
 
 scope_tracer::~scope_tracer()
 {
-    auto const elapsed = std::chrono::milliseconds(clock::now() - start_).count();
-    detail::dispatch(severity_, location_, "exit, elapsed time: ", elapsed, " ms");
+    auto const elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start_);
+    detail::dispatch(severity_, location_, "exit, elapsed time: ", elapsed.count(), " ms");
 }
 
 }   // namespace logging
