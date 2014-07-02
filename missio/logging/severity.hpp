@@ -28,16 +28,11 @@ enum severity
     warning,
     notice,
     info,
-    debug
+    debug,
+    trace
 };
 
-severity from_string(char const* str);
 char const* to_string(severity severity);
-
-inline severity from_string(std::string const& string)
-{
-    return from_string(string.c_str());
-}
 
 inline std::ostream& operator<<(std::ostream& os, severity severity)
 {

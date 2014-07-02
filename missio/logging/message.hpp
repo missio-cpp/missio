@@ -86,14 +86,6 @@ message::message(severity severity, location const& location, Args const& ... ar
     missio::format::write(buffer_, args...);
 }
 
-template <typename Format, typename ...Args>
-message::message(Format const& format, severity severity, location const& location, Args const& ... args):
-    severity_(severity),
-    location_(location)
-{
-    missio::format::print(buffer_, format, args...);
-}
-
 inline severity message::get_severity() const
 {
     return severity_;

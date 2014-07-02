@@ -35,5 +35,10 @@ void stop()
     factory::get_dispatcher().stop();
 }
 
+void dispatch(message&& message)
+{
+    factory::get_dispatcher().dispatch_message(std::forward<logging::message>(message));
+}
+
 }   // namespace logging
 }   // namespace missio

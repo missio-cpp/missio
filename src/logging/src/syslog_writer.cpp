@@ -52,8 +52,8 @@ int syslog_writer::get_level(message const& message)
         case failure: return LOG_CRIT;
         case error:   return LOG_ERR;
         case warning: return LOG_WARNING;
-        case info:    return LOG_INFO;
         case notice:  return LOG_NOTICE;
+        case info:    return LOG_INFO;
         case debug:   return LOG_DEBUG;
     }
 
