@@ -9,9 +9,6 @@
 #include <missio/logging/common.hpp>
 #include <missio/logging/factory.hpp>
 
-// STL headers
-#include <utility>
-
 
 namespace missio
 {
