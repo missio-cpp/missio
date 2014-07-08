@@ -7,7 +7,7 @@
 
 // Application headers
 #include <missio/logging/scope_tracer.hpp>
-#include <missio/logging/detail/dispatch.hpp>
+#include <missio/logging/common.hpp>
 
 
 namespace missio
@@ -20,13 +20,12 @@ scope_tracer::scope_tracer(severity severity, location const& location) :
     location_(location),
     start_(clock::now())
 {
-    detail::dispatch(severity_, location_, "enter");
+    dispatch(severity_, location_, "enter");
 }
 
 scope_tracer::~scope_tracer()
 {
-    auto const elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start_);
-    detail::dispatch(severity_, location_, "exit, elapsed time: ", elapsed.count(), " ms");
+    dispatch(severity_, location_, "exit, elapsed time: ", std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start_).count(), " ms");
 }
 
 }   // namespace logging

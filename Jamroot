@@ -24,9 +24,10 @@ project missio
         <include>$(TOP)
         <include>$(BOOST_ROOT)
         <define>BOOST_ALL_NO_LIB
+        <define>BOOST_SYSTEM_NO_DEPRECATED
         <define>BOOST_FILESYSTEM_VERSION=3
         <define>BOOST_FILESYSTEM_NO_DEPRECATED
-        <define>BOOST_SYSTEM_NO_DEPRECATED
+        <define>BOOST_SPIRIT_USE_PHOENIX_V3
         <toolset>msvc:<define>WIN32
         <toolset>msvc:<define>_WIN32
         <toolset>msvc:<define>NOMINMAX

@@ -15,6 +15,7 @@
 #include <missio/logging/severity.hpp>
 #include <missio/logging/location.hpp>
 #include <missio/logging/detail/sink_buffer.hpp>
+#include <missio/logging/detail/message_id.hpp>
 #include <missio/logging/detail/process_id.hpp>
 #include <missio/logging/detail/thread_id.hpp>
 #include <missio/logging/detail/timestamp.hpp>
@@ -46,6 +47,7 @@ public:
         severity_(other.severity_),
         location_(other.location_),
         timestamp_(other.timestamp_),
+        message_id_(other.message_id_),
         process_id_(other.process_id_),
         thread_id_(other.thread_id_),
         buffer_(std::move(other.buffer_))
@@ -57,6 +59,7 @@ public:
         severity_ = other.severity_;
         location_ = other.location_;
         timestamp_ = other.timestamp_;
+        message_id_ =  other.message_id_;
         process_id_ = other.process_id_;
         thread_id_ = other.thread_id_;
         buffer_ = std::move(other.buffer_);
@@ -73,6 +76,7 @@ private:
     severity severity_;
     location location_;
     detail::timestamp timestamp_;
+    detail::message_id message_id_;
     detail::process_id process_id_;
     detail::thread_id thread_id_;
     detail::sink_buffer buffer_;
@@ -97,6 +101,7 @@ void message::format(Sink& sink, Format const& format) const
     format::print(
         sink,
         format,
+        message_id_.value(),
         timestamp_.value(),
         to_string(severity_),
         process_id_.value(),

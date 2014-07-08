@@ -4,15 +4,15 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_logging_detail_timestamp_hpp
-#define _missio_logging_detail_timestamp_hpp
+#ifndef _missio_logging_detail_message_id_hpp
+#define _missio_logging_detail_message_id_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/date_time.hpp>
+// STL headers
+#include <cstdint>
 
 
 namespace missio
@@ -22,25 +22,22 @@ namespace logging
 namespace detail
 {
 
-class timestamp
+class message_id
 {
 public:
-    timestamp();
+    message_id();
 
-    timestamp(timestamp const&) = default;
-    timestamp& operator=(timestamp const&) = default;
+    message_id(message_id const&) = default;
+    message_id& operator=(message_id const&) = default;
 
-    boost::posix_time::ptime const& value() const;
-
-private:
-    static boost::posix_time::ptime get_current_time();
+    std::uint64_t value() const;
 
 private:
-    boost::posix_time::ptime value_;
+    std::uint64_t value_;
 };
 
 }   // namespace detail
 }   // namespace logging
 }   // namespace missio
 
-#endif  // _missio_logging_detail_timestamp_hpp
+#endif  // _missio_logging_detail_message_id_hpp

@@ -49,7 +49,7 @@
 #define LOG_DEBUG(...)          LOG_MESSAGE(LOG_SEV_DEBUG, LOG_UNKNOWN, __VA_ARGS__)
 #define LOG_TRACE(...)          LOG_MESSAGE(LOG_SEV_TRACE, LOG_UNKNOWN, __VA_ARGS__)
 
-#define LOG_TRACE_SCOPE()       missio::logging::scope_tracer scope_tracer(LOG_SEV_TRACE, LOG_LOCATION(LOG_UNKNOWN))
+#define LOG_TRACE_FUNCTION()    missio::logging::scope_tracer scope_tracer(LOG_SEV_TRACE, LOG_LOCATION(LOG_UNKNOWN))
 
 #define LOG_COMP_FAILURE(component, ...)        LOG_MESSAGE(LOG_SEV_FAILURE, component, __VA_ARGS__)
 #define LOG_COMP_ERROR(component, ...)          LOG_MESSAGE(LOG_SEV_ERROR, component, __VA_ARGS__)
@@ -59,7 +59,7 @@
 #define LOG_COMP_DEBUG(component, ...)          LOG_MESSAGE(LOG_SEV_DEBUG, component, __VA_ARGS__)
 #define LOG_COMP_TRACE(component, ...)          LOG_MESSAGE(LOG_SEV_TRACE, component, __VA_ARGS__)
 
-#define LOG_COMP_TRACE_SCOPE(component)         missio::logging::scope_tracer scope_tracer(LOG_SEV_TRACE, LOG_LOCATION(component))
+#define LOG_COMP_TRACE_FUNCTION(component)      missio::logging::scope_tracer scope_tracer(LOG_SEV_TRACE, LOG_LOCATION(component))
 
 
 namespace missio

@@ -34,7 +34,7 @@ public:
     scope_tracer& operator=(scope_tracer const&) = delete;
 
 private:
-    typedef std::chrono::high_resolution_clock clock;
+    typedef std::chrono::steady_clock clock;
     typedef clock::time_point clock_time_point;
 
 private:
