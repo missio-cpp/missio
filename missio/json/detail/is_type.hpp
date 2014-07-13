@@ -25,13 +25,10 @@ namespace detail
 {
 
 template <typename T>
-class is_visitor :
-    public boost::static_visitor<bool>
+class is_visitor : public boost::static_visitor<bool>
 {
 public:
-    is_visitor()
-    {
-    }
+    is_visitor() = default;
 
     bool operator()(T) const
     {

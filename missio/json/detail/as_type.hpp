@@ -29,16 +29,13 @@ namespace detail
 {
 
 template <typename T>
-class as_visitor :
-    public boost::static_visitor<T>
+class as_visitor : public boost::static_visitor<T>
 {
 public:
     typedef typename adapt<T>::type adapted_type;
 
 public:
-    as_visitor()
-    {
-    }
+    as_visitor() = default;
 
     T const& operator()(T const& value) const
     {

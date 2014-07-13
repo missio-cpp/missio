@@ -25,14 +25,16 @@ namespace detail
 {
 
 template <typename Variant, typename T>
-class convert_visitor :
-    public boost::static_visitor<void>
+class convert_visitor : public boost::static_visitor<void>
 {
 public:
     convert_visitor(Variant& variant) :
         variant_(variant)
     {
     }
+
+    convert_visitor(convert_visitor const&) = delete;
+    convert_visitor& operator=(convert_visitor const&) = delete;
 
     void operator()(T) const
     {
@@ -56,10 +58,6 @@ private:
     {
         variant = T();
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    convert_visitor& operator=(convert_visitor const& other);
 
 private:
     Variant& variant_;

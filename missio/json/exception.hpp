@@ -21,8 +21,7 @@ namespace missio
 namespace json
 {
 
-class exception :
-    public std::runtime_error
+class exception : public std::runtime_error
 {
 public:
     explicit exception(std::string const& message) :
