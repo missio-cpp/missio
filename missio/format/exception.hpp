@@ -21,12 +21,11 @@ namespace missio
 namespace format
 {
 
-class exception :
-    public std::invalid_argument
+class exception : public std::runtime_error
 {
 public:
     explicit exception(std::string const& message) :
-        std::invalid_argument(message)
+        std::runtime_error(message)
     {
     }
 };

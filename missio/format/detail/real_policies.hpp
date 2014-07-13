@@ -31,8 +31,7 @@ struct default_real_policies : boost::spirit::karma::real_policies<T>
 };
 
 template <typename T, real_format Format>
-class real_policies :
-    public boost::spirit::karma::real_policies<T>
+class real_policies : public boost::spirit::karma::real_policies<T>
 {
 public:
     typedef boost::spirit::karma::real_policies<T> base_policy_type;
@@ -45,12 +44,8 @@ public:
     {
     }
 
-    real_policies(real_policies const& other) :
-        precision_(other.precision_),
-        force_sign_(other.force_sign_),
-        upper_case_(other.upper_case_)
-    {
-    }
+    real_policies(real_policies const&) = default;
+    real_policies& operator=(real_policies const&) = delete;
 
     bool force_sign(T) const
     {
@@ -99,10 +94,6 @@ public:
 
         return base_policy_type::template exponent<CharEncoding, Tag>(sink, n);
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    real_policies& operator=(real_policies const& other);
 
 private:
     int const precision_;

@@ -24,8 +24,7 @@ namespace detail
 {
 
 template <typename Sink>
-class sink_iterator :
-    public std::iterator<std::output_iterator_tag, void, void, void, void>
+class sink_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {
 public:
     explicit sink_iterator(Sink& sink) :
@@ -33,10 +32,8 @@ public:
     {
     }
 
-    sink_iterator(sink_iterator const& other) :
-        sink_(other.sink_)
-    {
-    }
+    sink_iterator(sink_iterator const&) = default;
+    sink_iterator& operator=(sink_iterator const&) = delete;
 
     template <typename Char>
     sink_iterator& operator=(Char ch)
@@ -59,10 +56,6 @@ public:
     {
         return *this;
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    sink_iterator& operator=(sink_iterator const& other);
 
 private:
     Sink& sink_;
