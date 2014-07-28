@@ -15,7 +15,7 @@
 #include <iterator>
 
 
-BOOST_AUTO_TEST_SUITE(exception_test_suite)
+BOOST_AUTO_TEST_SUITE(unicode_exception_test_suite)
 
 BOOST_AUTO_TEST_CASE(invalid_utf32_code_point_exception_test)
 {
@@ -35,15 +35,17 @@ BOOST_AUTO_TEST_CASE(invalid_utf16_code_unit_exception_test)
 
 BOOST_AUTO_TEST_CASE(invalid_utf8_sequence_exception_test)
 {
-    char const sequence[] = { '\xEF', '\xBB', '\xBF' };
+    char const sequence[] { '\xEF', '\xBB', '\xBF' };
 
-    missio::unicode::invalid_utf8_sequence exception(std::begin(sequence), std::end(sequence));
+    missio::unicode::invalid_utf8_sequence exception1(std::begin(sequence), std::end(sequence));
 
-    BOOST_CHECK_EQUAL(exception.sequence_size(), 3u);
-    BOOST_CHECK_EQUAL(exception.sequence()[0], 0xEFu);
-    BOOST_CHECK_EQUAL(exception.sequence()[1], 0xBBu);
-    BOOST_CHECK_EQUAL(exception.sequence()[2], 0xBFu);
-    BOOST_CHECK_EQUAL(exception.message(), R"(invalid UTF-8 sequence: \xEF\xBB\xBF)");
+    BOOST_CHECK_EQUAL(exception1.sequence(), std::string(sequence));
+    BOOST_CHECK_EQUAL(exception1.message(), R"(invalid UTF-8 sequence: \xEF\xBB\xBF)");
+
+    missio::unicode::invalid_utf8_sequence exception2(sequence);
+
+    BOOST_CHECK_EQUAL(exception2.sequence(), std::string(sequence));
+    BOOST_CHECK_EQUAL(exception2.message(), R"(invalid UTF-8 sequence: \xEF\xBB\xBF)");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

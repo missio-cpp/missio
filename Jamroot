@@ -69,6 +69,7 @@ project missio
 use-project /missio : $(TOP) ;
 
 use-project /missio/logging : $(SRC)/logging/build ;
+use-project /missio/unicode : $(SRC)/unicode/build ;
 #use-project /missio/config : $(SRC)/config/build ;
 use-project /missio/json : $(SRC)/json/build ;
 
@@ -84,6 +85,7 @@ use-project /missio/format/perf : $(SRC)/format/perf ;
 #use-project /missio/json/perf : $(SRC)/json/perf ;
 
 build-project $(SRC)/logging/build ;
+build-project $(SRC)/unicode/build ;
 #build-project $(SRC)/config/build ;
 build-project $(SRC)/json/build ;
 
@@ -121,6 +123,7 @@ install missio
     :
         ## sources ##
         /missio/logging
+        /missio/unicode
         #/missio/config
         /missio/json
     :

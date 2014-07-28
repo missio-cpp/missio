@@ -1,0 +1,11 @@
+
+project missio/unicode
+    :
+        source-location ../src
+    ;
+
+lib missio_unicode
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+    ;

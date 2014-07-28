@@ -14,7 +14,6 @@
 // Application headers
 #include <missio/unicode/exception.hpp>
 #include <missio/unicode/convert.hpp>
-#include <missio/unicode/utf16.hpp>
 #include <missio/unicode/utf8.hpp>
 
 #endif  // _missio_unicode_unicode_hpp
