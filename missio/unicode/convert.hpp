@@ -11,9 +11,6 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/config.hpp>
-
 // STL headers
 #include <string>
 
