@@ -68,72 +68,108 @@ BOOST_FIXTURE_TEST_CASE(utf16_to_utf8_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_utf16) == hello_world_eng_utf8);
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_utf16) == hello_world_rus_utf8);
+
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_utf16.c_str()) == hello_world_eng_utf8);
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_utf16.c_str()) == hello_world_rus_utf8);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf32_to_utf8_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_utf32) == hello_world_eng_utf8);
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_utf32) == hello_world_rus_utf8);
+
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_utf32.c_str()) == hello_world_eng_utf8);
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_utf32.c_str()) == hello_world_rus_utf8);
 }
 
 BOOST_FIXTURE_TEST_CASE(wide_string_to_utf8_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_wstr) == hello_world_eng_utf8);
     BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_wstr) == hello_world_rus_utf8);
+
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_eng_wstr.c_str()) == hello_world_eng_utf8);
+    BOOST_CHECK(missio::unicode::to_utf8_string(hello_world_rus_wstr.c_str()) == hello_world_rus_utf8);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf8_to_utf16_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_utf8) == hello_world_eng_utf16);
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_utf8) == hello_world_rus_utf16);
+
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_utf8.c_str()) == hello_world_eng_utf16);
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_utf8.c_str()) == hello_world_rus_utf16);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf32_to_utf16_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_utf32) == hello_world_eng_utf16);
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_utf32) == hello_world_rus_utf16);
+
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_utf32.c_str()) == hello_world_eng_utf16);
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_utf32.c_str()) == hello_world_rus_utf16);
 }
 
 BOOST_FIXTURE_TEST_CASE(wide_string_to_utf16_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_wstr) == hello_world_eng_utf16);
     BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_wstr) == hello_world_rus_utf16);
+
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_eng_wstr.c_str()) == hello_world_eng_utf16);
+    BOOST_CHECK(missio::unicode::to_utf16_string(hello_world_rus_wstr.c_str()) == hello_world_rus_utf16);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf8_to_utf32_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_utf8) == hello_world_eng_utf32);
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_utf8) == hello_world_rus_utf32);
+
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_utf8.c_str()) == hello_world_eng_utf32);
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_utf8.c_str()) == hello_world_rus_utf32);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf16_to_utf32_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_utf16) == hello_world_eng_utf32);
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_utf16) == hello_world_rus_utf32);
+
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_utf16.c_str()) == hello_world_eng_utf32);
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_utf16.c_str()) == hello_world_rus_utf32);
 }
 
 BOOST_FIXTURE_TEST_CASE(wide_string_to_utf32_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_wstr) == hello_world_eng_utf32);
     BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_wstr) == hello_world_rus_utf32);
+
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_eng_wstr.c_str()) == hello_world_eng_utf32);
+    BOOST_CHECK(missio::unicode::to_utf32_string(hello_world_rus_wstr.c_str()) == hello_world_rus_utf32);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf8_to_wide_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf8) == hello_world_eng_wstr);
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf8) == hello_world_rus_wstr);
+
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf8.c_str()) == hello_world_eng_wstr);
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf8.c_str()) == hello_world_rus_wstr);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf16_to_wide_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf16) == hello_world_eng_wstr);
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf16) == hello_world_rus_wstr);
+
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf16.c_str()) == hello_world_eng_wstr);
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf16.c_str()) == hello_world_rus_wstr);
 }
 
 BOOST_FIXTURE_TEST_CASE(utf32_to_wide_string_test, convert_fixture)
 {
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf32) == hello_world_eng_wstr);
     BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf32) == hello_world_rus_wstr);
+
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_eng_utf32.c_str()) == hello_world_eng_wstr);
+    BOOST_CHECK(missio::unicode::to_wide_string(hello_world_rus_utf32.c_str()) == hello_world_rus_wstr);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
