@@ -9,11 +9,11 @@
 #include <missio/unicode/convert.hpp>
 
 // Implementation headers
+#include "wchar_convert.hpp"
 #include "convert.hpp"
 
 // STL headers
 #include <iterator>
-#include <cwchar>
 
 
 namespace missio
@@ -43,13 +43,7 @@ std::string to_utf8_string(std::wstring const& str)
 {
     std::string result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    impl::utf16_to_utf8(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    impl::utf32_to_utf8(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::to_utf8(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
@@ -76,13 +70,7 @@ std::u16string to_utf16_string(std::wstring const& str)
 {
     std::u16string result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    std::copy(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    impl::utf32_to_utf16(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::to_utf16(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
@@ -109,13 +97,7 @@ std::u32string to_utf32_string(std::wstring const& str)
 {
     std::u32string result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    impl::utf16_to_utf32(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    std::copy(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::to_utf32(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
@@ -124,13 +106,7 @@ std::wstring to_wide_string(std::string const& str)
 {
     std::wstring result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    impl::utf8_to_utf16(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    impl::utf8_to_utf32(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::from_utf8(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
@@ -139,13 +115,7 @@ std::wstring to_wide_string(std::u16string const& str)
 {
     std::wstring result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    std::copy(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    impl::utf16_to_utf32(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::from_utf16(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
@@ -154,13 +124,7 @@ std::wstring to_wide_string(std::u32string const& str)
 {
     std::wstring result;
 
-#if defined(WCHAR_MAX) && (WCHAR_MAX == 0xFFFF)
-    // Assume that wchar_t uses UTF-16 encoding (usually on Windows systems)
-    impl::utf32_to_utf16(str.begin(), str.end(), std::back_inserter(result));
-#else
-    // Otherwise assume wchar_t uses UTF-32 encoding (usually on Unix-based systems)
-    std::copy(str.begin(), str.end(), std::back_inserter(result));
-#endif
+    impl::wchar_convert::from_utf32(str.begin(), str.end(), std::back_inserter(result));
 
     return result;
 }
