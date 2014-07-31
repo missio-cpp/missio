@@ -28,15 +28,12 @@ struct type_adapter<boost::asio::ip::basic_endpoint<InternetProtocol>>
     template <typename Sink>
     static void format(Sink& sink, boost::asio::ip::basic_endpoint<InternetProtocol> const& value)
     {
-        if(is_v4_endpoint(value))
-            write(sink, value.address(), ':', value.port());
-        else
-            write(sink, '[', value.address(), ']', ':', value.port());
-    }
+        boost::asio::ip::address const address = value.address();
 
-    static bool is_v4_endpoint(boost::asio::ip::basic_endpoint<InternetProtocol> const& value)
-    {
-        return value.protocol() == InternetProtocol::v4();
+        if(address.is_v6())
+            write(sink, '[', address, ']', ':', value.port());
+        else
+            write(sink, address, ':', value.port());
     }
 };
 

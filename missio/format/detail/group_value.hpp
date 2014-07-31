@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_group_value_hpp
@@ -33,6 +33,12 @@ struct group_value
     {
     }
 
+    group_value(group_value const&) = delete;
+    group_value& operator=(group_value const&) = delete;
+
+    group_value(group_value&&) = default;
+    group_value& operator=(group_value&&) = default;
+
     Value const& value() const
     {
         return value_;
@@ -44,13 +50,21 @@ struct group_value
     }
 
 private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    group_value& operator=(group_value const& other);
-
-private:
     Value const& value_;
     Inserter inserter_;
 };
+
+template <typename Value, typename Inserter>
+auto make_group_value(Value const& value, Inserter const& inserter)
+{
+    return group_value<Value, Inserter>(value, inserter);
+}
+
+template <typename Inserter, typename Value>
+auto make_group_value(Value const& value)
+{
+    return group_value<Value, Inserter>(value);
+}
 
 }   // namespace detail
 }   // namespace format

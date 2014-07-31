@@ -24,69 +24,69 @@ namespace detail
 {
 
 template <typename Value>
-group_value<Value, detail::int_inserter<2>> bin(Value const& value, int precision = -1, bool force_sign = false)
+auto bin(Value const& value, int precision = -1, bool force_sign = false)
 {
-    return group_value<Value, int_inserter<2>>(value, int_inserter<2>(precision, force_sign));
+    return make_group_value(value, int_inserter<2>(precision, force_sign));
 }
 
 template <typename Value>
-group_value<Value, int_inserter<8>> oct(Value const& value, int precision = -1, bool force_sign = false)
+auto oct(Value const& value, int precision = -1, bool force_sign = false)
 {
-    return group_value<Value, int_inserter<8>>(value, int_inserter<8>(precision, force_sign));
+    return make_group_value(value, int_inserter<8>(precision, force_sign));
 }
 
 template <typename Value>
-group_value<Value, int_inserter<10>> dec(Value const& value, int precision = -1, bool force_sign = false)
+auto dec(Value const& value, int precision = -1, bool force_sign = false)
 {
-    return group_value<Value, int_inserter<10>>(value, int_inserter<10>(precision, force_sign));
+    return make_group_value(value, int_inserter<10>(precision, force_sign));
 }
 
 template <typename Value>
-group_value<Value, int_inserter<16>> hex(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
+auto hex(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
-    return group_value<Value, int_inserter<16>>(value, int_inserter<16>(precision, force_sign, upper_case));
+    return make_group_value(value, int_inserter<16>(precision, force_sign, upper_case));
 }
 
 template <typename Value>
-group_value<Value, real_inserter<real_format::fixed>> fixed(Value const& value, int precision = -1, bool force_sign = false)
+auto fixed(Value const& value, int precision = -1, bool force_sign = false)
 {
-    return group_value<Value, real_inserter<real_format::fixed>>(value, real_inserter<real_format::fixed>(precision, force_sign));
+    return make_group_value(value, real_inserter<real_format::fixed>(precision, force_sign));
 }
 
 template <typename Value>
-group_value<Value, real_inserter<real_format::general>> real(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
+auto real(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
-    return group_value<Value, real_inserter<real_format::general>>(value, real_inserter<real_format::general>(precision, force_sign, upper_case));
+    return make_group_value(value, real_inserter<real_format::general>(precision, force_sign, upper_case));
 }
 
 template <typename Value>
-group_value<Value, real_inserter<real_format::scientific>> scientific(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
+auto scientific(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
-    return group_value<Value, real_inserter<real_format::scientific>>(value, real_inserter<real_format::scientific>(precision, force_sign, upper_case));
+    return make_group_value(value, real_inserter<real_format::scientific>(precision, force_sign, upper_case));
 }
 
 template <typename Value>
-group_value<Value, align_inserter> align(Value const& value, int align)
+auto align(Value const& value, int align)
 {
-    return group_value<Value, align_inserter>(value, align_inserter(align));
+    return make_group_value(value, align_inserter(align));
 }
 
 template <typename Value>
-group_value<Value, repeat_inserter> repeat(Value const& value, unsigned int count)
+auto repeat(Value const& value, unsigned int count)
 {
-    return group_value<Value, repeat_inserter>(value, repeat_inserter(count));
+    return make_group_value(value, repeat_inserter(count));
 }
 
 template <typename Value>
-group_value<Value, lower_case_inserter> lower(Value const& value)
+auto lower(Value const& value)
 {
-    return group_value<Value, lower_case_inserter>(value);
+    return make_group_value<lower_case_inserter>(value);
 }
 
 template <typename Value>
-group_value<Value, upper_case_inserter> upper(Value const& value)
+auto upper(Value const& value)
 {
-    return group_value<Value, upper_case_inserter>(value);
+    return make_group_value<upper_case_inserter>(value);
 }
 
 }   // namespace detail

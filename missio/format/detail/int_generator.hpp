@@ -81,6 +81,9 @@ struct any_int_generator : boost::spirit::karma::primitive_generator<any_int_gen
     {
     }
 
+    any_int_generator(any_int_generator const&) = default;
+    any_int_generator& operator=(any_int_generator const&) = delete;
+
     template <typename OutputIterator, typename Context, typename Delimiter, typename Attribute>
     bool generate(OutputIterator& sink, Context& context, Delimiter const& d, Attribute const& attr) const
     {
@@ -163,10 +166,6 @@ private:
 
         return int_inserter<boost::spirit::char_encoding::ascii, boost::spirit::tag::upper>::call(sink, attr);
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    any_int_generator& operator=(any_int_generator const& other);
 
 private:
     int const precision_;

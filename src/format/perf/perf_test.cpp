@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -14,8 +14,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 
 #if _MSC_VER
@@ -304,16 +304,16 @@ int main(int argc, char *argv[])
     }
     catch(std::exception const& e)
     {
-        std::cout << std::endl << "caught std::exception" << e.what() << std::endl;
+        std::cout << std::endl << "caught std::exception: " << e.what() << std::endl;
 
-        return 1;
+        return EXIT_FAILURE;
     }
     catch(...)
     {
-        std::cout << std::endl << "caught unexpected exception" << std::endl;
+        std::cout << std::endl << "caught unknown exception" << std::endl;
 
-        return 2;
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(constructor_test)
 {
     missio::format::sink sink;
 
-    BOOST_CHECK(sink.empty());
+    BOOST_CHECK_EQUAL(sink.empty(), true);
     BOOST_CHECK_EQUAL(sink.size(), 0u);
     BOOST_CHECK_EQUAL(sink.capacity(), 128u);
 }
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(clear_test)
     sink.put('R');
     sink.clear();
 
-    BOOST_CHECK(sink.empty());
+    BOOST_CHECK_EQUAL(sink.empty(), true);
     BOOST_CHECK_EQUAL(sink.size(), 0u);
     BOOST_CHECK_EQUAL(sink.capacity(), 128u);
 }

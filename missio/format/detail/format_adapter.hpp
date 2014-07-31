@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_format_adapter_hpp
@@ -41,14 +41,13 @@ public:
         parse_format(format, std::strlen(format), items_);
     }
 
+    format_adapter(format_adapter const&) = delete;
+    format_adapter& operator=(format_adapter const&) = delete;
+
     item_buffer const& items() const
     {
         return items_;
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    format_adapter& operator=(format_adapter const& other);
 
 private:
     item_buffer items_;
@@ -63,14 +62,13 @@ public:
         parse_format(format.data(), format.size(), items_);
     }
 
+    format_adapter(format_adapter const&) = delete;
+    format_adapter& operator=(format_adapter const&) = delete;
+
     item_buffer const& items() const
     {
         return items_;
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    format_adapter& operator=(format_adapter const& other);
 
 private:
     item_buffer items_;
@@ -85,14 +83,13 @@ public:
     {
     }
 
+    format_adapter(format_adapter const&) = delete;
+    format_adapter& operator=(format_adapter const&) = delete;
+
     item_buffer const& items() const
     {
         return format_.items();
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    format_adapter& operator=(format_adapter const& other);
 
 private:
     string const& format_;

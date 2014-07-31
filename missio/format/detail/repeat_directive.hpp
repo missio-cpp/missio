@@ -71,6 +71,9 @@ struct repeat_generator : boost::spirit::karma::primitive_generator<repeat_gener
     {
     }
 
+    repeat_generator(repeat_generator const&) = default;
+    repeat_generator& operator=(repeat_generator const&) = delete;
+
     template <typename OutputIterator, typename Context, typename Delimiter, typename Attribute>
     bool generate(OutputIterator& sink, Context& ctx, Delimiter const& d, Attribute const& attr) const
     {

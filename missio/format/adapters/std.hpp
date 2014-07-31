@@ -4,18 +4,18 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_format_format_hpp
-#define _missio_format_format_hpp
+#ifndef _missio_format_adapters_std_hpp
+#define _missio_format_adapters_std_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/format/sink.hpp>
-#include <missio/format/print.hpp>
-#include <missio/format/write.hpp>
-#include <missio/format/inserters.hpp>
-#include <missio/format/exception.hpp>
+#include <missio/format/adapters/std/exception.hpp>
+#include <missio/format/adapters/std/pair.hpp>
+#include <missio/format/adapters/std/shared_ptr.hpp>
+#include <missio/format/adapters/std/unique_ptr.hpp>
+#include <missio/format/adapters/std/weak_ptr.hpp>
 
-#endif  // _missio_format_format_hpp
+#endif  // _missio_format_adapters_std_hpp

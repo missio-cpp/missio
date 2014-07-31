@@ -1,15 +1,15 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
 // Application headers
 #include <missio/format/format.hpp>
+#include <missio/format/adapters/std.hpp>
 #include <missio/format/adapters/boost.hpp>
 #include <missio/format/adapters/pointer.hpp>
-#include <missio/format/adapters/exception.hpp>
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
@@ -89,7 +89,7 @@ struct optional_fixture : common_fixture
     template <typename T>
     static std::string make_string(boost::optional<T> const& value)
     {
-        return (value ? common_fixture::make_string(*value) : std::string(""));
+        return value ? common_fixture::make_string(*value) : std::string();
     }
 
     optional_fixture() :
@@ -133,13 +133,13 @@ struct smart_ptr_fixture : common_fixture
     template <typename T>
     static std::string make_string(boost::shared_ptr<T> const& value)
     {
-        return (value ? common_fixture::make_string(*value) : std::string(""));
+        return value ? common_fixture::make_string(*value) : std::string();
     }
 
     template <typename T>
     static std::string make_string(boost::intrusive_ptr<T> const& value)
     {
-        return (value ? common_fixture::make_string(*value) : std::string(""));
+        return value ? common_fixture::make_string(*value) : std::string();
     }
 
     smart_ptr_fixture() :
@@ -386,7 +386,7 @@ BOOST_FIXTURE_TEST_CASE(boost_asio_ip_v4_endpoint_print_test, asio_v4_fixture)
     missio::format::print(sink, "{0}", missio::format::align(endpoint, -35));
     BOOST_CHECK_EQUAL(sink, make_aligned(make_string(endpoint), -35));
 }
-/*
+
 BOOST_FIXTURE_TEST_CASE(boost_asio_ip_v6_endpoint_write_test, asio_v6_fixture)
 {
     std::string sink;
@@ -422,7 +422,7 @@ BOOST_FIXTURE_TEST_CASE(boost_asio_ip_v6_endpoint_print_test, asio_v6_fixture)
     missio::format::print(sink, "{0}", missio::format::align(endpoint, -60));
     BOOST_CHECK_EQUAL(sink, make_aligned(make_string(endpoint), -60));
 }
-*/
+
 BOOST_FIXTURE_TEST_CASE(boost_filesystem_path_write_test, common_fixture)
 {
     std::string sink;

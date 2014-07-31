@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_inserters_hpp
@@ -21,84 +21,67 @@ namespace format
 {
 
 template <typename Value>
-auto bin(Value const& value,
-         int precision = -1,
-         bool force_sign = false) -> decltype(detail::bin(value, precision, force_sign))
+auto bin(Value const& value, int precision = -1, bool force_sign = false)
 {
     return detail::bin(value, precision, force_sign);
 }
 
 template <typename Value>
-auto oct(Value const& value,
-         int precision = -1,
-         bool force_sign = false) -> decltype(detail::oct(value, precision, force_sign))
+auto oct(Value const& value, int precision = -1,  bool force_sign = false)
 {
     return detail::oct(value, precision, force_sign);
 }
 
 template <typename Value>
-auto dec(Value const& value,
-         int precision = -1,
-         bool force_sign = false) -> decltype(detail::dec(value, precision, force_sign))
+auto dec(Value const& value, int precision = -1, bool force_sign = false)
 {
     return detail::dec(value, precision, force_sign);
 }
 
 template <typename Value>
-auto hex(Value const& value,
-         int precision = -1,
-         bool upper_case = false,
-         bool force_sign = false) -> decltype(detail::hex(value, precision, upper_case, force_sign))
+auto hex(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
     return detail::hex(value, precision, upper_case, force_sign);
 }
 
 template <typename Value>
-auto fixed(Value const& value,
-           int precision = -1,
-           bool force_sign = false) -> decltype(detail::fixed(value, precision, force_sign))
+auto fixed(Value const& value, int precision = -1, bool force_sign = false)
 {
     return detail::fixed(value, precision, force_sign);
 }
 
 template <typename Value>
-auto real(Value const& value,
-          int precision = -1,
-          bool upper_case = false,
-          bool force_sign = false) -> decltype(detail::real(value, precision, upper_case, force_sign))
+auto real(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
     return detail::real(value, precision, upper_case, force_sign);
 }
 
 template <typename Value>
-auto scientific(Value const& value,
-                int precision = -1,
-                bool upper_case = false,
-                bool force_sign = false) -> decltype(detail::scientific(value, precision, upper_case, force_sign))
+auto scientific(Value const& value, int precision = -1, bool upper_case = false, bool force_sign = false)
 {
     return detail::scientific(precision, upper_case, force_sign);
 }
 
 template <typename Value>
-auto align(Value const& value, int align) -> decltype(detail::align(value, align))
+auto align(Value const& value, int align)
 {
     return detail::align(value, align);
 }
 
 template <typename Value>
-auto repeat(Value const& value, unsigned int count) -> decltype(detail::repeat(value, count))
+auto repeat(Value const& value, unsigned int count)
 {
     return detail::repeat(value, count);
 }
 
 template <typename Value>
-auto lower(Value const& value) -> decltype(detail::lower(value))
+auto lower(Value const& value)
 {
     return detail::lower(value);
 }
 
 template <typename Value>
-auto upper(Value const& value) -> decltype(detail::upper(value))
+auto upper(Value const& value)
 {
     return detail::upper(value);
 }

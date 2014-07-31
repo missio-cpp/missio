@@ -59,18 +59,12 @@ namespace format
 namespace detail
 {
 
-namespace qi = boost::spirit::qi;
-
 template <typename Iterator>
-struct format_grammar : qi::grammar<Iterator, item_buffer()>
+struct format_grammar : boost::spirit::qi::grammar<Iterator, item_buffer()>
 {
     format_grammar() : format_grammar::base_type(start_)
     {
-        using qi::uint_;
-        using qi::char_;
-        using qi::lit;
-        using qi::raw;
-        using qi::attr;
+        using namespace boost::spirit::qi;
 
         string_     =   raw
                         [
@@ -99,11 +93,11 @@ struct format_grammar : qi::grammar<Iterator, item_buffer()>
                     ;
     }
 
-    qi::rule<Iterator, boost::string_ref()> string_;
-    qi::rule<Iterator, std::uint32_t()> index_;
-    qi::rule<Iterator, format_item()> prefix_;
-    qi::rule<Iterator, format_item()> item_;
-    qi::rule<Iterator, item_buffer()> start_;
+    boost::spirit::qi::rule<Iterator, boost::string_ref()> string_;
+    boost::spirit::qi::rule<Iterator, std::uint32_t()> index_;
+    boost::spirit::qi::rule<Iterator, format_item()> prefix_;
+    boost::spirit::qi::rule<Iterator, format_item()> item_;
+    boost::spirit::qi::rule<Iterator, item_buffer()> start_;
 };
 
 }   // namespace detail

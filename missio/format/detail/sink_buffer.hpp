@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_sink_buffer_hpp
@@ -10,9 +10,6 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
-
-// BOOST header
-#include <boost/noncopyable.hpp>
 
 // STL headers
 #include <iostream>
@@ -27,8 +24,7 @@ namespace format
 namespace detail
 {
 
-class sink_buffer :
-    private boost::noncopyable
+class sink_buffer
 {
 public:
     typedef char value_type;
@@ -51,6 +47,9 @@ public:
         if(sizeof(static_buffer_) != capacity_)
             std::free(buffer_ptr_);
     }
+
+    sink_buffer(sink_buffer const&) = delete;
+    sink_buffer& operator=(sink_buffer const&) = delete;
 
     void clear()
     {
@@ -97,12 +96,11 @@ public:
 
 private:
 #if defined(__GNUC__)
-    __attribute__((noinline)) void grow_buffer()
+    __attribute__((noinline))
 #elif defined(_MSC_VER)
-    __declspec(noinline) void grow_buffer()
-#else
-    void grow_buffer()
+    __declspec(noinline)
 #endif
+    void grow_buffer()
     {
         size_type const capacity(capacity_ * 4);
 

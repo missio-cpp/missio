@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_string_hpp
@@ -14,9 +14,6 @@
 // Application headers
 #include <missio/format/detail/parse_format.hpp>
 
-// BOOST headers
-#include <boost/noncopyable.hpp>
-
 // STL headers
 #include <string>
 
@@ -26,8 +23,7 @@ namespace missio
 namespace format
 {
 
-class string :
-    private boost::noncopyable
+class string
 {
 public:
     string(std::string const& format) :
@@ -35,6 +31,9 @@ public:
     {
         detail::parse_format(format_.data(), format_.size(), items_);
     }
+
+    string(string const&) = delete;
+    string& operator=(string const&) = delete;
 
     detail::item_buffer const& items() const
     {

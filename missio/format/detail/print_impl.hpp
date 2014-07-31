@@ -25,34 +25,18 @@ namespace format
 namespace detail
 {
 
-template <unsigned int N = 0, typename Sink>
-void insert_impl(Sink& sink, unsigned int index)
+template <std::uint32_t N = 0, typename Sink>
+void insert(Sink& /*sink*/, unsigned int /*index*/)
 {
 }
 
-template <unsigned int N = 0, typename Sink, typename Value, typename ... Args>
-void insert_impl(Sink& sink, unsigned int index, Value const& value, Args const& ... args)
+template <std::uint32_t N = 0, typename Sink, typename Value, typename ... Args>
+void insert(Sink& sink, unsigned int index, Value const& value, Args const& ... args)
 {
     if(N == index)
         format_value(sink, value);
     else
-        insert_impl<N + 1>(sink, index, args...);
-}
-
-template <typename Sink, typename ... Args>
-void insert(Sink& sink, unsigned int index, Args const& ... args)
-{
-    insert_impl<>(sink, index, args...);
-}
-
-template <typename Sink, typename Format, typename ... Args>
-void print_impl(Sink& sink, Format const& format, Args const& ... args)
-{
-    for(auto const& item : format.items())
-    {
-        insert(sink, item.index, args...);
-        insert_string(sink, item.string);
-    }
+        insert<N + 1>(sink, index, args...);
 }
 
 template <typename Sink, typename Format, typename ... Args>
@@ -61,7 +45,11 @@ void print(Sink& sink, Format const& format, Args const& ... args)
     typename traits::sink_traits<Sink>::adapter_type sink_adapter(sink);
     typename traits::format_traits<Format>::adapter_type format_adapter(format);
 
-    print_impl(sink_adapter, format_adapter, args...);
+    for(format_item const& item : format.items())
+    {
+        insert<>(sink, item.index, args...);
+        insert_string(sink, item.string);
+    }
 }
 
 }   // namespace detail

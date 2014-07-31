@@ -30,7 +30,7 @@ struct type_adapter<boost::posix_time::time_duration>
     {
         write(sink, dec(value.hours(), 2), ':', dec(value.minutes(), 2), ':', dec(value.seconds(), 2));
 
-        if(0 != value.fractional_seconds())
+        if(value.fractional_seconds() > 0)
             write(sink, '.', dec(value.fractional_seconds(), 6));
     }
 };

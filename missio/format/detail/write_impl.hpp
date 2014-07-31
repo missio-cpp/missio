@@ -24,7 +24,7 @@ namespace detail
 {
 
 template <typename Sink>
-void write_impl(Sink& sink)
+void write_impl(Sink& /*sink*/)
 {
 }
 

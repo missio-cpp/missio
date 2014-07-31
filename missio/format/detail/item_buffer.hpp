@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_item_buffer_hpp
@@ -14,9 +14,6 @@
 // Application headers
 #include <missio/format/detail/format_item.hpp>
 
-// BOOST headers
-#include <boost/noncopyable.hpp>
-
 // STL headers
 #include <cstddef>
 
@@ -28,8 +25,7 @@ namespace format
 namespace detail
 {
 
-class item_buffer :
-    private boost::noncopyable
+class item_buffer
 {
 public:
     typedef format_item value_type;
@@ -44,6 +40,9 @@ public:
         size_(0)
     {
     }
+
+    item_buffer(item_buffer const&) = delete;
+    item_buffer& operator=(item_buffer const&) = delete;
 
     bool empty() const
     {

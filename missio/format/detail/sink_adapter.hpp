@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_sink_adapter_hpp
@@ -36,6 +36,9 @@ public:
     {
     }
 
+    sink_adapter(sink_adapter const&) = default;
+    sink_adapter& operator=(sink_adapter const&) = delete;
+
     ~sink_adapter()
     {
         sink_writer<Sink>::call(sink_, buffer_);
@@ -45,10 +48,6 @@ public:
     {
         buffer_.put(ch);
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    sink_adapter& operator=(sink_adapter const& other);
 
 private:
     Sink& sink_;
@@ -65,6 +64,9 @@ public:
     {
     }
 
+    sink_adapter(sink_adapter const&) = default;
+    sink_adapter& operator=(sink_adapter const&) = delete;
+
     ~sink_adapter()
     {
         sink_[pos_] = '\0';
@@ -75,10 +77,6 @@ public:
         if(pos_ < N - 1)
             sink_[pos_++] = ch;
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    sink_adapter& operator=(sink_adapter const& other);
 
 private:
     char* sink_;

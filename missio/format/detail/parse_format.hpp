@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_parse_format_hpp
@@ -35,7 +35,7 @@ inline void parse_format(char const* format, std::size_t size, item_buffer& item
 
     static format_grammar<char const*> const grammar;
 
-    if(!qi::parse(first, last, grammar, items) || first != last)
+    if(!boost::spirit::qi::parse(first, last, grammar, items) || first != last)
         throw exception("invalid format near: " + std::string(first, last));
 }
 
