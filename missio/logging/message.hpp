@@ -19,9 +19,9 @@
 #include <missio/logging/detail/process_id.hpp>
 #include <missio/logging/detail/thread_id.hpp>
 #include <missio/logging/detail/timestamp.hpp>
-#include <missio/format/adapters/exception.hpp>
 #include <missio/format/adapters/pointer.hpp>
 #include <missio/format/adapters/boost.hpp>
+#include <missio/format/adapters/std.hpp>
 #include <missio/format/write.hpp>
 #include <missio/format/print.hpp>
 
@@ -43,29 +43,8 @@ public:
     message(message const&) = delete;
     message& operator=(message const&) = delete;
 
-    message(message&& other) :
-        severity_(other.severity_),
-        location_(other.location_),
-        timestamp_(other.timestamp_),
-        message_id_(other.message_id_),
-        process_id_(other.process_id_),
-        thread_id_(other.thread_id_),
-        buffer_(std::move(other.buffer_))
-    {
-    }
-
-    message& operator=(message&& other)
-    {
-        severity_ = other.severity_;
-        location_ = other.location_;
-        timestamp_ = other.timestamp_;
-        message_id_ =  other.message_id_;
-        process_id_ = other.process_id_;
-        thread_id_ = other.thread_id_;
-        buffer_ = std::move(other.buffer_);
-
-        return *this;
-    }
+    message(message&&) = default;
+    message& operator=(message&&) = default;
 
     severity get_severity() const;
 
