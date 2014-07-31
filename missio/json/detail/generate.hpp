@@ -26,7 +26,7 @@ template <typename OutputIterator>
 bool generate(value const& value, OutputIterator out)
 {
     static value_generator<OutputIterator> const generator;
-    return karma::generate(out, generator, value);
+    return boost::spirit::karma::generate(out, generator, value);
 }
 
 }   // namespace detail

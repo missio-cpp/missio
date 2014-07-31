@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(constructor_test)
 {
     missio::json::object object;
 
-    BOOST_CHECK(object.empty());
+    BOOST_CHECK_EQUAL(object.empty(), true);
     BOOST_CHECK_EQUAL(object.size(), 0u);
 }
 
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(value_type_insert_test)
     missio::json::object object;
     missio::json::object::value_type value("key", 15);
 
-    BOOST_CHECK(object.insert(object.begin(), value));
+    BOOST_CHECK_EQUAL(object.insert(object.begin(), value), true);
 
     BOOST_CHECK_EQUAL(object.size(), 1u);
     BOOST_CHECK_EQUAL((*object.begin()).first, value.first);
@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_CASE(key_value_insert_test)
     missio::json::string key("key");
     missio::json::value value(15);
 
-    BOOST_CHECK(object.insert(key, value));
-    BOOST_CHECK(!object.insert(key, value));
+    BOOST_CHECK_EQUAL(object.insert(key, value), true);
+    BOOST_CHECK_EQUAL(object.insert(key, value), false);
 
     BOOST_CHECK_EQUAL(object.size(), 1u);
     BOOST_CHECK_EQUAL((*object.begin()).first, key);
@@ -82,12 +82,12 @@ BOOST_AUTO_TEST_CASE(contains_test)
     missio::json::string key("key");
     missio::json::value value(15);
 
-    BOOST_CHECK(!object.contains(key));
+    BOOST_CHECK_EQUAL(object.contains(key), false);
 
     object.insert(key, value);
 
     BOOST_CHECK_EQUAL(object.size(), 1u);
-    BOOST_CHECK(object.contains(key));
+    BOOST_CHECK_EQUAL(object.contains(key), true);
 }
 
 BOOST_AUTO_TEST_CASE(iterator_erase_test)
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(iterator_erase_test)
 
     object.erase(object.begin());
 
-    BOOST_CHECK(object.empty());
+    BOOST_CHECK_EQUAL(object.empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(key_erase_test)
@@ -126,12 +126,12 @@ BOOST_AUTO_TEST_CASE(key_erase_test)
     object.erase(key1);
 
     BOOST_CHECK_EQUAL(object.size(), 1u);
-    BOOST_CHECK(!object.contains(key1));
-    BOOST_CHECK(object.contains(key2));
+    BOOST_CHECK_EQUAL(object.contains(key1), false);
+    BOOST_CHECK_EQUAL(object.contains(key2), true);
 
     object.erase(key2);
 
-    BOOST_CHECK(object.empty());
+    BOOST_CHECK_EQUAL(object.empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(assignment_test)
@@ -149,8 +149,8 @@ BOOST_AUTO_TEST_CASE(assignment_test)
     object2 = object1;
 
     BOOST_CHECK_EQUAL(object2.size(), 2u);
-    BOOST_CHECK(object2.contains(key1));
-    BOOST_CHECK(object2.contains(key2));
+    BOOST_CHECK_EQUAL(object2.contains(key1), true);
+    BOOST_CHECK_EQUAL(object2.contains(key2), true);
 }
 
 BOOST_AUTO_TEST_CASE(move_assignment_test)
@@ -167,10 +167,10 @@ BOOST_AUTO_TEST_CASE(move_assignment_test)
 
     object2 = std::move(object1);
 
-    BOOST_CHECK(object1.empty());
+    BOOST_CHECK_EQUAL(object1.empty(), true);
     BOOST_CHECK_EQUAL(object2.size(), 2u);
-    BOOST_CHECK(object2.contains(key1));
-    BOOST_CHECK(object2.contains(key2));
+    BOOST_CHECK_EQUAL(object2.contains(key1), true);
+    BOOST_CHECK_EQUAL(object2.contains(key2), true);
 }
 
 BOOST_AUTO_TEST_CASE(clear_test)
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(clear_test)
 
     object.clear();
 
-    BOOST_CHECK(object.empty());
+    BOOST_CHECK_EQUAL(object.empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(index_operator_test)
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(index_operator_test)
 
     object[key1] = value1;
 
-    BOOST_CHECK(object.contains(key1));
+    BOOST_CHECK_EQUAL(object.contains(key1), true);
     BOOST_CHECK_EQUAL(object.size(), 1u);
     BOOST_CHECK_EQUAL(object[key1], value1);
 
@@ -210,8 +210,8 @@ BOOST_AUTO_TEST_CASE(index_operator_test)
 
     object[key2] = value1;
 
-    BOOST_CHECK(object.contains(key1));
-    BOOST_CHECK(object.contains(key2));
+    BOOST_CHECK_EQUAL(object.contains(key1), true);
+    BOOST_CHECK_EQUAL(object.contains(key2), true);
     BOOST_CHECK_EQUAL(object.size(), 2u);
     BOOST_CHECK_EQUAL(object[key1], value2);
     BOOST_CHECK_EQUAL(object[key2], value1);

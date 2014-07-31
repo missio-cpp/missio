@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_base64_hpp
@@ -15,6 +15,7 @@
 #include <missio/json/exception.hpp>
 
 // STL headers
+#include <cstdint>
 #include <vector>
 #include <string>
 
@@ -29,30 +30,32 @@ namespace detail
 class base64
 {
 public:
+    base64() = delete;
+
     template <typename InputIterator, typename OutputIterator>
     static void encode(InputIterator first, InputIterator last, OutputIterator dest);
 
     template <typename InputIterator, typename OutputIterator>
     static void decode(InputIterator first, InputIterator last, OutputIterator dest);
 
-    static std::string encode(std::vector<unsigned char> const& value);
-    static std::vector<unsigned char> decode(std::string const& value);
+    static std::string encode(std::vector<std::uint8_t> const& value);
+    static std::vector<std::uint8_t> decode(std::string const& value);
 
 private:
-    static char from_6_bit(unsigned char ch);
-    static unsigned char to_6_bit(unsigned char ch);
+    static char from_6_bit(std::uint8_t ch);
+    static std::uint8_t to_6_bit(std::uint8_t ch);
 };
 
 template <typename InputIterator, typename OutputIterator>
 void base64::encode(InputIterator first, InputIterator last, OutputIterator dest)
 {
-    std::size_t count = 0;
-    unsigned char bytes[3];
+    std::size_t count;
+    std::uint8_t bytes[3];
 
     while(first != last)
     {
         for(count = 0; first != last && count < 3; ++first, ++count)
-            bytes[count] = static_cast<unsigned char>(*first);
+            bytes[count] = static_cast<std::uint8_t>(*first);
 
         switch(count)
         {
@@ -83,13 +86,13 @@ void base64::encode(InputIterator first, InputIterator last, OutputIterator dest
 template <typename InputIterator, typename OutputIterator>
 void base64::decode(InputIterator first, InputIterator last, OutputIterator dest)
 {
-    std::size_t count = 0;
-    unsigned char bytes[4];
+    std::size_t count;
+    std::uint8_t bytes[4];
 
     while(first != last)
     {
         for(count = 0; first != last && count < 4; ++first, ++count)
-            bytes[count] = static_cast<unsigned char>(*first);
+            bytes[count] = static_cast<std::uint8_t>(*first);
 
         if(4 != count)
             throw exception("invalid BASE-64 data");

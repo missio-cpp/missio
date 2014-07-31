@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_string_hpp
@@ -24,25 +24,20 @@ namespace json
 class string
 {
 public:
-    string();
-    ~string();
+    string() = default;
 
     string(char const* str);
     string(wchar_t const* str);
 
-    string(char const* str, std::size_t size);
-    string(wchar_t const* str, std::size_t size);
-
+    string(std::string&& str);
     string(std::string const& str);
     string(std::wstring const& str);
 
-    string(std::string&& str);
+    string(string const&) = default;
+    string& operator=(string const&) = default;
 
-    string(string&& other);
-    string& operator=(string&& other);
-
-    string(string const& other);
-    string& operator=(string const& other);
+    string(string&&) = default;
+    string& operator=(string&&) = default;
 
     char const* c_str() const;
 

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -64,10 +64,10 @@ BOOST_AUTO_TEST_CASE(construct_with_compatible_types_test)
     missio::json::value value2(short(0));
     BOOST_CHECK_EQUAL(value2.variant().which(), 2);
 
-    missio::json::value value3(std::string(""));
+    missio::json::value value3(std::string());
     BOOST_CHECK_EQUAL(value3.variant().which(), 4);
 
-    missio::json::value value4(std::wstring(L""));
+    missio::json::value value4(std::wstring());
     BOOST_CHECK_EQUAL(value4.variant().which(), 4);
 }
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(assignment_changes_type_test)
     value = missio::json::boolean(false);
     BOOST_CHECK_EQUAL(value.variant().which(), 3);
 
-    value = missio::json::string("");
+    value = missio::json::string();
     BOOST_CHECK_EQUAL(value.variant().which(), 4);
 
     value = missio::json::array();
@@ -160,19 +160,19 @@ BOOST_AUTO_TEST_CASE(null_value_test)
 {
     missio::json::value value;  // null is default
 
-    BOOST_CHECK(value.is<missio::json::null>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::null>(), missio::json::null_value);
     BOOST_CHECK_EQUAL(value.as<missio::json::null>(), missio::json::null_value);
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<int>());
-    BOOST_CHECK(!value.is<bool>());
-    BOOST_CHECK(!value.is<double>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
-    BOOST_CHECK(!value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<int>(), false);
+    BOOST_CHECK_EQUAL(value.is<bool>(), false);
+    BOOST_CHECK_EQUAL(value.is<double>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), false);
 
     BOOST_CHECK_THROW(value.as<int>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<bool>(), missio::json::exception);
@@ -186,12 +186,12 @@ BOOST_AUTO_TEST_CASE(integer_value_test)
 {
     missio::json::value value = 42;
 
-    BOOST_CHECK(value.is<char>());
-    BOOST_CHECK(value.is<short>());
-    BOOST_CHECK(value.is<int>());
-    BOOST_CHECK(value.is<long>());
-    BOOST_CHECK(value.is<double>());    // convertible
-    BOOST_CHECK(value.is<bool>());      // convertible
+    BOOST_CHECK_EQUAL(value.is<char>(), true);
+    BOOST_CHECK_EQUAL(value.is<short>(), true);
+    BOOST_CHECK_EQUAL(value.is<int>(), true);
+    BOOST_CHECK_EQUAL(value.is<long>(), true);
+    BOOST_CHECK_EQUAL(value.is<double>(), true);    // convertible
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);      // convertible
 
     BOOST_CHECK_EQUAL(value.get<missio::json::integer>(), 42);
 
@@ -204,10 +204,10 @@ BOOST_AUTO_TEST_CASE(integer_value_test)
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<missio::json::null>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
-    BOOST_CHECK(!value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), false);
 
     BOOST_CHECK_THROW(value.as<missio::json::null>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<missio::json::array>(), missio::json::exception);
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(integer_value_test)
     BOOST_CHECK_THROW(value.as<missio::json::string>(), missio::json::exception);
 }
 
-// should be defined in global scope due to GCC error
+// should be defined in global scope otherwise GCC does not recognize it as enumeration
 enum numbers
 {
     zero,
@@ -228,12 +228,12 @@ BOOST_AUTO_TEST_CASE(enum_value_test)
 {
     missio::json::value value = two;
 
-    BOOST_CHECK(value.is<char>());
-    BOOST_CHECK(value.is<short>());
-    BOOST_CHECK(value.is<int>());
-    BOOST_CHECK(value.is<long>());
-    BOOST_CHECK(value.is<double>());    // convertible
-    BOOST_CHECK(value.is<bool>());      // convertible
+    BOOST_CHECK_EQUAL(value.is<char>(), true);
+    BOOST_CHECK_EQUAL(value.is<short>(), true);
+    BOOST_CHECK_EQUAL(value.is<int>(), true);
+    BOOST_CHECK_EQUAL(value.is<long>(), true);
+    BOOST_CHECK_EQUAL(value.is<double>(), true);    // convertible
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);      // convertible
 
     BOOST_CHECK_EQUAL(value.get<missio::json::integer>(), 2);
 
@@ -247,10 +247,10 @@ BOOST_AUTO_TEST_CASE(enum_value_test)
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<missio::json::null>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
-    BOOST_CHECK(!value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), false);
 
     BOOST_CHECK_THROW(value.as<missio::json::null>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<missio::json::array>(), missio::json::exception);
@@ -262,10 +262,10 @@ BOOST_AUTO_TEST_CASE(real_value_test)
 {
     missio::json::value value = 3.141592;
 
-    BOOST_CHECK(value.is<float>());
-    BOOST_CHECK(value.is<double>());
-    BOOST_CHECK(value.is<int>());       // convertible
-    BOOST_CHECK(value.is<bool>());      // convertible
+    BOOST_CHECK_EQUAL(value.is<float>(), true);
+    BOOST_CHECK_EQUAL(value.is<double>(), true);
+    BOOST_CHECK_EQUAL(value.is<int>(), true);       // convertible
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);      // convertible
 
     BOOST_CHECK_CLOSE(value.get<missio::json::real>(), 3.141592, 0.000001);
 
@@ -276,10 +276,10 @@ BOOST_AUTO_TEST_CASE(real_value_test)
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<missio::json::null>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
-    BOOST_CHECK(!value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), false);
 
     BOOST_CHECK_THROW(value.as<missio::json::null>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<missio::json::array>(), missio::json::exception);
@@ -291,9 +291,9 @@ BOOST_AUTO_TEST_CASE(boolean_value_test)
 {
     missio::json::value value = true;
 
-    BOOST_CHECK(value.is<bool>());
-    BOOST_CHECK(value.is<int>());       // convertible
-    BOOST_CHECK(value.is<double>());    // convertible
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);
+    BOOST_CHECK_EQUAL(value.is<int>(), true);       // convertible
+    BOOST_CHECK_EQUAL(value.is<double>(), true);    // convertible
 
     BOOST_CHECK_EQUAL(value.get<missio::json::boolean>(), true);
 
@@ -303,10 +303,10 @@ BOOST_AUTO_TEST_CASE(boolean_value_test)
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<missio::json::null>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
-    BOOST_CHECK(!value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), false);
 
     BOOST_CHECK_THROW(value.as<missio::json::null>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<missio::json::array>(), missio::json::exception);
@@ -318,9 +318,9 @@ BOOST_AUTO_TEST_CASE(string_value_test)
 {
     missio::json::value value = missio::json::string("string");
 
-    BOOST_CHECK(value.is<missio::json::string>());
-    BOOST_CHECK(value.is<std::string>());
-    BOOST_CHECK(value.is<std::wstring>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::wstring>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::string>(), "string");
 
@@ -330,12 +330,12 @@ BOOST_AUTO_TEST_CASE(string_value_test)
 
     // test invalid conversions
 
-    BOOST_CHECK(!value.is<int>());
-    BOOST_CHECK(!value.is<bool>());
-    BOOST_CHECK(!value.is<double>());
-    BOOST_CHECK(!value.is<missio::json::null>());
-    BOOST_CHECK(!value.is<missio::json::array>());
-    BOOST_CHECK(!value.is<missio::json::object>());
+    BOOST_CHECK_EQUAL(value.is<int>(), false);
+    BOOST_CHECK_EQUAL(value.is<bool>(), false);
+    BOOST_CHECK_EQUAL(value.is<double>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), false);
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), false);
 
     BOOST_CHECK_THROW(value.as<int>(), missio::json::exception);
     BOOST_CHECK_THROW(value.as<bool>(), missio::json::exception);
@@ -349,9 +349,9 @@ BOOST_AUTO_TEST_CASE(literal_value_test)
 {
     missio::json::value value = "ascii";
 
-    BOOST_CHECK(value.is<missio::json::string>());
-    BOOST_CHECK(value.is<std::string>());
-    BOOST_CHECK(value.is<std::wstring>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::wstring>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::string>(), "ascii");
 
@@ -364,9 +364,9 @@ BOOST_AUTO_TEST_CASE(wide_literal_value_test)
 {
     missio::json::value value = L"wide";
 
-    BOOST_CHECK(value.is<missio::json::string>());
-    BOOST_CHECK(value.is<std::string>());
-    BOOST_CHECK(value.is<std::wstring>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.is<std::wstring>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::string>(), "wide");
 
@@ -379,7 +379,7 @@ BOOST_AUTO_TEST_CASE(array_value_test)
 {
     missio::json::value value = missio::json::array();
 
-    BOOST_CHECK(value.is<missio::json::array>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::array>(), missio::json::array());
     BOOST_CHECK_EQUAL(value.as<missio::json::array>(), missio::json::array());
@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE(object_value_test)
 {
     missio::json::value value = missio::json::object();
 
-    BOOST_CHECK(value.is<missio::json::object>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
 
     BOOST_CHECK_EQUAL(value.get<missio::json::object>(), missio::json::object());
     BOOST_CHECK_EQUAL(value.as<missio::json::object>(), missio::json::object());

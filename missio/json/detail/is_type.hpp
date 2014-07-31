@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_is_visitor_hpp
@@ -12,9 +12,11 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // BOOST headers
-#include <boost/type_traits/conversion_traits.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
+
+// STL headers
+#include <type_traits>
 
 
 namespace missio
@@ -38,7 +40,7 @@ public:
     template <typename U>
     bool operator()(U) const
     {
-        return boost::is_convertible<U, T>();
+        return std::is_convertible<U, T>();
     }
 };
 

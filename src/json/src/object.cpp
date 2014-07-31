@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -22,38 +22,6 @@ namespace missio
 {
 namespace json
 {
-
-object::object()
-{
-}
-
-object::~object()
-{
-}
-
-object::object(object&& other) :
-    values_(std::move(other.values_))
-{
-}
-
-object& object::operator=(object&& other)
-{
-    if(&other != this)
-        values_ = std::move(other.values_);
-    return *this;
-}
-
-object::object(object const& other) :
-    values_(other.values_)
-{
-}
-
-object& object::operator=(object const& other)
-{
-    if(&other != this)
-        values_ = other.values_;
-    return *this;
-}
 
 bool object::empty() const
 {
@@ -120,6 +88,17 @@ void object::erase(string const& key)
     boost::remove_erase_if(values_, [&key](value_type const& value){ return value.first == key; });
 }
 
+bool object::insert(iterator position, value_type&& value)
+{
+    if(!contains(value.first))
+    {
+        values_.insert(position, std::forward<value_type>(value));
+        return true;
+    }
+
+    return false;
+}
+
 bool object::insert(iterator position, value_type const& value)
 {
     if(!contains(value.first))
@@ -131,11 +110,11 @@ bool object::insert(iterator position, value_type const& value)
     return false;
 }
 
-bool object::insert(string const& key, value const& value)
+bool object::insert(string&& key, value&& value)
 {
     if(!contains(key))
     {
-        values_.emplace_back(key, value);
+        values_.push_back(value_type(key, value));
         return true;
     }
 

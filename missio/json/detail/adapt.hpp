@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_adapt_hpp
@@ -16,11 +16,9 @@
 #include <missio/json/string.hpp>
 #include <missio/json/binary.hpp>
 
-// BOOST headers
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits.hpp>
-
 // STL headers
+#include <type_traits>
+#include <utility>
 #include <string>
 
 
@@ -43,7 +41,7 @@ struct adapt<T const> : adapt<T>
 };
 
 template <typename T>
-struct adapt<T, typename boost::enable_if<boost::is_integral<T> >::type>
+struct adapt<T, typename std::enable_if<std::is_integral<T>::value>::type>
 {
     typedef integer type;
 
@@ -54,7 +52,7 @@ struct adapt<T, typename boost::enable_if<boost::is_integral<T> >::type>
 };
 
 template <typename T>
-struct adapt<T, typename boost::enable_if<boost::is_float<T> >::type>
+struct adapt<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 {
     typedef real type;
 
@@ -65,7 +63,7 @@ struct adapt<T, typename boost::enable_if<boost::is_float<T> >::type>
 };
 
 template <typename T>
-struct adapt<T, typename boost::enable_if<boost::is_enum<T> >::type>
+struct adapt<T, typename std::enable_if<std::is_enum<T>::value>::type>
 {
     typedef integer type;
 
@@ -81,7 +79,7 @@ struct adapt<T, typename boost::enable_if<boost::is_enum<T> >::type>
 };
 
 template <typename T>
-struct adapt<reference<T> >
+struct adapt<reference<T>>
 {
     typedef T const& type;
 
@@ -92,7 +90,7 @@ struct adapt<reference<T> >
 };
 
 template <typename T>
-struct adapt<reference<T const> >
+struct adapt<reference<T const>>
 {
     typedef T const& type;
 
@@ -119,13 +117,13 @@ struct adapt<binary>
 };
 
 template <typename Char, typename Traits>
-struct adapt<std::basic_string<Char, Traits> >
+struct adapt<std::basic_string<Char, Traits>>
 {
     typedef string type;
 
-    static string to(std::basic_string<Char, Traits> const& value)
+    static string to(std::basic_string<Char, Traits>&& value)
     {
-        return string(value);
+        return string(std::forward<std::basic_string<Char, Traits>>(value));
     }
 };
 

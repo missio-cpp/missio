@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(array_constructor_test)
     BOOST_CHECK_THROW((missio::json::array_cref)(value), missio::json::exception);
 
     BOOST_CHECK_NO_THROW((missio::json::array_ref)(value));
-    BOOST_CHECK(value.is<missio::json::array>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
 }
 
 BOOST_AUTO_TEST_CASE(object_constructor_test)
@@ -53,20 +53,20 @@ BOOST_AUTO_TEST_CASE(object_constructor_test)
     missio::json::object_cref object_cref(object);
 
     BOOST_CHECK_EQUAL(object_ref->size(), 1u);
-    BOOST_CHECK(object_ref->contains(key));
+    BOOST_CHECK_EQUAL(object_ref->contains(key), true);
 
     BOOST_CHECK_EQUAL(object_cref->size(), 1u);
-    BOOST_CHECK(object_ref->contains(key));
+    BOOST_CHECK_EQUAL(object_ref->contains(key), true);
 
     missio::json::object_cref other_object_cref(object_ref);
 
     BOOST_CHECK_EQUAL(other_object_cref->size(), 1u);
-    BOOST_CHECK(other_object_cref->contains(key));
+    BOOST_CHECK_EQUAL(other_object_cref->contains(key), true);
 
     BOOST_CHECK_THROW((missio::json::object_cref)(value), missio::json::exception);
 
     BOOST_CHECK_NO_THROW((missio::json::object_ref)(value));
-    BOOST_CHECK(value.is<missio::json::object>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
 }
 
 BOOST_AUTO_TEST_CASE(array_reference_test)
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(array_reference_test)
 
     missio::json::value const value = array_ref;
 
-    BOOST_CHECK(value.is<missio::json::array>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
     BOOST_CHECK_EQUAL(value[0], value1);
     BOOST_CHECK_EQUAL(value[1], value2);
 }
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(array_const_reference_test)
 
     missio::json::value const value = array_cref;
 
-    BOOST_CHECK(value.is<missio::json::array>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
     BOOST_CHECK_EQUAL(value[0], value1);
     BOOST_CHECK_EQUAL(value[1], value2);
 }
@@ -130,14 +130,14 @@ BOOST_AUTO_TEST_CASE(object_reference_test)
     object_ref[key1] = value1;
     object_ref[key2] = value2;
 
-    BOOST_CHECK(object.contains(key1));
-    BOOST_CHECK(object.contains(key2));
+    BOOST_CHECK_EQUAL(object.contains(key1), true);
+    BOOST_CHECK_EQUAL(object.contains(key2), true);
     BOOST_CHECK_EQUAL(object[key1], value1);
     BOOST_CHECK_EQUAL(object[key2], value2);
 
     missio::json::value const value = object_ref;
 
-    BOOST_CHECK(value.is<missio::json::object>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
     BOOST_CHECK_EQUAL(value[key1], value1);
     BOOST_CHECK_EQUAL(value[key2], value2);
 }
@@ -152,22 +152,22 @@ BOOST_AUTO_TEST_CASE(object_const_reference_test)
 
     missio::json::object_cref object_cref(object);
 
-    BOOST_CHECK(!object_cref->contains(key1));
-    BOOST_CHECK(!object_cref->contains(key2));
+    BOOST_CHECK_EQUAL(object_cref->contains(key1), false);
+    BOOST_CHECK_EQUAL(object_cref->contains(key2), false);
     BOOST_CHECK_THROW(object_cref[key1], missio::json::exception);
     BOOST_CHECK_THROW(object_cref[key2], missio::json::exception);
 
     object[key1] = value1;
     object[key2] = value2;
 
-    BOOST_CHECK(object_cref->contains(key1));
-    BOOST_CHECK(object_cref->contains(key2));
+    BOOST_CHECK_EQUAL(object_cref->contains(key1), true);
+    BOOST_CHECK_EQUAL(object_cref->contains(key2), true);
     BOOST_CHECK_EQUAL(object_cref[key1], value1);
     BOOST_CHECK_EQUAL(object_cref[key2], value2);
 
     missio::json::value const value = object_cref;
 
-    BOOST_CHECK(value.is<missio::json::object>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
     BOOST_CHECK_EQUAL(value[key1], value1);
     BOOST_CHECK_EQUAL(value[key2], value2);
 }

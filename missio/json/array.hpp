@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_array_hpp
@@ -33,14 +33,13 @@ public:
     typedef std::vector<value_type>::const_iterator const_iterator;
 
 public:
-    array();
-    ~array();
+    array() = default;
 
-    array(array&& other);
-    array& operator=(array&& other);
+    array(array const&) = default;
+    array& operator=(array const&) = default;
 
-    array(array const& other);
-    array& operator=(array const& other);
+    array(array&&) = default;
+    array& operator=(array&&) = default;
 
     bool empty() const;
     void clear();
@@ -66,14 +65,15 @@ public:
     value& back();
     value const& back() const;
 
-    void push_back(value const& value);
     void push_back(value&& value);
+    void push_back(value const& value);
 
     void pop_back();
 
     void erase(iterator position);
     void erase(iterator first, iterator last);
 
+    void insert(iterator position, value&& value);
     void insert(iterator position, value const& value);
 
     value& operator[](std::size_t index);

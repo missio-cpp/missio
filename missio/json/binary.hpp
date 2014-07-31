@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_binary_hpp
@@ -15,6 +15,7 @@
 #include <missio/json/string.hpp>
 
 // STL headers
+#include <cstdint>
 #include <vector>
 
 
@@ -30,38 +31,67 @@ public:
     static string to_base64_string(binary const& value);
 
 public:
-    binary();
+    binary() = default;
 
-    explicit binary(std::vector<unsigned char>&& data);
-    explicit binary(std::vector<unsigned char> const& data);
+    binary(std::initializer_list<std::uint8_t> data);
+    binary(std::uint8_t const* data, std::size_t size);
 
-    binary(unsigned char const* data, std::size_t size);
+    template <std::size_t N>
+    explicit binary(std::uint8_t const* (&data)[N]);
 
-    binary(binary&& other);
-    binary& operator=(binary&& other);
+    template <template <typename ...> class Container, typename ... Args>
+    explicit binary(Container<std::uint8_t, Args...> const& data);
 
-    binary(binary const& other);
-    binary& operator=(binary const& other);
+    binary(binary const&) = default;
+    binary& operator=(binary const&) = default;
 
-    void assign(std::vector<unsigned char> const& data);
-    void append(std::vector<unsigned char> const& data);
+    binary(binary&&) = default;
+    binary& operator=(binary&&) = default;
 
-    void assign(unsigned char const* data, std::size_t size);
-    void append(unsigned char const* data, std::size_t size);
+    void assign(std::uint8_t const* data, std::size_t size);
+    void append(std::uint8_t const* data, std::size_t size);
+
+    template <std::size_t N>
+    void assign(std::uint8_t const* (&data)[N]);
+
+    template <std::size_t N>
+    void append(std::uint8_t const* (&data)[N]);
 
     void clear();
 
     bool empty() const;
     std::size_t size() const;
 
-    std::vector<unsigned char> const& data() const;
+    std::uint8_t const* data() const;
 
     friend bool operator<(binary const& lhs, binary const& rhs);
     friend bool operator==(binary const& lhs, binary const& rhs);
 
 private:
-    std::vector<unsigned char> data_;
+    std::vector<std::uint8_t> data_;
 };
+
+template <std::size_t N>
+binary::binary(std::uint8_t const* (&data)[N]) : binary(data, N)
+{
+}
+
+template <template <typename ...> class Container, typename ... Args>
+binary::binary(Container<std::uint8_t, Args...> const& data) : binary(data.data(), data.size())
+{
+}
+
+template <std::size_t N>
+void binary::assign(std::uint8_t const* (&data)[N])
+{
+    assign(data, N);
+}
+
+template <std::size_t N>
+void binary::append(std::uint8_t const* (&data)[N])
+{
+    append(data, N);
+}
 
 inline bool operator!=(binary const& lhs, binary const& rhs) { return !operator==(lhs, rhs); }
 inline bool operator<=(binary const& lhs, binary const& rhs) { return !operator<(rhs, lhs); }

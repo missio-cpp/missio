@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ namespace json
 namespace detail
 {
 
-std::string base64::encode(std::vector<unsigned char> const& input)
+std::string base64::encode(std::vector<std::uint8_t> const& input)
 {
     std::string output;
 
@@ -30,9 +30,9 @@ std::string base64::encode(std::vector<unsigned char> const& input)
     return output;
 }
 
-std::vector<unsigned char> base64::decode(std::string const& input)
+std::vector<std::uint8_t> base64::decode(std::string const& input)
 {
-    std::vector<unsigned char> output;
+    std::vector<std::uint8_t> output;
 
     output.reserve(input.size() * 3 / 4);
 
@@ -41,7 +41,7 @@ std::vector<unsigned char> base64::decode(std::string const& input)
     return output;
 }
 
-char base64::from_6_bit(unsigned char ch)
+char base64::from_6_bit(std::uint8_t ch)
 {
     static char const lookup_table[] =
     {
@@ -58,11 +58,11 @@ char base64::from_6_bit(unsigned char ch)
     return lookup_table[ch];
 }
 
-unsigned char base64::to_6_bit(unsigned char ch)
+std::uint8_t base64::to_6_bit(std::uint8_t ch)
 {
-    static unsigned char const nop(255);
+    static std::uint8_t const nop(255);
 
-    static unsigned char const lookup_table[] =
+    static std::uint8_t const lookup_table[] =
     {
         nop, nop, nop, nop, nop, nop, nop, nop,
         nop, nop, nop, nop, nop, nop, nop, nop,
@@ -82,7 +82,7 @@ unsigned char base64::to_6_bit(unsigned char ch)
          49,  50,  51, nop, nop, nop, nop, nop
     };
 
-    unsigned char const value(ch < 128 ? lookup_table[ch] : nop);
+    std::uint8_t const value = ch < 128 ? lookup_table[ch] : nop;
 
     if(nop == value)
         throw exception("invalid BASE-64 character");

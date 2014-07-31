@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_value_hpp
@@ -24,8 +24,10 @@
 #include <missio/json/detail/null_traits.hpp>
 
 // BOOST headers
-#include <boost/type_traits.hpp>
 #include <boost/variant.hpp>
+
+// STL headers
+#include <utility>
 
 
 namespace missio
@@ -50,41 +52,27 @@ public:
     typedef variant_type::types types;
 
 public:
-    value();
-    ~value();
+    value() = default;
 
-    value(value&& other);
-    value& operator=(value&& other);
+    value(value const&) = default;
+    value& operator=(value const&) = default;
 
-    value(value const& other);
-    value& operator=(value const& other);
+    value(value&&) = default;
+    value& operator=(value&&) = default;
 
-    void assign(value&& other);
-    void assign(value const& other);
+    template <typename T> value(T const& value);
+    template <typename T> value& operator=(T const& value);
 
-    template <typename T>
-    inline value(T const& value);
+    template <typename T> value(T&& value);
+    template <typename T> value& operator=(T&& value);
 
-    template <typename T>
-    inline value& operator=(T const& value);
+    template <typename T> bool is() const;
 
-    template <typename T>
-    inline void assign(T const& value);
+    template <typename T> T as() const;
+    template <typename T> operator T() const;
 
-    template <typename T>
-    inline bool is() const;
-
-    template <typename T>
-    inline T as() const;
-
-    template <typename T>
-    inline operator T() const;
-
-    template <typename T>
-    inline T& get();
-
-    template <typename T>
-    inline T const& get() const;
+    template <typename T> T& get();
+    template <typename T> T const& get() const;
 
     int which() const;
 

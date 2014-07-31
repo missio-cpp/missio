@@ -39,7 +39,7 @@ struct value_grammar : qi::grammar<Iterator, value(), qi::space_type>
         using qi::bool_;
 
         typedef qi::strict_real_policies<real> real_policies;
-        qi::real_parser<real, real_policies> strict_real_parser;
+        qi::real_parser<real, real_policies> real_parser;
 
         qi::int_parser<integer> int_parser;
 
@@ -47,7 +47,7 @@ struct value_grammar : qi::grammar<Iterator, value(), qi::space_type>
 
         string_     =   string_parser;
 
-        real_       =   strict_real_parser;
+        real_       =   real_parser;
 
         integer_    =   int_parser;
 

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_reference_hpp
@@ -26,11 +26,6 @@ class reference
 friend class reference<T const>;
 
 public:
-    reference(reference<T>& other) :
-        value_(other.value_)
-    {
-    }
-
     reference(value& value) :
         value_(value.get<T>())
     {
@@ -40,6 +35,9 @@ public:
         value_(value)
     {
     }
+
+    reference(reference const&) = default;
+    reference& operator=(reference const&) = delete;
 
     operator T&()
     {
@@ -74,10 +72,6 @@ public:
     }
 
 private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    reference& operator=(reference const& other);
-
-private:
     T& value_;
 };
 
@@ -85,11 +79,6 @@ template <typename T>
 class reference<T const>
 {
 public:
-    reference(reference<T const> const& other) :
-        value_(other.value_)
-    {
-    }
-
     reference(reference<T> const& other) :
         value_(other.value_)
     {
@@ -104,6 +93,9 @@ public:
         value_(value)
     {
     }
+
+    reference(reference const&) = default;
+    reference& operator=(reference const&) = delete;
 
     operator T const&() const
     {
@@ -120,10 +112,6 @@ public:
     {
         return value_[key];
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    reference& operator=(reference const& other);
 
 private:
     T const& value_;

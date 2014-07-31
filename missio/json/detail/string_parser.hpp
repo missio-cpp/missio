@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_string_parser_hpp
@@ -59,6 +59,9 @@ struct any_string_parser : boost::spirit::qi::primitive_parser<any_string_parser
         typedef string type;
     };
 
+    any_string_parser(any_string_parser const&) = default;
+    any_string_parser& operator=(any_string_parser const&) = delete;
+    
     template <typename Iterator, typename Context, typename Skipper, typename Attribute>
     static bool parse(Iterator& first, Iterator const& last, Context&, Skipper const& skipper, Attribute& attr)
     {
@@ -71,10 +74,6 @@ struct any_string_parser : boost::spirit::qi::primitive_parser<any_string_parser
     {
         return boost::spirit::info("json-string-parser");
     }
-
-private:
-    // prevent MSVC warning C4512: assignment operator could not be generated
-    any_string_parser& operator=(any_string_parser const& other);
 };
 
 }   // namespace detail

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_object_hpp
@@ -34,14 +34,13 @@ public:
     typedef std::vector<value_type>::const_iterator const_iterator;
 
 public:
-    object();
-    ~object();
+    object() = default;
 
-    object(object&& other);
-    object& operator=(object&& other);
+    object(object const&) = default;
+    object& operator=(object const&) = default;
 
-    object(object const& other);
-    object& operator=(object const& other);
+    object(object&&) = default;
+    object& operator=(object&&) = default;
 
     bool empty() const;
     std::size_t size() const;
@@ -63,8 +62,10 @@ public:
     void erase(iterator first, iterator last);
     void erase(string const& key);
 
+    bool insert(iterator position, value_type&& value);
     bool insert(iterator position, value_type const& value);
-    bool insert(string const& key, value const& value);
+
+    bool insert(string&& key, value&& value);
 
     value& operator[](string const& key);
     value const& operator[](string const& key) const;

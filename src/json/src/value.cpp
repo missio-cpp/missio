@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -17,46 +17,9 @@ namespace missio
 namespace json
 {
 
-value::value()
-{
-}
-
-value::~value()
-{
-}
-
-value::value(value&& other) :
-    variant_(std::move(other.variant_))
-{
-}
-
-value& value::operator=(value&& other)
-{
-    assign(std::forward<value>(other));
-    return *this;
-}
-
-value::value(value const& other) :
-    variant_(other.variant_)
-{
-}
-
-value& value::operator=(value const& other)
-{
-    assign(other);
-    return *this;
-}
-
-void value::assign(value&& other)
-{
-    if(&other != this)
-        variant_ = std::move(other.variant_);
-}
-
 void value::assign(value const& other)
 {
-    if(&other != this)
-        variant_ = other.variant_;
+    variant_ = other.variant_;
 }
 
 int value::which() const

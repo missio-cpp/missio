@@ -26,35 +26,12 @@ struct null
 
 null const null_value;
 
-inline bool operator==(null const&, null const&)
-{
-    return true;
-}
-
-inline bool operator<=(null const&, null const&)
-{
-    return true;
-}
-
-inline bool operator>=(null const&, null const&)
-{
-    return true;
-}
-
-inline bool operator!=(null const&, null const&)
-{
-    return false;
-}
-
-inline bool operator<(null const&, null const&)
-{
-    return false;
-}
-
-inline bool operator>(null const&, null const&)
-{
-    return false;
-}
+inline bool operator==(null const&, null const&) { return true; }
+inline bool operator<=(null const&, null const&) { return true; }
+inline bool operator>=(null const&, null const&) { return true; }
+inline bool operator!=(null const&, null const&) { return false; }
+inline bool operator<(null const&, null const&) { return false; }
+inline bool operator>(null const&, null const&) { return false; }
 
 inline std::ostream& operator<<(std::ostream& os, null const&)
 {

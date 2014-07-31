@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(constructor_test)
 {
     missio::json::array array;
 
-    BOOST_CHECK(array.empty());
+    BOOST_CHECK_EQUAL(array.empty(), true);
     BOOST_CHECK_EQUAL(array.size(), 0u);
 }
 
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(move_assignment_test)
 
     array2 = std::move(array1);
 
-    BOOST_CHECK(array1.empty());
+    BOOST_CHECK_EQUAL(array1.empty(), true);
     BOOST_CHECK_EQUAL(array2.size(), 2u);
     BOOST_CHECK_EQUAL(array2.front(), value1);
     BOOST_CHECK_EQUAL(array2.back(), value2);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(clear_test)
 
     array.clear();
 
-    BOOST_CHECK(array.empty());
+    BOOST_CHECK_EQUAL(array.empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(pop_back_test)
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(reserve_test)
 
     array.reserve(4);
 
-    BOOST_CHECK(array.empty());
+    BOOST_CHECK_EQUAL(array.empty(), true);
     BOOST_CHECK_GE(array.capacity(), 4u);
 }
 

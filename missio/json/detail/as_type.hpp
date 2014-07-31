@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_as_visitor_hpp
@@ -16,9 +16,11 @@
 #include <missio/json/detail/adapt.hpp>
 
 // BOOST headers
-#include <boost/type_traits/conversion_traits.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
+
+// STL headers
+#include <type_traits>
 
 
 namespace missio
@@ -43,28 +45,15 @@ public:
     }
 
     template <typename U>
-    T operator()(U const& value) const
-    {
-        return as(value, boost::is_convertible<U, T>(), boost::is_same<U, adapted_type>());
-    }
-
-private:
-    template <typename U, bool adapted>
-    static T as(U const& value, boost::mpl::true_, boost::mpl::bool_<adapted>)
+    typename std::enable_if<std::is_convertible<U, T>::value, T>::type operator()(U const& value) const
     {
         return static_cast<T>(value);
     }
 
     template <typename U>
-    static T as(U const& value, boost::mpl::false_, boost::mpl::true_)
+    typename std::enable_if<std::is_same<U, adapted_type>::value, T>::type operator()(U const& value) const
     {
         return adapt<T>::from(value);
-    }
-
-    template <typename U>
-    static T as(U, boost::mpl::false_, boost::mpl::false_)
-    {
-        throw exception("invalid value type");
     }
 };
 

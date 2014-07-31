@@ -1,57 +1,55 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
 
-template <typename T>
-inline value::value(T const& value)
+template <typename T> value::value(T const& value)
 {
-    assign(value);
+    detail::assign_value_to_variant(variant_, value);
 }
 
-template <typename T>
-inline value& value::operator=(T const& value)
+template <typename T> value& value::operator=(T const& value)
 {
-    assign(value);
+    detail::assign_value_to_variant(variant_, value);
     return *this;
 }
 
-template <typename T>
-inline void value::assign(T const& value)
+template <typename T> value::value(T&& value)
 {
-    detail::assign<T>::call(variant_, value);
+    detail::assign_value_to_variant(variant_, value);
 }
 
-template <typename T>
-inline bool value::is() const
+template <typename T> value& value::operator=(T&& value)
+{
+    detail::assign_value_to_variant(variant_, value);
+    return *this;
+}
+
+template <typename T> bool value::is() const
 {
     return detail::is_type<T>::call(variant_);
 }
 
-template <typename T>
-inline T value::as() const
+template <typename T> T value::as() const
 {
     return detail::as_type<T>::call(variant_);
 }
 
-template <typename T>
-inline value::operator T() const
+template <typename T> value::operator T() const
 {
     return as<T>();
 }
 
-template <typename T>
-inline T& value::get()
+template <typename T> T& value::get()
 {
     detail::convert<T>::call(variant_);
     return boost::get<T>(variant_);
 }
 
-template <typename T>
-inline T const& value::get() const
+template <typename T> T const& value::get() const
 {
     T const* value = boost::get<T>(&variant_);
 

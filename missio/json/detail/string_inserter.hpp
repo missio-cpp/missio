@@ -33,7 +33,7 @@ struct string_inserter
     {
         *sink++ = '"';
 
-        for(char ch = *str; 0 != ch; ch = *++str)
+        for(char ch = *str; nullptr != ch; ch = *++str)
             char_inserter::call(sink, ch);
 
         *sink++ = '"';

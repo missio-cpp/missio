@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(boost_asio_ip_address_test)
 
     missio::json::value value = address;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), "192.168.1.1");
     BOOST_CHECK_EQUAL(value.as<boost::asio::ip::address>(), address);
 }
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(boost_date_time_date_test)
 
     missio::json::value value = date;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), "2011-12-06");
     BOOST_CHECK_EQUAL(value.as<boost::gregorian::date>(), date);
 }
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(boost_date_time_time_duration_test)
 
     missio::json::value value = duration;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), "18:35:43.123456");
     BOOST_CHECK_EQUAL(value.as<boost::posix_time::time_duration>(), duration);
 }
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(boost_date_time_ptime_test)
 
     missio::json::value value = time;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), "2011-12-06T18:35:43.123456");
     BOOST_CHECK_EQUAL(value.as<boost::posix_time::ptime>(), time);
 }
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(boost_filesystem_path_test)
 
     missio::json::value value = filename;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), "/home/user/file.ext");
     BOOST_CHECK_EQUAL(value.as<boost::filesystem::path>(), filename);
 }
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(boost_uuid_uuid_test)
 
     missio::json::value value = uuid;
 
-    BOOST_CHECK(value.is<missio::json::string>());
+    BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
     BOOST_CHECK_EQUAL(value.as<missio::json::string>(), string);
     BOOST_CHECK_EQUAL(value.as<boost::uuids::uuid>(), uuid);
 }

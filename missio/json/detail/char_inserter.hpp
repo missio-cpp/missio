@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_char_inserter_hpp
@@ -11,8 +11,8 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/spirit/include/karma.hpp>
+// STL headers
+#include <cstdint>
 
 
 namespace missio
@@ -28,63 +28,65 @@ public:
     template <typename OutputIterator>
     static bool call(OutputIterator& sink, unsigned char const ch)
     {
-        if(0x1F < ch)
+        if(ch > 0x1Fu)
         {
             switch(ch)
             {
                 case '"':
                 case '\\':
-                    *sink++ = '\\';
+                    *sink++ = '\\';   // no break after, intentionally
 
                 default:
-                    *sink++ = char(ch);
+                    *sink++ = static_cast<char>(ch);
             }
-        }
-        else
-        {
-            *sink++ = '\\';
 
-            switch(ch)
-            {
-                case '\b':
-                    *sink++ = 'b';
-                    break;
-
-                case '\f':
-                    *sink++ = 'f';
-                    break;
-
-                case '\n':
-                    *sink++ = 'n';
-                    break;
-
-                case '\r':
-                    *sink++ = 'r';
-                    break;
-
-                case '\t':
-                    *sink++ = 't';
-                    break;
-
-                default:
-                    insert_utf16(sink, ch);
-            }
+            return true;
         }
 
-        return true;
+        if(insert_escape(sink, ch))
+            return true;
+
+        if(insert_utf16(sink, ch))
+            return true;
+
+        return false;
     }
 
 private:
     template <typename OutputIterator>
-    static bool insert_utf16(OutputIterator& sink, unsigned char const ch)
+    static bool insert_escape(OutputIterator& sink, unsigned char const ch)
+    {
+        char temp;
+
+        switch(ch)
+        {
+            case '\b': temp = 'b'; break;
+            case '\f': temp = 'f'; break;
+            case '\n': temp = 'n'; break;
+            case '\r': temp = 'r'; break;
+            case '\t': temp = 't'; break;
+
+            default:
+                return false;
+        }
+
+        *sink++ = '\\';
+        *sink++ = temp;
+
+        return true;
+    }
+
+    template <typename OutputIterator>
+    static bool insert_utf16(OutputIterator& sink, std::uint16_t const ch)
     {
         static char const hex_digits[] = "0123456789ABCDEF";
 
+        *sink++ = '\\';
         *sink++ = 'u';
-        *sink++ = '0';
-        *sink++ = '0';
-        *sink++ = hex_digits[ch >> 4];
-        *sink++ = hex_digits[ch & 15];
+        *sink++ = hex_digits[0x0F & (ch >> 12)];
+        *sink++ = hex_digits[0x0F & (ch >> 8)];
+        *sink++ = hex_digits[0x0F & (ch >> 4)];
+        *sink++ = hex_digits[0x0F & ch];
 
         return true;
     }

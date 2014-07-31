@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_extract_string_hpp
@@ -13,13 +13,12 @@
 
 // Application headers
 #include <missio/json/string.hpp>
-#include <missio/utf8/common.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/qi.hpp>
-#include <boost/type_traits.hpp>
 
 // STL headers
+#include <type_traits>
 #include <iterator>
 #include <utility>
 #include <cstdint>
@@ -97,7 +96,7 @@ private:
     {
         if(last == first)
             return false;
-    
+
         if(ch != *first)
             return false;
 
@@ -110,7 +109,7 @@ private:
     static bool parse_char(Iterator& first, Iterator const& last, std::string& str)
     {
         typedef typename std::iterator_traits<Iterator>::value_type value_type;
-        typedef typename boost::make_unsigned<value_type>::type unsigned_type;
+        typedef typename std::make_unsigned<value_type>::type unsigned_type;
 
         if(last == first)
             return false;
@@ -135,37 +134,14 @@ private:
 
         switch(*first)
         {
-            case '"':
-                str.push_back('"');
-                break;
-
-            case '/':
-                str.push_back('/');
-                break;
-
-            case '\\':
-                str.push_back('\\');
-                break;
-
-            case 'b':
-                str.push_back('\b');
-                break;
-
-            case 'f':
-                str.push_back('\f');
-                break;
-
-            case 'n':
-                str.push_back('\n');
-                break;
-
-            case 'r':
-                str.push_back('\r');
-                break;
-
-            case 't':
-                str.push_back('\t');
-                break;
+            case '"': str.push_back('"'); break;
+            case '/': str.push_back('/'); break;
+            case 'b': str.push_back('\b'); break;
+            case 'f': str.push_back('\f'); break;
+            case 'n': str.push_back('\n'); break;
+            case 'r': str.push_back('\r'); break;
+            case 't': str.push_back('\t'); break;
+            case '\\': str.push_back('\\'); break;
 
             default:
                 return false;
@@ -179,19 +155,20 @@ private:
     template <typename Iterator>
     static bool parse_utf16(Iterator& first, Iterator const& last, std::string& str)
     {
-        typedef boost::spirit::qi::extract_uint<boost::uint32_t, 16, 4, 4> extract_utf16;
-
         Iterator i(first);
 
         if(!skip_char(i, last, 'u'))
             return false;
 
-        std::uint32_t cp1;
+        std::uint32_t cp;
 
-        if(!extract_utf16::call(i, last, cp1))
+        if(!extract_utf16(i, last, cp))
             return false;
 
-        if(utf8::is_surrogate(cp1))
+        if(is_low_surrogate(cp))
+            return false;
+
+        if(is_high_surrogate(cp))
         {
             if(!skip_char(i, last, '\\'))
                 return false;
@@ -199,18 +176,79 @@ private:
             if(!skip_char(i, last, 'u'))
                 return false;
 
-            std::uint32_t cp2;
+            std::uint32_t low_surrogate;
 
-            if(!extract_utf16::call(i, last, cp2))
+            if(!extract_utf16(i, last, low_surrogate))
                 return false;
 
-            cp1 = utf8::make_code_point(cp1, cp2);
+            if(!is_low_surrogate(low_surrogate))
+                return false;
+
+            cp = make_code_point(cp, low_surrogate);
         }
 
-        utf8::write_code_point(cp1, std::back_inserter(str));
+        if(!write_code_point(cp, str))
+            return false;
 
         first = i;
 
+        return true;
+    }
+
+    template <typename Iterator>
+    static bool extract_utf16(Iterator& first, Iterator const& last, std::uint32_t& cp)
+    {
+        return boost::spirit::qi::extract_uint<std::uint32_t, 16, 4, 4>::call(first, last, cp);
+    }
+
+    static std::uint32_t make_code_point(std::uint32_t const high, std::uint32_t const low)
+    {
+        return 0x10000u + (high - 0xD800u) << 10u + low - 0xDC00u;
+    }
+
+    static bool is_high_surrogate(std::uint32_t const cp)
+    {
+        return 0xD800u <= cp && cp <= 0xDBFFu;
+    }
+
+    static bool is_low_surrogate(std::uint32_t const cp)
+    {
+        return 0xDC00u <= cp && cp <= 0xDFFFu;
+    }
+
+    static bool is_code_point_valid(std::uint32_t const cp)
+    {
+        return cp <= 0x10FFFFu && cp != 0xFFFEu && cp != 0xFFFFu;
+    }
+
+    static bool write_code_point(std::uint32_t const cp, std::string& str)
+    {
+        if(!is_code_point_valid(cp))
+             return false;
+
+        if(cp < 0x80u)
+        {
+            str.push_back(static_cast<char>(cp));
+        }
+        else if(cp < 0x800u)
+        {
+            str.push_back(static_cast<char>(0xC0 | ((cp >> 6) & 0x1F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+        }
+        else if(cp < 0x10000u)
+        {
+            str.push_back(static_cast<char>(0xE0 | ((cp >> 12) & 0x0F)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+        }
+        else if(cp < 0x110000u)
+        {
+            str.push_back(static_cast<char>(0xF0 | ((cp >> 18) & 0x07)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+            str.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+        }
+  
         return true;
     }
 };

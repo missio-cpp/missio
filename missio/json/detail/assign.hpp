@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_assign_hpp
@@ -16,6 +16,10 @@
 
 // BOOST headers
 #include <boost/mpl/contains.hpp>
+
+// STL headers
+#include <type_traits>
+#include <utility>
 
 
 namespace missio
@@ -46,6 +50,18 @@ struct assign
         variant = adapt<T>::to(value);
     }
 };
+
+template <typename Variant>
+void assign_value_to_variant(Variant& variant, value const& value)
+{
+   variant = value.variant();
+}
+
+template <typename T, typename Variant>
+void assign_value_to_variant(Variant& variant, T const& value)
+{
+    assign<typename std::remove_reference<T>::type>::call(variant, value);
+}
 
 }   // namespace detail
 }   // namespace json

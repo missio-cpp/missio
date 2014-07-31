@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -17,38 +17,6 @@ namespace missio
 {
 namespace json
 {
-
-array::array()
-{
-}
-
-array::~array()
-{
-}
-
-array::array(array&& other) :
-    values_(std::move(other.values_))
-{
-}
-
-array& array::operator=(array&& other)
-{
-    if(&other != this)
-        values_ = std::move(other.values_);
-    return *this;
-}
-
-array::array(array const& other) :
-    values_(other.values_)
-{
-}
-
-array& array::operator=(array const& other)
-{
-    if(&other != this)
-        values_ = other.values_;
-    return *this;
-}
 
 bool array::empty() const
 {
@@ -130,14 +98,14 @@ value const& array::back() const
     return values_.back();
 }
 
+void array::push_back(value&& value)
+{
+    values_.push_back(std::forward<json::value>(value));
+}
+
 void array::push_back(value const& value)
 {
     values_.push_back(value);
-}
-
-void array::push_back(value&& value)
-{
-    values_.push_back(std::move(value));
 }
 
 void array::pop_back()
@@ -153,6 +121,11 @@ void array::erase(iterator position)
 void array::erase(iterator first, iterator last)
 {
     values_.erase(first, last);
+}
+
+void array::insert(iterator position, value&& value)
+{
+    values_.insert(position, std::forward<json::value>(value));
 }
 
 void array::insert(iterator position, value const& value)
