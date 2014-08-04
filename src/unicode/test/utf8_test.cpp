@@ -80,7 +80,7 @@ BOOST_FIXTURE_TEST_CASE(validate_test, utf8_fixture)
     BOOST_CHECK_NO_THROW(missio::unicode::utf8::validate(hello_world_rus));
 
     BOOST_CHECK_THROW(missio::unicode::utf8::validate(invalid1), missio::unicode::invalid_utf8_sequence);
-    BOOST_CHECK_THROW(missio::unicode::utf8::validate(invalid2), missio::unicode::invalid_utf32_code_point);
+    BOOST_CHECK_THROW(missio::unicode::utf8::validate(invalid2), missio::unicode::invalid_utf8_sequence);
 }
 
 BOOST_FIXTURE_TEST_CASE(is_valid_test, utf8_fixture)

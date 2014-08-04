@@ -89,12 +89,6 @@ std::uint32_t next(OctetIterator& pos, OctetIterator end)
     if(!parse_utf8(it, end, cp))
         throw invalid_utf8_sequence(it, end);
 
-    if(utf16::is_surrogate(cp))
-        throw invalid_utf32_code_point(cp);
-
-    if(!is_code_point_valid(cp))
-        throw invalid_utf32_code_point(cp);
-
     pos = it;
 
     return cp;
@@ -201,12 +195,7 @@ void replace_invalid(OctetIterator begin, OctetIterator end, OutputIterator dest
         }
         else
         {
-            if(parse_utf8(begin, end, cp))
-            {
-                if(!is_code_point_valid(cp))
-                    cp = replacement_char;
-            }
-            else
+            if(!parse_utf8(begin, end, cp))
             {
                 while(++begin != end)
                 {
@@ -237,9 +226,6 @@ OctetIterator find_invalid(OctetIterator begin, OctetIterator end)
         OctetIterator it(begin);
 
         if(!parse_utf8(it, end, cp))
-            break;
-
-        if(!is_code_point_valid(cp))
             break;
 
         begin = it;

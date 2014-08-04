@@ -11,9 +11,8 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/spirit/include/phoenix.hpp>
-#include <boost/spirit/include/qi.hpp>
+// Implementation headers
+#include "common.hpp"
 
 // STL headers
 #include <cstdint>
@@ -26,68 +25,60 @@ namespace unicode
 namespace impl
 {
 
-template <typename Iterator>
-struct utf8_grammar : boost::spirit::qi::grammar<Iterator, std::uint32_t()>
+struct utf8_octet_sequence
 {
-    utf8_grammar() : utf8_grammar::base_type(code_point_)
+    std::uint8_t min;
+    std::uint8_t max;
+
+    std::uint8_t mask;
+
+    struct
     {
-        using namespace boost::spirit::qi;
-
-        octet_          =   byte_ >> eps(_r1 <= _val && _val <= _r2);
-
-        two_octets_     =   octet_(0xC2, 0xDF)   [ _val  = (_1 & 0x1F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ];
-
-        three_octets_   =   octet_(0xE0, 0xE0)   [ _val  = (_1 & 0x0F) << 12 ]
-                        >   octet_(0xA0, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ]
-
-                        |   octet_(0xE1, 0xEC)   [ _val  = (_1 & 0x0F) << 12 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ]
-
-                        |   octet_(0xED, 0xED)   [ _val  = (_1 & 0x0F) << 12 ]
-                        >   octet_(0x80, 0x9F)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ]
-
-                        |   octet_(0xEE, 0xEF)   [ _val  = (_1 & 0x0F) << 12 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ];
-
-        four_octets_    =   octet_(0xF0, 0xF0)   [ _val  = (_1 & 0x07) << 18 ]
-                        >   octet_(0x90, 0xBF)   [ _val += (_1 & 0x3F) << 12 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ]
-
-                        |   octet_(0xF1, 0xF3)   [ _val  = (_1 & 0x07) << 18 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 12 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ]
-
-                        |   octet_(0xF4, 0xF4)   [ _val  = (_1 & 0x07) << 18 ]
-                        >   octet_(0x80, 0x8F)   [ _val += (_1 & 0x3F) << 12 ]
-                        >   octet_(0x80, 0xBF)   [ _val += (_1 & 0x3F) << 6  ]
-                        >   octet_(0x80, 0xBF)   [ _val +=  _1 & 0x3F        ];
-
-        code_point_     =   byte_ >> eps(_val < 0x80u) | two_octets_ | three_octets_ | four_octets_;
-
-        on_error<fail>(code_point_, boost::phoenix::nothing);
-    }
-
-    boost::spirit::qi::rule<Iterator, std::uint8_t(std::uint8_t, std::uint8_t)> octet_;
-
-    boost::spirit::qi::rule<Iterator, std::uint32_t()> two_octets_;
-    boost::spirit::qi::rule<Iterator, std::uint32_t()> three_octets_;
-    boost::spirit::qi::rule<Iterator, std::uint32_t()> four_octets_;
-
-    boost::spirit::qi::rule<Iterator, std::uint32_t()> code_point_;
+        std::uint8_t min;
+        std::uint8_t max;
+    } next[3];
 };
+
+extern utf8_octet_sequence const utf8_octet_sequences[9];
 
 template <typename OctetIterator>
 bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
 {
-    static utf8_grammar<OctetIterator> const grammar;
-    return boost::spirit::qi::parse(pos, end, grammar, cp);
+    OctetIterator it(pos);
+
+    if(it == end)
+        return false;
+
+    cp = make_uint8(*it++);
+
+    for(auto const& first : utf8_octet_sequences)
+    {
+        if(first.min <= cp && cp <= first.max)
+        {
+            cp &= first.mask;
+
+            for(auto const& next : first.next)
+            {
+                if(!next.max)
+                    break;
+
+                if(it == end)
+                    return false;
+
+                std::uint8_t const octet = make_uint8(*it++);
+
+                if(octet < next.min || next.max < octet)
+                    return false;
+
+                cp = (cp << 6) + (octet & 0x3F);
+            }
+
+            pos = it;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }   // namespace impl

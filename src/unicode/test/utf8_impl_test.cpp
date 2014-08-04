@@ -110,19 +110,49 @@ BOOST_AUTO_TEST_CASE(peek_next_two_octets_code_point_test)
 BOOST_AUTO_TEST_CASE(peek_next_three_octets_code_point_test)
 {
     char const test1[] = "\xE0\xA0\x80";
-    char const test2[] = "\xEF\xBF\xBD";
+    char const test2[] = "\xE0\xBF\xBF";
+
+    char const test3[] = "\xE1\x80\x80";
+    char const test4[] = "\xEC\xBF\xBF";
+
+    char const test5[] = "\xED\x80\x80";
+    char const test6[] = "\xED\x9F\xBF";
+
+    char const test7[] = "\xEE\x80\x80";
+    char const test8[] = "\xEF\xBF\xBD";
 
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test1), std::end(test1)), 0x00000800u);
-    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), 0x0000FFFDu);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), 0x00000FFFu);
+
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test3), std::end(test3)), 0x00001000u);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test4), std::end(test4)), 0x0000CFFFu);
+
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test5), std::end(test5)), 0x0000D000u);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test6), std::end(test6)), 0x0000D7FFu);
+
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test7), std::end(test7)), 0x0000E000u);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test8), std::end(test8)), 0x0000FFFDu);
 }
 
 BOOST_AUTO_TEST_CASE(peek_next_four_octets_code_point_test)
 {
     char const test1[] = "\xF0\x90\x80\x80";
-    char const test2[] = "\xF4\x8F\xBF\xBF";
+    char const test2[] = "\xF0\x90\xBF\xBF";
+
+    char const test3[] = "\xF1\x80\x80\x80";
+    char const test4[] = "\xF3\xBF\xBF\xBF";
+
+    char const test5[] = "\xF4\x80\x80\x80";
+    char const test6[] = "\xF4\x8F\xBF\xBF";
 
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test1), std::end(test1)), 0x00010000u);
-    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), 0x0010FFFFu);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), 0x00010FFFu);
+
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test3), std::end(test3)), 0x00040000u);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test4), std::end(test4)), 0x000FFFFFu);
+
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test5), std::end(test5)), 0x00100000u);
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::peek_next(std::begin(test6), std::end(test6)), 0x0010FFFFu);
 }
 
 BOOST_AUTO_TEST_CASE(peek_next_on_empty_input_test)
@@ -220,11 +250,11 @@ BOOST_AUTO_TEST_CASE(peek_next_unexpected_utf16_surrogate_test)
 
 BOOST_AUTO_TEST_CASE(peek_next_invalid_utf32_code_points_test)
 {
-    char const test1[] = "\xEF\xBF\xBE";
-    char const test2[] = "\xEF\xBF\xBF";
+    char const test1[] = "\xEF\xBF\xBE";    // U+0000FFFE
+    char const test2[] = "\xEF\xBF\xBF";    // U+0000FFFF
 
-    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test1), std::end(test1)), missio::unicode::invalid_utf32_code_point);
-    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), missio::unicode::invalid_utf32_code_point);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test1), std::end(test1)), missio::unicode::invalid_utf8_sequence);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), missio::unicode::invalid_utf8_sequence);
 }
 
 BOOST_AUTO_TEST_CASE(failed_next_should_not_modify_iterators_test)
@@ -266,7 +296,7 @@ BOOST_AUTO_TEST_CASE(peek_invalid_previous_code_point_test)
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_previous(std::prev(std::end(test1)), std::begin(test1)), missio::unicode::invalid_utf8_sequence);
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_previous(std::prev(std::end(test2)), std::begin(test2)), missio::unicode::invalid_utf8_sequence);
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_previous(std::prev(std::end(test3)), std::begin(test3)), missio::unicode::invalid_utf8_sequence);
-    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_previous(std::prev(std::end(test4)), std::begin(test4)), missio::unicode::invalid_utf32_code_point);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_previous(std::prev(std::end(test4)), std::begin(test4)), missio::unicode::invalid_utf8_sequence);
 }
 
 BOOST_AUTO_TEST_CASE(failed_previous_should_not_modify_iterators_test)
@@ -392,7 +422,7 @@ BOOST_FIXTURE_TEST_CASE(validate_test, utf8_fixture)
     BOOST_CHECK_NO_THROW(missio::unicode::impl::utf8::validate(hello_world_rus.begin(), hello_world_rus.end()));
 
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::validate(invalid1.begin(), invalid1.end()), missio::unicode::invalid_utf8_sequence);
-    BOOST_CHECK_THROW(missio::unicode::impl::utf8::validate(invalid2.begin(), invalid2.end()), missio::unicode::invalid_utf32_code_point);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::validate(invalid2.begin(), invalid2.end()), missio::unicode::invalid_utf8_sequence);
 }
 
 BOOST_FIXTURE_TEST_CASE(is_valid_test, utf8_fixture)
