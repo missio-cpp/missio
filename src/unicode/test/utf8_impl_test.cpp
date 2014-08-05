@@ -27,6 +27,7 @@ struct utf8_fixture
     {
     }
 
+    std::string empty_string;
     std::string hello_world_eng;
     std::string hello_world_rus;
 };
@@ -250,11 +251,13 @@ BOOST_AUTO_TEST_CASE(peek_next_unexpected_utf16_surrogate_test)
 
 BOOST_AUTO_TEST_CASE(peek_next_invalid_utf32_code_points_test)
 {
-    char const test1[] = "\xEF\xBF\xBE";    // U+0000FFFE
-    char const test2[] = "\xEF\xBF\xBF";    // U+0000FFFF
+    char const test1[] = "\xEF\xBF\xBE";      // U+0000FFFE
+    char const test2[] = "\xEF\xBF\xBF";      // U+0000FFFF
+    char const test3[] = "\xF4\x9F\x80\x80";  // >U+0010FFFF
 
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test1), std::end(test1)), missio::unicode::invalid_utf8_sequence);
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test2), std::end(test2)), missio::unicode::invalid_utf8_sequence);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::peek_next(std::begin(test3), std::end(test3)), missio::unicode::invalid_utf8_sequence);
 }
 
 BOOST_AUTO_TEST_CASE(failed_next_should_not_modify_iterators_test)
@@ -338,6 +341,7 @@ BOOST_AUTO_TEST_CASE(write_invalid_code_point_test)
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::write(0x0000D800u, std::back_inserter(string)), missio::unicode::invalid_utf32_code_point);
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::write(0x0020FFFFu, std::back_inserter(string)), missio::unicode::invalid_utf32_code_point);
     BOOST_CHECK_THROW(missio::unicode::impl::utf8::write(0x0000FFFEu, std::back_inserter(string)), missio::unicode::invalid_utf32_code_point);
+    BOOST_CHECK_THROW(missio::unicode::impl::utf8::write(0x00110000u, std::back_inserter(string)), missio::unicode::invalid_utf32_code_point);
 }
 
 BOOST_FIXTURE_TEST_CASE(advance_text, utf8_fixture)
@@ -351,19 +355,28 @@ BOOST_FIXTURE_TEST_CASE(advance_text, utf8_fixture)
 
 BOOST_FIXTURE_TEST_CASE(length_text, utf8_fixture)
 {
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::length(std::begin(empty_string), std::end(empty_string)), 0u);
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::length(std::begin(hello_world_eng), std::end(hello_world_eng)), 13u);
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::length(std::begin(hello_world_rus), std::end(hello_world_rus)), 12u);
 }
 
 BOOST_FIXTURE_TEST_CASE(replace_invalid_test, utf8_fixture)
 {
-    std::string invalid1("Hello, \x80 world!");
-    std::string invalid2("Hello, \xFF\xFE world!");
-    std::string invalid3("Hello, \xE0\x80\x80\x80 world!");
-    std::string invalid4("Hello, \x80\x80\x80\x80\x80 world!");
-    std::string invalid5("\xC0\xE0\x80\xF0\x80\x80\xDF\xEF\xBF\xF7\xBF\xBF");
+    std::string invalid1("Hello, \x80 world!");                   // unexpected continuation octet
+    std::string invalid2("Hello, \xC1\x80 world!");               // invalid two octets code point
+    std::string invalid3("Hello, \xE0\x80\x80 world!");           // invalid three octets code point
+    std::string invalid4("Hello, \xF0\x80\x80\x80 world!");       // invalid four octets code point
+    std::string invalid5("Hello, \xFF\xFE\xC0\xC1 world!");       // four invalid UTF-8 octets
+    std::string invalid6("Hello, \xE0\x80\x80\x80 world!");       // over-long UTF-8 sequence
+    std::string invalid7("Hello, \x80\x80\x80\x80\x80 world!");   // five unexpected continuation octets
+    std::string invalid8("Hello, \xF1\x80\x80 world!");           // four octets code point with missing last continuation octet
 
     std::string string;
+
+    missio::unicode::impl::utf8::replace_invalid(std::begin(empty_string), std::end(empty_string), std::back_inserter(string));
+    BOOST_CHECK_EQUAL(string, empty_string);
+
+    string.erase();
 
     missio::unicode::impl::utf8::replace_invalid(std::begin(hello_world_eng), std::end(hello_world_eng), std::back_inserter(string));
     BOOST_CHECK_EQUAL(string, hello_world_eng);
@@ -381,7 +394,7 @@ BOOST_FIXTURE_TEST_CASE(replace_invalid_test, utf8_fixture)
     string.erase();
 
     missio::unicode::impl::utf8::replace_invalid(std::begin(invalid2), std::end(invalid2), std::back_inserter(string), '?');
-    BOOST_CHECK_EQUAL(string, "Hello, ?? world!");
+    BOOST_CHECK_EQUAL(string, "Hello, ? world!");
 
     string.erase();
 
@@ -391,12 +404,27 @@ BOOST_FIXTURE_TEST_CASE(replace_invalid_test, utf8_fixture)
     string.erase();
 
     missio::unicode::impl::utf8::replace_invalid(std::begin(invalid4), std::end(invalid4), std::back_inserter(string), '?');
-    BOOST_CHECK_EQUAL(string, "Hello, ????? world!");
+    BOOST_CHECK_EQUAL(string, "Hello, ? world!");
 
     string.erase();
 
     missio::unicode::impl::utf8::replace_invalid(std::begin(invalid5), std::end(invalid5), std::back_inserter(string), '?');
-    BOOST_CHECK_EQUAL(string, std::string(6, '?'));
+    BOOST_CHECK_EQUAL(string, "Hello, ???? world!");
+
+    string.erase();
+
+    missio::unicode::impl::utf8::replace_invalid(std::begin(invalid6), std::end(invalid6), std::back_inserter(string), '?');
+    BOOST_CHECK_EQUAL(string, "Hello, ? world!");
+
+    string.erase();
+
+    missio::unicode::impl::utf8::replace_invalid(std::begin(invalid7), std::end(invalid7), std::back_inserter(string), '?');
+    BOOST_CHECK_EQUAL(string, "Hello, ????? world!");
+
+    string.erase();
+
+    missio::unicode::impl::utf8::replace_invalid(std::begin(invalid8), std::end(invalid8), std::back_inserter(string), '?');
+    BOOST_CHECK_EQUAL(string, "Hello, ? world!");
 }
 
 BOOST_FIXTURE_TEST_CASE(find_invalid_test, utf8_fixture)
@@ -405,6 +433,7 @@ BOOST_FIXTURE_TEST_CASE(find_invalid_test, utf8_fixture)
     std::string invalid2("Hello, \xE0\x80\x80\x80 world!");
     std::string invalid3("\xD0\x9F\xD1\x80\xD0\xB8\xD0\xB2\xD0\xB5\xD1\x82, \xEF\xBF\xBE \xD0\xBC\xD0\xB8\xD1\x80!");
 
+    BOOST_CHECK(missio::unicode::impl::utf8::find_invalid(std::begin(empty_string), std::end(empty_string)) == std::end(empty_string));
     BOOST_CHECK(missio::unicode::impl::utf8::find_invalid(std::begin(hello_world_eng), std::end(hello_world_eng)) == std::end(hello_world_eng));
     BOOST_CHECK(missio::unicode::impl::utf8::find_invalid(std::begin(hello_world_rus), std::end(hello_world_rus)) == std::end(hello_world_rus));
 
@@ -418,6 +447,7 @@ BOOST_FIXTURE_TEST_CASE(validate_test, utf8_fixture)
     std::string invalid1("Hello, \x80 world!");
     std::string invalid2("\xD0\x9F\xD1\x80\xD0\xB8\xD0\xB2\xD0\xB5\xD1\x82, \xEF\xBF\xBE \xD0\xBC\xD0\xB8\xD1\x80!");
 
+    BOOST_CHECK_NO_THROW(missio::unicode::impl::utf8::validate(empty_string.begin(), empty_string.end()));
     BOOST_CHECK_NO_THROW(missio::unicode::impl::utf8::validate(hello_world_eng.begin(), hello_world_eng.end()));
     BOOST_CHECK_NO_THROW(missio::unicode::impl::utf8::validate(hello_world_rus.begin(), hello_world_rus.end()));
 
@@ -430,6 +460,7 @@ BOOST_FIXTURE_TEST_CASE(is_valid_test, utf8_fixture)
     std::string invalid1("Hello, \x80 world!");
     std::string invalid2("\xD0\x9F\xD1\x80\xD0\xB8\xD0\xB2\xD0\xB5\xD1\x82, \xEF\xBF\xBE \xD0\xBC\xD0\xB8\xD1\x80!");
 
+    BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::is_valid(std::begin(empty_string), std::end(empty_string)), true);
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::is_valid(std::begin(hello_world_eng), std::end(hello_world_eng)), true);
     BOOST_CHECK_EQUAL(missio::unicode::impl::utf8::is_valid(std::begin(hello_world_rus), std::end(hello_world_rus)), true);
 

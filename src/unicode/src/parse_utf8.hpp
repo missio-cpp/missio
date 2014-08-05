@@ -11,9 +11,6 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Implementation headers
-#include "common.hpp"
-
 // STL headers
 #include <cstdint>
 
@@ -39,7 +36,7 @@ struct utf8_octet_sequence
     } next[3];
 };
 
-extern utf8_octet_sequence const utf8_octet_sequences[9];
+extern utf8_octet_sequence const utf8_octet_sequences[8];
 
 template <typename OctetIterator>
 bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
@@ -49,7 +46,13 @@ bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
     if(it == end)
         return false;
 
-    cp = make_uint8(*it++);
+    cp = static_cast<std::uint8_t>(*it++);
+
+    if(cp < 0x80)
+    {
+        pos = it;
+        return true;
+    }
 
     for(auto const& first : utf8_octet_sequences)
     {
@@ -65,12 +68,54 @@ bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
                 if(it == end)
                     return false;
 
-                std::uint8_t const octet = make_uint8(*it++);
+                auto const octet = static_cast<std::uint8_t>(*it++);
 
                 if(octet < next.min || next.max < octet)
                     return false;
 
                 cp = (cp << 6) + (octet & 0x3F);
+            }
+
+            pos = it;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template <typename OctetIterator>
+bool skip_utf8(OctetIterator& pos, OctetIterator end)
+{
+    OctetIterator it(pos);
+
+    if(it == end)
+        return false;
+
+    auto octet = static_cast<std::uint8_t>(*it++);
+
+    if(octet < 0x80)
+    {
+        pos = it;
+        return true;
+    }
+
+    for(auto const& first : utf8_octet_sequences)
+    {
+        if(first.min <= octet && octet <= first.max)
+        {
+            for(auto const& next : first.next)
+            {
+                if(!next.max)
+                    break;
+
+                if(it == end)
+                    return false;
+
+                octet = static_cast<std::uint8_t>(*it++);
+
+                if(octet < next.min || next.max < octet)
+                    return false;
             }
 
             pos = it;

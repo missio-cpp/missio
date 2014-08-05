@@ -16,11 +16,8 @@ namespace unicode
 namespace impl
 {
 
-utf8_octet_sequence const utf8_octet_sequences[9] =
+utf8_octet_sequence const utf8_octet_sequences[8] =
 {
-    // one octet sequences
-    { 0x00, 0x7F, 0x7F },
-
     // two octets sequences
     { 0xC2, 0xDF, 0x1F, { { 0x80, 0xBF } } },
 

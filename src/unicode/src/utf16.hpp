@@ -44,19 +44,22 @@ std::uint32_t const surrogate_base = 0x10000;
 template <typename UTF16>
 bool is_surrogate(UTF16 code_unit)
 {
-    return high_surrogate_min <= make_uint16(code_unit) && make_uint16(code_unit) <= low_surrogate_max;
+    return high_surrogate_min <= static_cast<std::uint16_t>(code_unit) &&
+           low_surrogate_max >= static_cast<std::uint16_t>(code_unit);
 }
 
 template <typename UTF16>
 bool is_high_surrogate(UTF16 code_unit)
 {
-    return high_surrogate_min <= make_uint16(code_unit) && make_uint16(code_unit) <= high_surrogate_max;
+    return high_surrogate_min <= static_cast<std::uint16_t>(code_unit) &&
+           high_surrogate_max >= static_cast<std::uint16_t>(code_unit);
 }
 
 template <typename UTF16>
 bool is_low_surrogate(UTF16 code_unit)
 {
-    return low_surrogate_min <= make_uint16(code_unit) && make_uint16(code_unit) <= low_surrogate_max;
+    return low_surrogate_min <= static_cast<std::uint16_t>(code_unit) &&
+           low_surrogate_max >= static_cast<std::uint16_t>(code_unit);
 }
 
 template <typename UTF16>
@@ -64,8 +67,8 @@ std::uint32_t make_code_point(UTF16 high_surrogate, UTF16 low_surrogate)
 {
     std::uint32_t code_point;
 
-    code_point = (make_uint16(high_surrogate) - high_surrogate_min) << surrogate_shift;
-    code_point += make_uint16(low_surrogate) - low_surrogate_min + surrogate_base;
+    code_point = (static_cast<std::uint16_t>(high_surrogate) - high_surrogate_min) << surrogate_shift;
+    code_point += static_cast<std::uint16_t>(low_surrogate) - low_surrogate_min + surrogate_base;
 
     return code_point;
 }
@@ -78,27 +81,26 @@ std::uint32_t next(UTF16Iterator& pos, UTF16Iterator end)
     if(pos == end)
         throw input_underflow_error();
 
-    std::uint32_t cp = make_uint16(*it++);
+    std::uint16_t const cp1 = static_cast<std::uint16_t>(*it++);
 
-    if(is_low_surrogate(cp))
-        throw invalid_utf16_code_unit(cp);
+    if(is_low_surrogate(cp1))
+        throw invalid_utf16_code_unit(cp1);
 
-    if(is_high_surrogate(cp))
+    if(is_high_surrogate(cp1))
     {
         if(it == end)
-            throw invalid_utf16_code_unit(cp);
+            throw invalid_utf16_code_unit(cp1);
 
-        std::uint32_t const low_surrogate = make_uint16(*it++);
+        std::uint16_t const cp2 = static_cast<std::uint16_t>(*it++);
 
-        if(!is_low_surrogate(low_surrogate))
-            throw invalid_utf16_code_unit(low_surrogate);
+        if(!is_low_surrogate(cp2))
+            throw invalid_utf16_code_unit(cp2);
 
-        cp = make_code_point(cp, low_surrogate);
+        return make_code_point(cp1, cp2);
     }
 
     pos = it;
-
-    return cp;
+    return cp1;
 }
 
 template <typename UTF16Iterator>

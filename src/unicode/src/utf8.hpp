@@ -41,7 +41,8 @@ std::uint8_t const byte_order_mark[] { 0xEF, 0xBB, 0xBF };
 template <typename UTF8>
 bool is_continuation_octet(UTF8 octet)
 {
-    return continuation_octet_min <= make_uint8(octet) && make_uint8(octet) <= continuation_octet_max;
+    return continuation_octet_min <= static_cast<std::uint8_t>(octet) &&
+           continuation_octet_max >= static_cast<std::uint8_t>(octet);
 }
 
 template <typename OutputIterator>
@@ -55,19 +56,18 @@ bool skip_byte_order_mark(OctetIterator& pos, OctetIterator end)
 {
     OctetIterator it(pos);
 
-    for(std::uint8_t const bom_octet : byte_order_mark)
+    for(auto const bom_octet : byte_order_mark)
     {
         if(it == end)
             return false;
 
-        std::uint8_t const octet = make_uint8(*it++);
+        auto const octet = static_cast<std::uint8_t>(*it++);
 
         if(octet != bom_octet)
             return false;
     }
 
     pos = it;
-
     return true;
 }
 
@@ -81,15 +81,12 @@ template <typename OctetIterator>
 std::uint32_t next(OctetIterator& pos, OctetIterator end)
 {
     std::uint32_t cp;
-    OctetIterator it(pos);
 
     if(pos == end)
         throw input_underflow_error();
 
-    if(!parse_utf8(it, end, cp))
-        throw invalid_utf8_sequence(it, end);
-
-    pos = it;
+    if(!parse_utf8(pos, end, cp))
+        throw invalid_utf8_sequence(pos, end);
 
     return cp;
 }
@@ -98,6 +95,16 @@ template <typename OctetIterator>
 std::uint32_t peek_next(OctetIterator pos, OctetIterator end)
 {
     return next(pos, end);
+}
+
+template <typename OctetIterator>
+void skip_next(OctetIterator& pos, OctetIterator end)
+{
+    if(pos == end)
+        throw input_underflow_error();
+
+    if(!skip_utf8(pos, end))
+        throw invalid_utf8_sequence(pos, end);
 }
 
 template <typename OctetIterator>
@@ -115,10 +122,9 @@ std::uint32_t previous(OctetIterator& pos, OctetIterator begin)
             throw invalid_utf8_sequence(begin, end);
     }
 
-    std::uint32_t const cp = peek_next(it, end);
+    auto const cp = peek_next(it, end);
 
     pos = it;
-
     return cp;
 }
 
@@ -132,7 +138,7 @@ template <typename OctetIterator, typename Distance>
 OctetIterator advance(OctetIterator& pos, OctetIterator end, Distance n)
 {
     while(n-- > 0)
-        next(pos, end);
+        skip_next(pos, end);
 
     return pos;
 }
@@ -143,7 +149,7 @@ std::size_t length(OctetIterator begin, OctetIterator end)
     std::size_t n;
 
     for(n = 0u; begin != end; ++n)
-        next(begin, end);
+        skip_next(begin, end);
 
     return n;
 }
@@ -193,17 +199,14 @@ void replace_invalid(OctetIterator begin, OctetIterator end, OutputIterator dest
             cp = replacement_char;
             ++begin;
         }
-        else
+        else if(!parse_utf8(begin, end, cp))
         {
-            if(!parse_utf8(begin, end, cp))
-            {
-                while(++begin != end)
-                {
-                    if(!is_continuation_octet(*begin))
-                        break;
-                }
+            cp = replacement_char;
 
-                cp = replacement_char;
+            while(++begin != end)
+            {
+                if(!is_continuation_octet(*begin))
+                    break;
             }
         }
 
@@ -220,16 +223,7 @@ void replace_invalid(OctetIterator begin, OctetIterator end, OutputIterator dest
 template <typename OctetIterator>
 OctetIterator find_invalid(OctetIterator begin, OctetIterator end)
 {
-    while(begin != end)
-    {
-        std::uint32_t cp;
-        OctetIterator it(begin);
-
-        if(!parse_utf8(it, end, cp))
-            break;
-
-        begin = it;
-    }
+    while(skip_utf8(begin, end));
 
     return begin;
 }
@@ -244,7 +238,7 @@ template <typename OctetIterator>
 void validate(OctetIterator begin, OctetIterator end)
 {
     while(begin != end)
-        next(begin, end);
+        skip_next(begin, end);
 }
 
 }   // namespace utf8
