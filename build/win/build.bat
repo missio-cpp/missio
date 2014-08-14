@@ -68,6 +68,6 @@ SET BOOST_ROOT="%BOOST_ROOT%"
 SET BOOST_BUILD_PATH="%BOOST_BUILD_PATH%"
 
 ECHO Starting build of missio
-"%BOOST_JAM%" -q -j%JOBS_NUM% toolset=msvc %*
+"%BOOST_JAM%" -q -j%JOBS_NUM% %*
 
 popd
