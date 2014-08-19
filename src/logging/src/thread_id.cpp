@@ -8,18 +8,24 @@
 // Application headers
 #include <missio/logging/detail/thread_id.hpp>
 
-// BOOST headers
-#include <boost/config.hpp>
-
-#if defined(BOOST_WINDOWS)
+#if defined(_WIN32) || defined(_WIN64)
 
 // Windows headers
 #include <windows.h>
 
-#elif defined(BOOST_HAS_PTHREADS)
+#elif defined(__unix__) || defined(__unix)
+
+// Unix headers
+#include <unistd.h>
+
+#if defined(_POSIX_VERSION) && (_POSIX_VERSION >= 200112L)
 
 // POSIX headers
 #include <pthread.h>
+
+#else
+#error Operating System does not support POSIX threads
+#endif
 
 #else
 #error Operating System is not supported
@@ -45,10 +51,14 @@ unsigned long thread_id::value() const
 
 unsigned long thread_id::get_current_thread_id()
 {
-#if defined(BOOST_WINDOWS)
+#if defined(_WIN32) || defined(_WIN64)
     return static_cast<unsigned long>(::GetCurrentThreadId());
-#elif defined(BOOST_HAS_PTHREADS)
+#elif defined(__unix__) || defined(__unix)
+#if defined(_POSIX_VERSION) && (_POSIX_VERSION >= 200112L)
     return static_cast<unsigned long>(::pthread_self());
+#else
+#error Operating System does not support POSIX threads
+#endif
 #else
 #error Operating System is not supported
 #endif

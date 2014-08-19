@@ -81,7 +81,7 @@ void message::format(Sink& sink, Format const& format) const
         sink,
         format,
         message_id_.value(),
-        timestamp_.value(),
+        timestamp_.to_datetime(),
         to_string(severity_),
         process_id_.value(),
         thread_id_.value(),

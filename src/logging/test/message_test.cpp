@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -11,24 +11,12 @@
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
-#include <boost/lexical_cast.hpp>
 
 
 BOOST_AUTO_TEST_SUITE(logging_message_test_suite)
 
 struct message_fixture
 {
-    template <typename T>
-    static std::string make_string(T const& value)
-    {
-        return boost::lexical_cast<std::string>(value);
-    }
-
-    static std::string make_string(missio::logging::detail::sink_buffer const& value)
-    {
-        return std::string(value.begin(), value.end());
-    }
-
     message_fixture() :
         error_string("Error message"),
         warning_string("Warning message"),
@@ -49,22 +37,22 @@ struct message_fixture
 
 BOOST_FIXTURE_TEST_CASE(constructor_test, message_fixture)
 {
-    BOOST_CHECK_EQUAL(error_message.severity(), missio::logging::error);
-    BOOST_CHECK_EQUAL(warning_message.severity(), missio::logging::warning);
+    BOOST_CHECK_EQUAL(error_message.get_severity(), missio::logging::error);
+    BOOST_CHECK_EQUAL(warning_message.get_severity(), missio::logging::warning);
 }
 
 BOOST_FIXTURE_TEST_CASE(move_constructor_test, message_fixture)
 {
     missio::logging::message message(std::move(error_message));
 
-    BOOST_CHECK_EQUAL(message.severity(), missio::logging::error);
+    BOOST_CHECK_EQUAL(message.get_severity(), missio::logging::error);
 }
 
 BOOST_FIXTURE_TEST_CASE(move_assignment_operator_test, message_fixture)
 {
     error_message = std::move(warning_message);
 
-    BOOST_CHECK_EQUAL(error_message.severity(), missio::logging::warning);
+    BOOST_CHECK_EQUAL(error_message.get_severity(), missio::logging::warning);
 }
 
 BOOST_FIXTURE_TEST_CASE(format_test, message_fixture)
@@ -72,46 +60,51 @@ BOOST_FIXTURE_TEST_CASE(format_test, message_fixture)
     std::string sink;
 
     warning_message.format(sink, "{0}");
-    BOOST_CHECK_EQUAL(sink.empty(), false); // cannot retrieve timestamp from the message
+    BOOST_CHECK_EQUAL(sink, std::string("2"));    // 1 = error_message, 2 = warning_message
 
     sink.erase();
 
     warning_message.format(sink, "{1}");
-    BOOST_CHECK_EQUAL(sink, missio::logging::to_string(missio::logging::warning));
+    BOOST_CHECK_EQUAL(sink.empty(), false);   // cannot retrieve timestamp from the message
 
     sink.erase();
 
     warning_message.format(sink, "{2}");
-    BOOST_CHECK_EQUAL(sink, make_string(process_id.value()));
+    BOOST_CHECK_EQUAL(sink, missio::logging::to_string(missio::logging::warning));
 
     sink.erase();
 
     warning_message.format(sink, "{3}");
-    BOOST_CHECK_EQUAL(sink, make_string(thread_id.value()));
+    BOOST_CHECK_EQUAL(sink, std::to_string(process_id.value()));
 
     sink.erase();
 
     warning_message.format(sink, "{4}");
-    BOOST_CHECK_EQUAL(sink, location.component());
+    BOOST_CHECK_EQUAL(sink, std::to_string(thread_id.value()));
 
     sink.erase();
 
     warning_message.format(sink, "{5}");
-    BOOST_CHECK_EQUAL(sink, location.function());
+    BOOST_CHECK_EQUAL(sink, location.component());
 
     sink.erase();
 
     warning_message.format(sink, "{6}");
-    BOOST_CHECK_EQUAL(sink, location.file());
+    BOOST_CHECK_EQUAL(sink, location.function());
 
     sink.erase();
 
     warning_message.format(sink, "{7}");
-    BOOST_CHECK_EQUAL(sink, location.line());
+    BOOST_CHECK_EQUAL(sink, location.file());
 
     sink.erase();
 
     warning_message.format(sink, "{8}");
+    BOOST_CHECK_EQUAL(sink, location.line());
+
+    sink.erase();
+
+    warning_message.format(sink, "{9}");
     BOOST_CHECK_EQUAL(sink, warning_string);
 }
 

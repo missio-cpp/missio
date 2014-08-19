@@ -11,8 +11,11 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/date_time.hpp>
+// Application headers
+#include <missio/logging/detail/datetime.hpp>
+
+// STL headers
+#include <chrono>
 
 
 namespace missio
@@ -25,18 +28,26 @@ namespace detail
 class timestamp
 {
 public:
+    typedef std::chrono::system_clock clock;
+    typedef clock::time_point clock_time_point;
+
+public:
     timestamp();
+
+    explicit timestamp(clock_time_point const& value);
+
+    timestamp(timestamp&&) = default;
+    timestamp& operator=(timestamp&&) = default;
 
     timestamp(timestamp const&) = default;
     timestamp& operator=(timestamp const&) = default;
 
-    boost::posix_time::ptime const& value() const;
+    clock_time_point const& value() const;
+
+    datetime to_datetime() const;
 
 private:
-    static boost::posix_time::ptime get_current_time();
-
-private:
-    boost::posix_time::ptime value_;
+    clock_time_point value_;
 };
 
 }   // namespace detail

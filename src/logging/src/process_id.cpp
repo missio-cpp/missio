@@ -8,15 +8,12 @@
 // Application headers
 #include <missio/logging/detail/process_id.hpp>
 
-// BOOST headers
-#include <boost/config.hpp>
-
-#if defined(BOOST_WINDOWS)
+#if defined(_WIN32) || defined(_WIN64)
 
 // Windows headers
 #include <windows.h>
 
-#elif defined(BOOST_HAS_UNISTD_H)
+#elif defined(__unix__) || defined(__unix)
 
 // UNIX headers
 #include <unistd.h>
@@ -45,9 +42,9 @@ unsigned long process_id::value() const
 
 unsigned long process_id::get_current_process_id()
 {
-#if defined(BOOST_WINDOWS)
+#if defined(_WIN32) || defined(_WIN64)
     return static_cast<unsigned long>(::GetCurrentProcessId());
-#elif defined(BOOST_HAS_UNISTD_H)
+#elif defined(__unix__) || defined(__unix)
     return static_cast<unsigned long>(::getpid());
 #else
 #error Operating System is not supported

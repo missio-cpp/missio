@@ -16,8 +16,12 @@
 #include <missio/logging/writer_base.hpp>
 #include <missio/logging/message.hpp>
 
-// BOOST headers
-#include <boost/config.hpp>
+#if defined(__unix__) || defined(__unix)
+
+// Unix headers
+#include <unistd.h>
+
+#endif
 
 #if defined(_POSIX_VERSION) && (_POSIX_VERSION >= 200112L)
 

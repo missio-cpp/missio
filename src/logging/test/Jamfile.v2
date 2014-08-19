@@ -13,7 +13,6 @@ unit-test missio_logging_test
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
         <library>/boost/system//boost_system
-        <library>/boost/date_time//boost_date_time
     ;
 
 always missio_logging_test ;
