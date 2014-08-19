@@ -56,7 +56,7 @@ bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
     {
         if(first.min <= cp && cp <= first.max)
         {
-            std::size_t count = 0;
+            std::uint32_t bits = 6;
 
             for(auto const& next : first.next)
             {
@@ -73,11 +73,10 @@ bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)
 
                 cp = (cp << 6) + (octet & 0x3F);
 
-                ++count;
+                bits += 5;
             }
 
-            count = count * 5 + 6;
-            cp &= (1 << count) - 1;
+            cp &= (1 << bits) - 1;
 
             pos = it;
             return true;

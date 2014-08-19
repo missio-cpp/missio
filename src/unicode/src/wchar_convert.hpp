@@ -29,7 +29,7 @@ template <std::size_t>
 struct wchar_convert_impl;
 
 template <>
-struct wchar_convert_impl<2>
+struct wchar_convert_impl<sizeof(char16_t)>
 {
     template <typename InputIterator, typename OutputIterator>
     static void to_utf8(InputIterator first, InputIterator last, OutputIterator dest)
@@ -69,7 +69,7 @@ struct wchar_convert_impl<2>
 };
 
 template <>
-struct wchar_convert_impl<4>
+struct wchar_convert_impl<sizeof(char32_t)>
 {
     template <typename InputIterator, typename OutputIterator>
     static void to_utf8(InputIterator first, InputIterator last, OutputIterator dest)
