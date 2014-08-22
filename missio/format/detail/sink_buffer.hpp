@@ -13,8 +13,7 @@
 
 // STL headers
 #include <iostream>
-#include <cstring>
-#include <cstdlib>
+#include <cstddef>
 
 
 namespace missio
@@ -29,94 +28,37 @@ class sink_buffer
 public:
     typedef char value_type;
     typedef std::size_t size_type;
+    typedef char const* pointer;
+    typedef char const* const_pointer;
     typedef char const* iterator;
     typedef char const* const_iterator;
     typedef char const& reference;
     typedef char const& const_reference;
 
 public:
-    sink_buffer() :
-        capacity_(sizeof(static_buffer_)),
-        buffer_ptr_(static_buffer_),
-        size_(0)
-    {
-    }
-
-    ~sink_buffer()
-    {
-        if(sizeof(static_buffer_) != capacity_)
-            std::free(buffer_ptr_);
-    }
+    sink_buffer();
+    ~sink_buffer();
 
     sink_buffer(sink_buffer const&) = delete;
     sink_buffer& operator=(sink_buffer const&) = delete;
 
-    void clear()
-    {
-        size_ = 0;
-    }
+    void clear();
 
-    bool empty() const
-    {
-        return 0 == size_;
-    }
+    bool full() const;
+    bool empty() const;
 
-    size_type size() const
-    {
-        return size_;
-    }
+    size_type size() const;
+    size_type capacity() const;
 
-    size_type capacity() const
-    {
-        return capacity_;
-    }
+    const_pointer data() const;
 
-    char const* data() const
-    {
-        return buffer_ptr_;
-    }
+    const_iterator begin() const;
+    const_iterator end() const;
 
-    const_iterator begin() const
-    {
-        return buffer_ptr_;
-    }
-
-    const_iterator end() const
-    {
-        return buffer_ptr_ + size_;
-    }
-
-    void put(char ch)
-    {
-        buffer_ptr_[size_++] = ch;
-
-        if(size_ == capacity_)
-            grow_buffer();
-    }
+    void put(value_type ch);
 
 private:
-#if defined(__GNUC__)
-    __attribute__((noinline))
-#elif defined(_MSC_VER)
-    __declspec(noinline)
-#endif
-    void grow_buffer()
-    {
-        size_type const capacity(capacity_ * 4);
-
-        if(sizeof(static_buffer_) == capacity_)
-            buffer_ptr_ = reinterpret_cast<char*>(std::malloc(capacity));
-        else
-            buffer_ptr_ = reinterpret_cast<char*>(std::realloc(buffer_ptr_, capacity));
-
-        if(!buffer_ptr_)
-            throw std::bad_alloc();
-
-        if(sizeof(static_buffer_) == capacity_)
-            std::memcpy(buffer_ptr_, static_buffer_, size_);
-
-        capacity_ = capacity;
-    }
+    void grow_buffer();
 
 private:
     char static_buffer_[128];
@@ -124,6 +66,14 @@ private:
     char* buffer_ptr_;
     size_type size_;
 };
+
+inline void sink_buffer::put(value_type ch)
+{
+    buffer_ptr_[size_++] = ch;
+
+    if(full())
+        grow_buffer();
+}
 
 inline std::ostream& operator<<(std::ostream& os, sink_buffer const& buffer)
 {

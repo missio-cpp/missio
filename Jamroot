@@ -72,12 +72,11 @@ use-project /missio : $(TOP) ;
 
 use-project /missio/logging : $(SRC)/logging/build ;
 use-project /missio/unicode : $(SRC)/unicode/build ;
-#use-project /missio/config : $(SRC)/config/build ;
+use-project /missio/format : $(SRC)/format/build ;
 use-project /missio/json : $(SRC)/json/build ;
 
 use-project /missio/logging/test : $(SRC)/logging/test ;
 use-project /missio/unicode/test : $(SRC)/unicode/test ;
-#use-project /missio/config/test : $(SRC)/config/test ;
 use-project /missio/format/test : $(SRC)/format/test ;
 use-project /missio/json/test : $(SRC)/json/test ;
 
@@ -88,12 +87,11 @@ use-project /missio/format/perf : $(SRC)/format/perf ;
 
 build-project $(SRC)/logging/build ;
 build-project $(SRC)/unicode/build ;
-#build-project $(SRC)/config/build ;
+build-project $(SRC)/format/build ;
 build-project $(SRC)/json/build ;
 
 build-project $(SRC)/logging/test ;
 build-project $(SRC)/unicode/test ;
-#build-project $(SRC)/config/test ;
 build-project $(SRC)/format/test ;
 build-project $(SRC)/json/test ;
 
@@ -107,7 +105,6 @@ alias /missio/test
         ## sources ##
         /missio/logging/test
         /missio/unicode/test
-        #/missio/config/test
         /missio/format/test
         /missio/json/test
     ;
@@ -126,7 +123,7 @@ install missio
         ## sources ##
         /missio/logging
         /missio/unicode
-        #/missio/config
+        /missio/format
         /missio/json
     :
         ## build requirements ##

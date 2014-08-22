@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/format/detail/parse_format.hpp>
+#include <missio/format/detail/item_buffer.hpp>
 
 // STL headers
 #include <string>
@@ -26,19 +26,12 @@ namespace format
 class string
 {
 public:
-    string(std::string const& format) :
-        format_(format)
-    {
-        detail::parse_format(format_.data(), format_.size(), items_);
-    }
+    string(std::string const& format);
 
     string(string const&) = delete;
     string& operator=(string const&) = delete;
 
-    detail::item_buffer const& items() const
-    {
-        return items_;
-    }
+    detail::item_buffer const& items() const;
 
 private:
     std::string const format_;

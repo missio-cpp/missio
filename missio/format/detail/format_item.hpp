@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_format_item_hpp
@@ -11,9 +11,11 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// BOOST headers
-#include <boost/utility/string_ref.hpp>
-#include <boost/cstdint.hpp>
+// Application headers headers
+#include <missio/format/detail/string_view.hpp>
+
+// STL headers
+#include <cstdint>
 
 
 namespace missio
@@ -25,8 +27,8 @@ namespace detail
 
 struct format_item
 {
-    boost::uint32_t index;
-    boost::string_ref string;
+    std::uint32_t index;
+    string_view string;
 };
 
 }   // namespace detail

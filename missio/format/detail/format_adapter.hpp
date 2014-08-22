@@ -12,9 +12,8 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/format/string.hpp>
 #include <missio/format/detail/item_buffer.hpp>
-#include <missio/format/detail/parse_format.hpp>
+#include <missio/format/string.hpp>
 
 // STL headers
 #include <cstddef>
@@ -36,18 +35,12 @@ template <>
 class format_adapter<char const*>
 {
 public:
-    explicit format_adapter(char const* format)
-    {
-        parse_format(format, std::strlen(format), items_);
-    }
+    explicit format_adapter(char const* format);
 
     format_adapter(format_adapter const&) = delete;
     format_adapter& operator=(format_adapter const&) = delete;
 
-    item_buffer const& items() const
-    {
-        return items_;
-    }
+    item_buffer const& items() const;
 
 private:
     item_buffer items_;
@@ -57,18 +50,12 @@ template <>
 class format_adapter<std::string>
 {
 public:
-    explicit format_adapter(std::string const& format)
-    {
-        parse_format(format.data(), format.size(), items_);
-    }
+    explicit format_adapter(std::string const& format);
 
     format_adapter(format_adapter const&) = delete;
     format_adapter& operator=(format_adapter const&) = delete;
 
-    item_buffer const& items() const
-    {
-        return items_;
-    }
+    item_buffer const& items() const;
 
 private:
     item_buffer items_;
@@ -78,18 +65,12 @@ template <>
 class format_adapter<string>
 {
 public:
-    explicit format_adapter(string const& format) :
-        format_(format)
-    {
-    }
+    explicit format_adapter(string const& format);
 
     format_adapter(format_adapter const&) = delete;
     format_adapter& operator=(format_adapter const&) = delete;
 
-    item_buffer const& items() const
-    {
-        return format_.items();
-    }
+    item_buffer const& items() const;
 
 private:
     string const& format_;

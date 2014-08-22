@@ -36,49 +36,22 @@ public:
     typedef format_item const& const_reference;
 
 public:
-    item_buffer() :
-        size_(0)
-    {
-    }
+    item_buffer();
 
     item_buffer(item_buffer const&) = delete;
     item_buffer& operator=(item_buffer const&) = delete;
 
-    bool empty() const
-    {
-        return 0 == size_;
-    }
+    bool empty() const;
 
-    size_type size() const
-    {
-        return size_;
-    }
+    size_type size() const;
+    size_type capacity() const;
 
-    size_type capacity() const
-    {
-        return 32;
-    }
+    const_iterator begin() const;
+    const_iterator end() const;
 
-    const_iterator begin() const
-    {
-        return items_;
-    }
+    void push_back(format_item const& item);
 
-    const_iterator end() const
-    {
-        return items_ + size_;
-    }
-
-    void push_back(format_item const& item)
-    {
-        if(size_ < 32)
-            items_[size_++] = item;
-    }
-
-    const_reference operator[](size_type index) const
-    {
-        return items_[index];
-    }
+    const_reference operator[](size_type index) const;
 
 private:
     size_type size_;

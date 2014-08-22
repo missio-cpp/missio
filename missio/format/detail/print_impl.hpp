@@ -13,8 +13,8 @@
 
 // Application headers
 #include <missio/format/detail/sink_traits.hpp>
+#include <missio/format/detail/type_adapter.hpp>
 #include <missio/format/detail/format_traits.hpp>
-#include <missio/format/detail/format_value.hpp>
 #include <missio/format/detail/insert_string.hpp>
 
 
@@ -34,7 +34,7 @@ template <std::uint32_t N = 0, typename Sink, typename Value, typename ... Args>
 void insert(Sink& sink, unsigned int index, Value const& value, Args const& ... args)
 {
     if(N == index)
-        format_value(sink, value);
+        type_adapter<Value>::format(sink, value);
     else
         insert<N + 1>(sink, index, args...);
 }
@@ -45,10 +45,10 @@ void print(Sink& sink, Format const& format, Args const& ... args)
     typename traits::sink_traits<Sink>::adapter_type sink_adapter(sink);
     typename traits::format_traits<Format>::adapter_type format_adapter(format);
 
-    for(format_item const& item : format.items())
+    for(format_item const& item : format_adapter.items())
     {
-        insert<>(sink, item.index, args...);
-        insert_string(sink, item.string);
+        insert(sink_adapter, item.index, args...);
+        insert_string(sink_adapter, item.string);
     }
 }
 

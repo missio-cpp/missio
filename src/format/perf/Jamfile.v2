@@ -5,4 +5,5 @@ exe missio_format_perf
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
+        ../build//missio_format
     ;

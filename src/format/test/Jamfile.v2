@@ -3,16 +3,21 @@ import testing ;
 
 project missio/format/test ;
 
+# Windows libraries
+lib ws2_32 ;
+
 unit-test missio_format_test
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
+        ../build//missio_format
     :
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
         <library>/boost/system//boost_system
         <library>/boost/filesystem//boost_filesystem
+        <target-os>windows:<library>ws2_32
     ;
 
 always missio_format_test ;

@@ -14,11 +14,11 @@
 // Application headers
 #include <missio/format/detail/real_generator.hpp>
 #include <missio/format/detail/sink_buffer.hpp>
+#include <missio/format/detail/string_view.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/utility/string_ref.hpp>
 
 // STL headers
 #include <string>
@@ -247,14 +247,14 @@ struct type_generator<std::wstring>
 };
 
 template <>
-struct type_generator<boost::string_ref>
+struct type_generator<string_view>
 {
     typedef boost::spirit::auto_type const& type;
     static type get() { return boost::spirit::auto_; }
 };
 
 template <>
-struct type_generator<boost::wstring_ref>
+struct type_generator<wstring_view>
 {
     typedef boost::spirit::auto_type const& type;
     static type get() { return boost::spirit::auto_; }

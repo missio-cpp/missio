@@ -12,24 +12,28 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application header
-#include <missio/format/detail/item_buffer_traits.hpp>
+#include <missio/format/detail/string_view.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
+// Implementation headers
+#include "item_buffer_traits.hpp"
+
 // STL headers
-#include <algorithm>
+#include <iterator>
 #include <cstdint>
 
 
 using missio::format::detail::format_item;
+using missio::format::detail::string_view;
 
 BOOST_FUSION_ADAPT_STRUCT
 (
     format_item,
     (std::uint32_t, index)
-    (boost::string_ref, string)
+    (string_view, string)
 )
 
 namespace boost
@@ -39,12 +43,12 @@ namespace spirit
 namespace traits
 {
 
-template <typename Char, typename Traits, typename Iterator>
-struct assign_to_attribute_from_iterators<boost::basic_string_ref<Char, Traits>, Iterator>
+template <typename Iterator>
+struct assign_to_attribute_from_iterators<missio::format::detail::string_view, Iterator>
 {
-    static void call(Iterator const& first, Iterator const& last, boost::basic_string_ref<Char, Traits>& attr)
+    static void call(Iterator const& first, Iterator const& last, missio::format::detail::string_view& attr)
     {
-        attr = boost::basic_string_ref<Char, Traits>(&*first, std::distance(first, last));
+        attr = missio::format::detail::string_view(&*first, std::distance(first, last));
     }
 };
 
@@ -66,34 +70,18 @@ struct format_grammar : boost::spirit::qi::grammar<Iterator, item_buffer()>
     {
         using namespace boost::spirit::qi;
 
-        string_     =   raw
-                        [
-                           *(  ~char_("{}")
-                            |   lit("{{")
-                            |   lit("}}")
-                            )
-                        ]
-                    ;
+        string_     =   raw[ *( ~char_("{}") | "{{" | "}}" ) ];
 
-        index_      =   '{'
-                    >>  uint_
-                    >>  '}'
-                    ;
+        index_      =   '{' >> uint_ >> '}';
 
-        prefix_     =   attr(~0u)
-                    >>  string_
-                    ;
+        prefix_     =   attr(~0u) >> string_;
 
-        item_       =   index_
-                    >>  string_
-                    ;
+        item_       =   index_ >> string_;
 
-        start_      =   prefix_
-                    >> *item_
-                    ;
+        start_      =   prefix_ >> *item_;
     }
 
-    boost::spirit::qi::rule<Iterator, boost::string_ref()> string_;
+    boost::spirit::qi::rule<Iterator, string_view()> string_;
     boost::spirit::qi::rule<Iterator, std::uint32_t()> index_;
     boost::spirit::qi::rule<Iterator, format_item()> prefix_;
     boost::spirit::qi::rule<Iterator, format_item()> item_;

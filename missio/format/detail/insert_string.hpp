@@ -13,9 +13,7 @@
 
 // Application headers
 #include <missio/format/detail/sink_iterator.hpp>
-
-// BOOST headers
-#include <boost/utility/string_ref.hpp>
+#include <missio/format/detail/string_view.hpp>
 
 
 namespace missio
@@ -26,7 +24,7 @@ namespace detail
 {
 
 template <typename Sink>
-void insert_string(Sink& sink, boost::string_ref const& str)
+void insert_string(Sink& sink, string_view const& str)
 {
     insert_string(sink_iterator<Sink>(sink), str.begin(), str.end());
 }

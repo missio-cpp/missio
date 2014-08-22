@@ -1,0 +1,11 @@
+
+project missio/format
+    :
+        source-location ../src
+    ;
+
+lib missio_format
+    :
+        ## sources ##
+        [ glob-tree *.cpp : .svn ]
+    ;

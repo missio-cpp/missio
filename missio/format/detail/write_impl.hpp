@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_write_impl_hpp
@@ -13,7 +13,7 @@
 
 // Application headers
 #include <missio/format/detail/sink_traits.hpp>
-#include <missio/format/detail/format_value.hpp>
+#include <missio/format/detail/type_adapter.hpp>
 
 
 namespace missio
@@ -31,7 +31,8 @@ void write_impl(Sink& /*sink*/)
 template <typename Sink, typename Value, typename ... Args>
 void write_impl(Sink& sink, Value const& value, Args const& ... args)
 {
-    format_value(sink, value); 
+    type_adapter<Value>::format(sink, value);
+
     write_impl(sink, args...);
 }
 

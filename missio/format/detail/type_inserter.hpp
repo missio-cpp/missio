@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2013 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_type_inserter_hpp
@@ -17,7 +17,7 @@
 #include <missio/format/detail/type_generator.hpp>
 #include <missio/format/detail/real_generator.hpp>
 #include <missio/format/detail/int_generator.hpp>
-#include <missio/format/detail/format_value.hpp>
+#include <missio/format/detail/type_adapter.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
@@ -102,7 +102,7 @@ struct align_inserter
     {
         sink_buffer buffer;
 
-        format_value(buffer, value);
+        type_adapter<Value>::format(buffer, value);
 
         call(sink, buffer, type_generator<sink_buffer>::get());
     }
@@ -132,7 +132,7 @@ struct repeat_inserter
     {
         sink_buffer buffer;
 
-        format_value(buffer, value);
+        type_adapter<Value>::format(buffer, value);
 
         call(sink, buffer, type_generator<sink_buffer>::get());
     }

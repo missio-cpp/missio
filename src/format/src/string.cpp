@@ -4,30 +4,29 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_format_detail_real_format_hpp
-#define _missio_format_detail_real_format_hpp
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1200)
-# pragma once
-#endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+// Application headers
+#include <missio/format/string.hpp>
+
+// Implementation headers
+#include "parse_format.hpp"
 
 
 namespace missio
 {
 namespace format
 {
-namespace detail
-{
 
-enum class real_format
+string::string(std::string const& format) :
+    format_(format)
 {
-    fixed,
-    general,
-    scientific
-};
+    detail::parse_format(format_.begin(), format_.end(), items_);
+}
 
-}   // namespace detail
+detail::item_buffer const& string::items() const
+{
+    return items_;
+}
+
 }   // namespace format
 }   // namespace missio
-
-#endif  // _missio_format_detail_real_format_hpp
