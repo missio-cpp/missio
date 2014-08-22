@@ -9,8 +9,8 @@
 #include <missio/logging/detail/sink_buffer.hpp>
 
 // STL headers
-#include <stdexcept>
 #include <cstdlib>
+#include <new>
 
 
 namespace missio
@@ -65,12 +65,17 @@ void sink_buffer::clear()
     buffer_pos_ = buffer_beg_;
 }
 
+bool sink_buffer::full() const
+{
+    return buffer_pos_ == buffer_end_;
+}
+
 bool sink_buffer::empty() const
 {
     return buffer_pos_ == buffer_beg_;
 }
 
-char const* sink_buffer::data() const
+sink_buffer::const_pointer sink_buffer::data() const
 {
     return buffer_beg_;
 }
@@ -85,26 +90,26 @@ sink_buffer::const_iterator sink_buffer::end() const
     return buffer_pos_;
 }
 
-std::size_t sink_buffer::size() const
+sink_buffer::size_type sink_buffer::size() const
 {
     return buffer_pos_ - buffer_beg_;
 }
 
-std::size_t sink_buffer::capacity() const
+sink_buffer::size_type sink_buffer::capacity() const
 {
     return buffer_end_ - buffer_beg_;
 }
 
 void sink_buffer::grow_buffer()
 {
-    std::size_t new_capacity(std::max<std::size_t>(128, 4 * capacity()));
+    size_type const new_capacity = std::max(128u, 4u * capacity());
 
-    void* buffer(std::realloc(buffer_beg_, new_capacity));
+    void* buffer = std::realloc(buffer_beg_, new_capacity);
 
     if(!buffer)
         throw std::bad_alloc();
 
-    std::size_t const buffer_offset(size());
+    size_type const buffer_offset = size();
 
     buffer_beg_ = static_cast<char*>(buffer);
     buffer_end_ = buffer_beg_ + new_capacity;

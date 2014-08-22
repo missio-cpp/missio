@@ -31,6 +31,11 @@ namespace detail
 class sink_buffer
 {
 public:
+    typedef char value_type;
+    typedef std::size_t size_type;
+    typedef char const* pointer;
+    typedef char const* const_pointer;
+    typedef char const* iterator;
     typedef char const* const_iterator;
 
 public:
@@ -44,17 +49,19 @@ public:
     sink_buffer& operator=(sink_buffer&& other);
 
     void clear();
+
+    bool full() const;
     bool empty() const;
 
-    char const* data() const;
+    const_pointer data() const;
 
     const_iterator begin() const;
     const_iterator end() const;
 
-    std::size_t size() const;
-    std::size_t capacity() const;
+    size_type size() const;
+    size_type capacity() const;
 
-    void put(char ch);
+    void put(value_type ch);
 
 private:
     void grow_buffer();
@@ -65,9 +72,9 @@ private:
     char* buffer_pos_;
 };
 
-inline void sink_buffer::put(char ch)
+inline void sink_buffer::put(value_type ch)
 {
-    if(buffer_pos_ == buffer_end_)
+    if(full())
         grow_buffer();
 
     *buffer_pos_++ = ch;
@@ -87,7 +94,7 @@ struct type_adapter<logging::detail::sink_buffer>
     template <typename Sink>
     static void format(Sink& sink, logging::detail::sink_buffer const& value)
     {
-         format_value(sink, boost::make_iterator_range(value.begin(), value.end()));
+         write(sink, boost::make_iterator_range(value.begin(), value.end()));
     }
 };
 
