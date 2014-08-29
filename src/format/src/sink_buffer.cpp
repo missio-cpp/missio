@@ -97,8 +97,6 @@ void sink_buffer::grow_buffer()
             throw std::bad_alloc();
 
         buffer_ptr_ = static_cast<char*>(buffer);
-
-        capacity_
     }
 
     capacity_ = capacity;

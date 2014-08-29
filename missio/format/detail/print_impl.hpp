@@ -26,12 +26,12 @@ namespace detail
 {
 
 template <std::uint32_t N = 0, typename Sink>
-void insert(Sink& /*sink*/, unsigned int /*index*/)
+void insert(Sink& /*sink*/, std::uint32_t const /*index*/)
 {
 }
 
 template <std::uint32_t N = 0, typename Sink, typename Value, typename ... Args>
-void insert(Sink& sink, unsigned int index, Value const& value, Args const& ... args)
+void insert(Sink& sink, std::uint32_t const index, Value const& value, Args const& ... args)
 {
     if(N == index)
         type_adapter<Value>::format(sink, value);
