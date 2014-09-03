@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_null_traits_hpp
@@ -23,17 +23,17 @@ namespace boost
 {
 
 template <>
-struct is_pod<missio::json::null> : boost::mpl::true_
+struct is_pod<missio::json::null> : mpl::true_
 {
 };
 
 template <>
-struct is_empty<missio::json::null> : boost::mpl::true_
+struct is_empty<missio::json::null> : mpl::true_
 {
 };
 
 template <>
-struct is_stateless<missio::json::null> : boost::mpl::true_
+struct is_stateless<missio::json::null> : mpl::true_
 {
 };
 
