@@ -56,6 +56,44 @@ BOOST_AUTO_TEST_CASE(constructor_test)
     BOOST_CHECK_EQUAL(value8.variant().which(), 6);
 }
 
+BOOST_AUTO_TEST_CASE(move_constructor_test)
+{
+    missio::json::null null;
+    missio::json::value value1(std::move(null));
+
+    BOOST_CHECK_EQUAL(value1.variant().which(), 0);
+
+    missio::json::real real(0.0);
+    missio::json::value value2(std::move(real));
+
+    BOOST_CHECK_EQUAL(value2.variant().which(), 1);
+
+    missio::json::integer integer(0);
+    missio::json::value value3(std::move(integer));
+
+    BOOST_CHECK_EQUAL(value3.variant().which(), 2);
+
+    missio::json::boolean boolean(false);
+    missio::json::value value4(std::move(boolean));
+
+    BOOST_CHECK_EQUAL(value4.variant().which(), 3);
+
+    missio::json::string string;
+    missio::json::value value5(std::move(string));
+
+    BOOST_CHECK_EQUAL(value5.variant().which(), 4);
+
+    missio::json::array array;
+    missio::json::value value6(std::move(array));
+
+    BOOST_CHECK_EQUAL(value6.variant().which(), 5);
+
+    missio::json::object object;
+    missio::json::value value7(std::move(object));
+
+    BOOST_CHECK_EQUAL(value7.variant().which(), 6);
+}
+
 BOOST_AUTO_TEST_CASE(construct_with_compatible_types_test)
 {
     missio::json::value value1(float(0.0));
@@ -64,10 +102,10 @@ BOOST_AUTO_TEST_CASE(construct_with_compatible_types_test)
     missio::json::value value2(short(0));
     BOOST_CHECK_EQUAL(value2.variant().which(), 2);
 
-    missio::json::value value3(std::string());
+    missio::json::value value3(std::string(""));
     BOOST_CHECK_EQUAL(value3.variant().which(), 4);
 
-    missio::json::value value4(std::wstring());
+    missio::json::value value4(std::wstring(L""));
     BOOST_CHECK_EQUAL(value4.variant().which(), 4);
 }
 

@@ -3,6 +3,9 @@ import testing ;
 
 project missio/json/test ;
 
+# Windows libraries
+lib ws2_32 ;
+
 unit-test missio_json_test
     :
         ## sources ##
@@ -15,6 +18,7 @@ unit-test missio_json_test
         <library>/boost/system//boost_system
         <library>/boost/date_time//boost_date_time
         <library>/boost/filesystem//boost_filesystem
+        <target-os>windows:<library>ws2_32
     ;
 
 always missio_json_test ;

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_value_traits_hpp
@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/json/value_get.hpp>
+#include <missio/json/value.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
@@ -35,7 +35,7 @@ struct variant_which<missio::json::value>
 {
     static int call(missio::json::value const& value)
     {
-        return value.which();
+        return value.variant().which();
     }
 };
 

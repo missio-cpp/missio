@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_real_policies_hpp
@@ -27,7 +27,7 @@ struct high_precision_real_policies : boost::spirit::karma::real_policies<T>
 {
     static unsigned precision(T)
     {
-        return 6;
+        return 6u;
     }
 };
 

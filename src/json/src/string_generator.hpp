@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_string_generator_hpp
@@ -11,8 +11,8 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/json/detail/string_inserter.hpp>
+// Implementation headers
+#include "string_inserter.hpp"
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
@@ -71,7 +71,7 @@ struct any_string_generator : boost::spirit::karma::primitive_generator<any_stri
     template <typename OutputIterator, typename Context, typename Delimiter>
     static bool generate(OutputIterator&, Context&, Delimiter const&, boost::spirit::unused_type)
     {
-        BOOST_SPIRIT_ASSERT_MSG(false, json_string_generator_not_usable_without_attribute, ());
+        //TODO: BOOST_SPIRIT_ASSERT_MSG(false, json_string_generator_not_usable_without_attribute, ());
         return false;
     }
 

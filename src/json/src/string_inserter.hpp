@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_string_inserter_hpp
@@ -13,7 +13,9 @@
 
 // Application headers
 #include <missio/json/string.hpp>
-#include <missio/json/detail/char_inserter.hpp>
+
+// Implementation headers
+#include "char_inserter.hpp"
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
@@ -33,7 +35,7 @@ struct string_inserter
     {
         *sink++ = '"';
 
-        for(char ch = *str; nullptr != ch; ch = *++str)
+        for(char ch = *str; 0 != ch; ch = *++str)
             char_inserter::call(sink, ch);
 
         *sink++ = '"';

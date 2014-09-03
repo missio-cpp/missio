@@ -22,6 +22,66 @@ BOOST_AUTO_TEST_CASE(constructor_test)
     BOOST_CHECK_EQUAL(array.size(), 0u);
 }
 
+BOOST_AUTO_TEST_CASE(construct_from_initializer_list_test)
+{
+    missio::json::array array
+    {
+        42,
+        true,
+        "string",
+        missio::json::array { 42, false, "string" },
+        missio::json::object { { "key1", 42 }, { "key2", "value" } }
+    };
+
+    BOOST_CHECK_EQUAL(array.size(), 5u);
+
+    BOOST_CHECK_EQUAL(array[0], 42);
+    BOOST_CHECK_EQUAL(array[1], true);
+    BOOST_CHECK_EQUAL(array[2], "string");
+
+    BOOST_CHECK_EQUAL(array[3].is<missio::json::array>(), true);
+
+    BOOST_CHECK_EQUAL(array[3][0], 42);
+    BOOST_CHECK_EQUAL(array[3][1], false);
+    BOOST_CHECK_EQUAL(array[3][2], "string");
+
+    BOOST_CHECK_EQUAL(array[4].is<missio::json::object>(), true);
+
+    BOOST_CHECK_EQUAL(array[4]["key1"], 42);
+    BOOST_CHECK_EQUAL(array[4]["key2"], "value");
+}
+
+BOOST_AUTO_TEST_CASE(assign_from_initializer_list_test)
+{
+    missio::json::array array;
+
+    array =
+    {
+        42,
+        true,
+        "string",
+        missio::json::array { 42, false, "string" },
+        missio::json::object { { "key1", 42 }, { "key2", "value" } }
+    };
+
+    BOOST_CHECK_EQUAL(array.size(), 5u);
+
+    BOOST_CHECK_EQUAL(array[0], 42);
+    BOOST_CHECK_EQUAL(array[1], true);
+    BOOST_CHECK_EQUAL(array[2], "string");
+
+    BOOST_CHECK_EQUAL(array[3].is<missio::json::array>(), true);
+
+    BOOST_CHECK_EQUAL(array[3][0], 42);
+    BOOST_CHECK_EQUAL(array[3][1], false);
+    BOOST_CHECK_EQUAL(array[3][2], "string");
+
+    BOOST_CHECK_EQUAL(array[4].is<missio::json::object>(), true);
+
+    BOOST_CHECK_EQUAL(array[4]["key1"], 42);
+    BOOST_CHECK_EQUAL(array[4]["key2"], "value");
+}
+
 BOOST_AUTO_TEST_CASE(push_back_test)
 {
     missio::json::array array;

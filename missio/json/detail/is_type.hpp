@@ -30,7 +30,18 @@ template <typename T>
 class is_visitor : public boost::static_visitor<bool>
 {
 public:
+    template <typename U>
+    using is_convertible = typename std::is_convertible<U, T>::type;
+
+    template <typename U>
+    using enable_if_convertible = typename std::enable_if<is_convertible<U>::value>::type;
+
+    template <typename U>
+    using enable_if_not_convertible = typename std::enable_if<!is_convertible<U>::value>::type;
+
+public:
     is_visitor() = default;
+    ~is_visitor() = default;
 
     bool operator()(T) const
     {
@@ -38,9 +49,15 @@ public:
     }
 
     template <typename U>
-    bool operator()(U) const
+    bool operator()(U, enable_if_convertible<U> const* = nullptr) const
     {
-        return std::is_convertible<U, T>();
+        return true;
+    }
+
+    template <typename U>
+    bool operator()(U, enable_if_not_convertible<U> const* = nullptr) const
+    {
+        return false;
     }
 };
 

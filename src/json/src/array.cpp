@@ -18,6 +18,17 @@ namespace missio
 namespace json
 {
 
+array::array(std::initializer_list<value> values) :
+    values_(values.begin(), values.end())
+{
+}
+
+array& array::operator=(std::initializer_list<value> values)
+{
+    values_.assign(values);
+    return *this;
+}
+
 bool array::empty() const
 {
     return values_.empty();
@@ -100,7 +111,7 @@ value const& array::back() const
 
 void array::push_back(value&& value)
 {
-    values_.push_back(std::forward<json::value>(value));
+    values_.push_back(std::forward<value_type>(value));
 }
 
 void array::push_back(value const& value)
@@ -113,9 +124,9 @@ void array::pop_back()
     values_.pop_back();
 }
 
-void array::erase(iterator position)
+void array::erase(iterator pos)
 {
-    values_.erase(position);
+    values_.erase(pos);
 }
 
 void array::erase(iterator first, iterator last)
@@ -123,14 +134,19 @@ void array::erase(iterator first, iterator last)
     values_.erase(first, last);
 }
 
-void array::insert(iterator position, value&& value)
+void array::insert(iterator pos, value&& value)
 {
-    values_.insert(position, std::forward<json::value>(value));
+    values_.insert(pos, std::forward<value_type>(value));
 }
 
-void array::insert(iterator position, value const& value)
+void array::insert(iterator pos, value const& value)
 {
-    values_.insert(position, value);
+    values_.insert(pos, value);
+}
+
+void array::insert(iterator pos, std::initializer_list<value> values)
+{
+    values_.insert(pos, values);
 }
 
 value& array::operator[](std::size_t index)

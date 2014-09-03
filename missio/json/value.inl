@@ -6,25 +6,29 @@
 //---------------------------------------------------------------------------
 
 
-template <typename T> value::value(T const& value)
+template <typename T, typename Enable>
+value::value(T const& value)
 {
-    detail::assign_value_to_variant(variant_, value);
+    detail::assign_to_variant(variant_, value);
 }
 
-template <typename T> value& value::operator=(T const& value)
+template <typename T, typename Enable>
+value& value::operator=(T const& value)
 {
-    detail::assign_value_to_variant(variant_, value);
+    detail::assign_to_variant(variant_, value);
     return *this;
 }
 
-template <typename T> value::value(T&& value)
+template <typename T, typename Enable>
+value::value(T&& value)
 {
-    detail::assign_value_to_variant(variant_, value);
+    detail::assign_to_variant(variant_, std::forward<T>(value));
 }
 
-template <typename T> value& value::operator=(T&& value)
+template <typename T, typename Enable>
+value& value::operator=(T&& value)
 {
-    detail::assign_value_to_variant(variant_, value);
+    detail::assign_to_variant(variant_, std::forward<T>(value));
     return *this;
 }
 
@@ -40,7 +44,7 @@ template <typename T> T value::as() const
 
 template <typename T> value::operator T() const
 {
-    return as<T>();
+    return detail::as_type<T>::call(variant_);
 }
 
 template <typename T> T& value::get()

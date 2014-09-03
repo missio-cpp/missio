@@ -5,8 +5,8 @@
 //
 //---------------------------------------------------------------------------
 
-// Application headers
-#include <missio/json/detail/base64.hpp>
+// Implementation headers
+#include "base64.hpp"
 
 // STL headers
 #include <iterator>

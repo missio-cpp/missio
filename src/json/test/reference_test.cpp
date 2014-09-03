@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(object_constructor_test)
     missio::json::string key("key1");
     missio::json::value value(1);
 
-    object.insert(key, value);
+    object.insert(std::make_pair(key, value));
 
     missio::json::object_ref object_ref(object);
     missio::json::object_cref object_cref(object);

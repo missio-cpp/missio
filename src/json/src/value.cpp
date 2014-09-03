@@ -8,24 +8,11 @@
 // Application headers
 #include <missio/json/value.hpp>
 
-// STL headers
-#include <utility>
-
 
 namespace missio
 {
 namespace json
 {
-
-void value::assign(value const& other)
-{
-    variant_ = other.variant_;
-}
-
-int value::which() const
-{
-    return variant_.which();
-}
 
 value::variant_type const& value::variant() const
 {

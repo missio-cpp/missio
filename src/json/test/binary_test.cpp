@@ -16,14 +16,14 @@ BOOST_AUTO_TEST_SUITE(json_binary_test_suite)
 
 struct binary_fixture
 {
-    binary_fixture()
+    binary_fixture() :
+        base64_string{ "Zm9vYmFy" },
+        binary_data{ 'f', 'o', 'o', 'b', 'a', 'r' }
     {
-        base64_string = "Zm9vYmFy";
-        std::memcpy(binary_data, "foobar", 6);
     }
 
     std::string const base64_string;
-    std::uint8_t const binary_data[6];
+    std::vector<std::uint8_t> const binary_data;
 };
 
 BOOST_AUTO_TEST_CASE(default_constructor_test)
@@ -34,22 +34,77 @@ BOOST_AUTO_TEST_CASE(default_constructor_test)
     BOOST_CHECK_EQUAL(binary.size(), 0u);
 }
 
-BOOST_FIXTURE_TEST_CASE(data_constructor_test, binary_fixture)
+BOOST_AUTO_TEST_CASE(construct_from_initializer_list_test)
 {
-    missio::json::binary binary1 { 'f', 'o', 'o', 'b', 'a', 'r' };
+    missio::json::binary binary { 'f', 'o', 'o', 'b', 'a', 'r' };
 
-    BOOST_CHECK_EQUAL(binary1.empty(), true);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary1.data(), binary1.data() + binary1.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL(binary.data()[0], std::uint8_t('f'));
+    BOOST_CHECK_EQUAL(binary.data()[1], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[2], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[3], std::uint8_t('b'));
+    BOOST_CHECK_EQUAL(binary.data()[4], std::uint8_t('a'));
+    BOOST_CHECK_EQUAL(binary.data()[5], std::uint8_t('r'));
+}
 
-    missio::json::binary binary2(binary_data.data(), binary_data.size());
+BOOST_AUTO_TEST_CASE(constuct_from_char_array)
+{
+    char array[6] { 'f', 'o', 'o', 'b', 'a', 'r' };
 
-    BOOST_CHECK_EQUAL(binary2.empty(), true);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.data(), binary2.data() + binary2.size(), std::begin(binary_data), std::end(binary_data));
+    missio::json::binary binary(array, 6);
 
-    missio::json::binary binary3(binary_data);
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), std::begin(array), std::end(array));
+}
 
-    BOOST_CHECK_EQUAL(binary3.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary3.data(), binary3.data() + binary3.size(), std::begin(binary_data), std::end(binary_data));
+BOOST_AUTO_TEST_CASE(construct_from_array_test)
+{
+    std::array<char, 6> array { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary { array };
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), array.begin(), array.end());
+}
+
+BOOST_AUTO_TEST_CASE(construct_from_vector_test)
+{
+    std::vector<char> vector { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary { vector };
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), vector.begin(), vector.end());
+}
+
+BOOST_AUTO_TEST_CASE(construct_from_deque_test)
+{
+    std::deque<char> deque { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary { deque };
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), deque.begin(), deque.end());
+}
+
+BOOST_AUTO_TEST_CASE(construct_from_list_test)
+{
+    std::list<char> list { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary { list };
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), list.begin(), list.end());
+}
+
+BOOST_AUTO_TEST_CASE(move_construct_from_vector_test)
+{
+    std::vector<char> vector { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary { std::vector<char>(vector) };
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), vector.begin(), vector.end());
 }
 
 BOOST_FIXTURE_TEST_CASE(move_constructor_test, binary_fixture)
@@ -58,7 +113,7 @@ BOOST_FIXTURE_TEST_CASE(move_constructor_test, binary_fixture)
     missio::json::binary binary2(std::move(binary1));
 
     BOOST_CHECK_EQUAL(binary1.empty(), true);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.data(), binary2.data() + binary2.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.begin(), binary2.end(), std::begin(binary_data), std::end(binary_data));
 }
 
 BOOST_FIXTURE_TEST_CASE(copy_constructor_test, binary_fixture)
@@ -66,8 +121,8 @@ BOOST_FIXTURE_TEST_CASE(copy_constructor_test, binary_fixture)
     missio::json::binary binary1(binary_data);
     missio::json::binary binary2(binary1);
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary1.data(), binary1.data() + binary1.size(), std::begin(binary_data), std::end(binary_data));
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.data(), binary2.data() + binary2.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary1.begin(), binary1.end(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.begin(), binary2.end(), std::begin(binary_data), std::end(binary_data));
 }
 
 BOOST_FIXTURE_TEST_CASE(move_assignment_operator_test, binary_fixture)
@@ -78,7 +133,7 @@ BOOST_FIXTURE_TEST_CASE(move_assignment_operator_test, binary_fixture)
     binary2 = std::move(binary1);
 
     BOOST_CHECK_EQUAL(binary1.empty(), true);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.data(), binary2.data() + binary2.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.begin(), binary2.end(), std::begin(binary_data), std::end(binary_data));
 }
 
 BOOST_FIXTURE_TEST_CASE(assignment_operator_test, binary_fixture)
@@ -88,8 +143,8 @@ BOOST_FIXTURE_TEST_CASE(assignment_operator_test, binary_fixture)
 
     binary2 = binary1;
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary1.data(), binary1.data() + binary1.size(), std::begin(binary_data), std::end(binary_data));
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.data(), binary2.data() + binary2.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary1.begin(), binary1.end(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary2.begin(), binary2.end(), std::begin(binary_data), std::end(binary_data));
 }
 
 BOOST_FIXTURE_TEST_CASE(clear_test, binary_fixture)
@@ -102,35 +157,143 @@ BOOST_FIXTURE_TEST_CASE(clear_test, binary_fixture)
     BOOST_CHECK_EQUAL(binary.size(), 0u);
 }
 
-BOOST_FIXTURE_TEST_CASE(assign_test, binary_fixture)
+BOOST_AUTO_TEST_CASE(assign_from_initializer_list_test)
 {
     missio::json::binary binary;
 
-    binary.assign(binary_data);
+    binary.assign({ 'f', 'o', 'o', 'b', 'a', 'r' });
 
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
-
-    binary.assign(binary_data.data(), binary_data.size());
-
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL(binary.data()[0], std::uint8_t('f'));
+    BOOST_CHECK_EQUAL(binary.data()[1], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[2], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[3], std::uint8_t('b'));
+    BOOST_CHECK_EQUAL(binary.data()[4], std::uint8_t('a'));
+    BOOST_CHECK_EQUAL(binary.data()[5], std::uint8_t('r'));
 }
 
-BOOST_FIXTURE_TEST_CASE(append_test, binary_fixture)
+BOOST_AUTO_TEST_CASE(assign_from_char_array_test)
+{
+    char array[6] { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.assign(array, 6);
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), std::begin(array), std::end(array));
+}
+
+BOOST_AUTO_TEST_CASE(assign_from_vector_test)
+{
+    std::vector<char> vector { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.assign(vector);
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), vector.begin(), vector.end());
+}
+
+BOOST_AUTO_TEST_CASE(assign_from_deque_test)
+{
+    std::deque<char> deque { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.assign(deque);
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), deque.begin(), deque.end());
+}
+
+BOOST_AUTO_TEST_CASE(assign_from_list_test)
+{
+    std::list<char> list { 'f', 'o', 'o', 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.assign(list);
+
+    BOOST_CHECK_EQUAL(binary.empty(), false);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), list.begin(), list.end());
+}
+
+BOOST_AUTO_TEST_CASE(append_from_initializer_list_test)
 {
     missio::json::binary binary;
 
-    binary.append(binary_data);
+    binary.append({ 'f', 'o', 'o' });
+    binary.append({ 'b', 'a', 'r' });
 
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL(binary.data()[0], std::uint8_t('f'));
+    BOOST_CHECK_EQUAL(binary.data()[1], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[2], std::uint8_t('o'));
+    BOOST_CHECK_EQUAL(binary.data()[3], std::uint8_t('b'));
+    BOOST_CHECK_EQUAL(binary.data()[4], std::uint8_t('a'));
+    BOOST_CHECK_EQUAL(binary.data()[5], std::uint8_t('r'));
+}
 
-    binary.append(binary_data.data(), binary_data.size());
+BOOST_AUTO_TEST_CASE(append_from_char_array_test)
+{
+    char array1[3] { 'f', 'o', 'o' };
+    char array2[3] { 'b', 'a', 'r' };
 
-    BOOST_CHECK_EQUAL(binary.size(), 2u * binary_data.size());
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size() / 2, std::begin(binary_data), std::end(binary_data));
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data() + binary.size() / 2, binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
+    missio::json::binary binary;
+
+    binary.append(array1, 3);
+    binary.append(array2, 3);
+
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, std::begin(array1), std::end(array1));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), std::begin(array2), std::end(array2));
+}
+
+BOOST_AUTO_TEST_CASE(append_from_vector_test)
+{
+    std::vector<char> vector1 { 'f', 'o', 'o' };
+    std::vector<char> vector2 { 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.append(vector1);
+    binary.append(vector2);
+
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, vector1.begin(), vector1.end());
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), vector2.begin(), vector2.end());
+}
+
+BOOST_AUTO_TEST_CASE(append_from_deque_test)
+{
+    std::deque<char> deque1 { 'f', 'o', 'o' };
+    std::deque<char> deque2 { 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.append(deque1);
+    binary.append(deque2);
+
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, deque1.begin(), deque1.end());
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), deque2.begin(), deque2.end());
+}
+
+BOOST_AUTO_TEST_CASE(append_from_list_test)
+{
+    std::list<char> list1 { 'f', 'o', 'o' };
+    std::list<char> list2 { 'b', 'a', 'r' };
+
+    missio::json::binary binary;
+
+    binary.append(list1);
+    binary.append(list2);
+
+    BOOST_CHECK_EQUAL(binary.size(), 6u);
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, list1.begin(), list1.end());
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), list2.begin(), list2.end());
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_operators_test, binary_fixture)
@@ -169,7 +332,7 @@ BOOST_FIXTURE_TEST_CASE(from_base64_string_test, binary_fixture)
 
     binary = missio::json::binary::from_base64_string(string);
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), std::begin(binary_data), std::end(binary_data));
 }
 
 BOOST_FIXTURE_TEST_CASE(to_base64_string_test, binary_fixture)
@@ -198,7 +361,7 @@ BOOST_FIXTURE_TEST_CASE(get_from_value_test, binary_fixture)
     missio::json::binary binary = value;
 
     BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.data(), binary.data() + binary.size(), std::begin(binary_data), std::end(binary_data));
+    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), std::begin(binary_data), std::end(binary_data));
 
     missio::json::value invalid_value("not a BASE-64 encoded string");
 

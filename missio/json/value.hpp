@@ -22,11 +22,13 @@
 #include <missio/json/detail/is_type.hpp>
 #include <missio/json/detail/as_type.hpp>
 #include <missio/json/detail/null_traits.hpp>
+#include <missio/json/detail/type_traits.hpp>
 
 // BOOST headers
 #include <boost/variant.hpp>
 
 // STL headers
+#include <type_traits>
 #include <utility>
 
 
@@ -51,8 +53,15 @@ public:
 public:
     typedef variant_type::types types;
 
+    template <typename T>
+    using is_value = typename std::is_same<detail::remove_ref_const<T>, value>::type;
+
+    template <typename T>
+    using enable_if_not_value = typename std::enable_if<!is_value<T>::value>::type;
+
 public:
     value() = default;
+    ~value() = default;
 
     value(value const&) = default;
     value& operator=(value const&) = default;
@@ -60,11 +69,17 @@ public:
     value(value&&) = default;
     value& operator=(value&&) = default;
 
-    template <typename T> value(T const& value);
-    template <typename T> value& operator=(T const& value);
+    template <typename T, typename Enable = enable_if_not_value<T>>
+    value(T const& value);
 
-    template <typename T> value(T&& value);
-    template <typename T> value& operator=(T&& value);
+    template <typename T, typename Enable = enable_if_not_value<T>>
+    value& operator=(T const& value);
+
+    template <typename T, typename Enable = enable_if_not_value<T>>
+    value(T&& value);
+
+    template <typename T, typename Enable = enable_if_not_value<T>>
+    value& operator=(T&& value);
 
     template <typename T> bool is() const;
 
@@ -73,8 +88,6 @@ public:
 
     template <typename T> T& get();
     template <typename T> T const& get() const;
-
-    int which() const;
 
     variant_type const& variant() const;
 

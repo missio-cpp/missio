@@ -116,14 +116,19 @@ struct adapt<binary>
     }
 };
 
-template <typename Char, typename Traits>
-struct adapt<std::basic_string<Char, Traits>>
+template <typename Char, typename Traits, typename Allocator>
+struct adapt<std::basic_string<Char, Traits, Allocator>>
 {
     typedef string type;
 
-    static string to(std::basic_string<Char, Traits>&& value)
+    static string to(std::basic_string<Char, Traits, Allocator>&& value)
     {
-        return string(std::forward<std::basic_string<Char, Traits>>(value));
+        return string(std::forward<std::basic_string<Char, Traits, Allocator>>(value));
+    }
+
+    static string to(std::basic_string<Char, Traits, Allocator> const& value)
+    {
+        return string(value);
     }
 };
 

@@ -23,6 +23,26 @@ namespace missio
 namespace json
 {
 
+object::object(std::initializer_list<value_type> values)
+{
+    for(auto const& value : values)
+    {
+        insert(value);
+    }
+}
+
+object& object::operator=(std::initializer_list<value_type> values)
+{
+    values_.clear();
+
+    for(auto const& value : values)
+    {
+        insert(value);
+    }
+
+    return *this;
+}
+
 bool object::empty() const
 {
     return values_.empty();
@@ -88,6 +108,16 @@ void object::erase(string const& key)
     boost::remove_erase_if(values_, [&key](value_type const& value){ return value.first == key; });
 }
 
+bool object::insert(value_type&& value)
+{
+    return insert(end(), std::forward<value_type>(value));
+}
+
+bool object::insert(value_type const& value)
+{
+    return insert(end(), value);
+}
+
 bool object::insert(iterator position, value_type&& value)
 {
     if(!contains(value.first))
@@ -110,15 +140,12 @@ bool object::insert(iterator position, value_type const& value)
     return false;
 }
 
-bool object::insert(string&& key, value&& value)
+void object::insert(std::initializer_list<value_type> values)
 {
-    if(!contains(key))
+    for(auto const& value : values)
     {
-        values_.push_back(value_type(key, value));
-        return true;
+        insert(value);
     }
-
-    return false;
 }
 
 value& object::operator[](string const& key)

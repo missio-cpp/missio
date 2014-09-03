@@ -6,8 +6,10 @@
 //---------------------------------------------------------------------------
 
 // Application headers
-#include <missio/json/detail/base64.hpp>
 #include <missio/json/exception.hpp>
+
+// Implementation headers
+#include "src/json/src/base64.hpp"
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
@@ -17,9 +19,9 @@ BOOST_AUTO_TEST_SUITE(json_base64_test_suite)
 
 struct base64_fixture
 {
-    static std::vector<unsigned char> make_vector(char const* data)
+    static std::vector<std::uint8_t> make_vector(char const* data)
     {
-        return std::vector<unsigned char>(data, data + std::strlen(data));
+        return std::vector<std::uint8_t>(data, data + std::strlen(data));
     }
 };
 

@@ -16,6 +16,7 @@
 #include <missio/json/value.hpp>
 
 // STL headers
+#include <initializer_list>
 #include <vector>
 
 
@@ -29,11 +30,17 @@ class array
 public:
     typedef value value_type;
     typedef std::vector<value_type>::size_type size_type;
+    typedef std::vector<value_type>::reference reference;
+    typedef std::vector<value_type>::const_reference const_reference;
     typedef std::vector<value_type>::iterator iterator;
     typedef std::vector<value_type>::const_iterator const_iterator;
 
 public:
     array() = default;
+    ~array() = default;
+
+    array(std::initializer_list<value> values);
+    array& operator=(std::initializer_list<value> values);
 
     array(array const&) = default;
     array& operator=(array const&) = default;
@@ -70,11 +77,13 @@ public:
 
     void pop_back();
 
-    void erase(iterator position);
+    void erase(iterator pos);
     void erase(iterator first, iterator last);
 
-    void insert(iterator position, value&& value);
-    void insert(iterator position, value const& value);
+    void insert(iterator pos, value&& value);
+    void insert(iterator pos, value const& value);
+
+    void insert(iterator pos, std::initializer_list<value> values);
 
     value& operator[](std::size_t index);
     value const& operator[](std::size_t index) const;

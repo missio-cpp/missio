@@ -160,15 +160,15 @@ private:
         if(!skip_char(i, last, 'u'))
             return false;
 
-        std::uint32_t cp;
+        std::uint32_t cp1;
 
-        if(!extract_utf16(i, last, cp))
+        if(!extract_utf16(i, last, cp1))
             return false;
 
-        if(is_low_surrogate(cp))
+        if(is_low_surrogate(cp1))
             return false;
 
-        if(is_high_surrogate(cp))
+        if(is_high_surrogate(cp1))
         {
             if(!skip_char(i, last, '\\'))
                 return false;
@@ -176,18 +176,18 @@ private:
             if(!skip_char(i, last, 'u'))
                 return false;
 
-            std::uint32_t low_surrogate;
+            std::uint32_t cp2;
 
-            if(!extract_utf16(i, last, low_surrogate))
+            if(!extract_utf16(i, last, cp2))
                 return false;
 
-            if(!is_low_surrogate(low_surrogate))
+            if(!is_low_surrogate(cp2))
                 return false;
 
-            cp = make_code_point(cp, low_surrogate);
+            cp1 = make_code_point(cp1, cp2);
         }
 
-        if(!write_code_point(cp, str))
+        if(!write_code_point(cp1, str))
             return false;
 
         first = i;
@@ -203,7 +203,7 @@ private:
 
     static std::uint32_t make_code_point(std::uint32_t const high, std::uint32_t const low)
     {
-        return 0x10000u + (high - 0xD800u) << 10u + low - 0xDC00u;
+        return 0x10000u + ((high - 0xD800u) << 10u) + low - 0xDC00u;
     }
 
     static bool is_high_surrogate(std::uint32_t const cp)

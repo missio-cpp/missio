@@ -7,7 +7,9 @@
 
 // Application headers
 #include <missio/json/binary.hpp>
-#include <missio/json/detail/base64.hpp>
+
+// Implementation headers
+#include "base64.hpp"
 
 // STL headers
 #include <utility>
@@ -28,24 +30,30 @@ string binary::to_base64_string(binary const& value)
     return string(detail::base64::encode(value.data_));
 }
 
+binary::binary(std::vector<std::uint8_t>&& data) :
+    data_(std::forward<std::vector<std::uint8_t>>(data))
+{
+}
+
 binary::binary(std::initializer_list<std::uint8_t> data) :
-    data_(data.begin(), data.end())
+    data_(data)
 {
 }
 
-binary::binary(std::uint8_t const* data, std::size_t size) :
-    data_(data, data + size)
+binary& binary::operator=(std::initializer_list<std::uint8_t> data)
 {
+    data_.assign(data);
+    return *this;
 }
 
-void binary::assign(std::uint8_t const* data, std::size_t size)
+void binary::assign(std::initializer_list<std::uint8_t> data)
 {
-    data_.assign(data, data + size);
+    data_.assign(data);
 }
 
-void binary::append(std::uint8_t const* data, std::size_t size)
+void binary::append(std::initializer_list<std::uint8_t> data)
 {
-    data_.insert(data_.end(), data, data + size);
+    data_.insert(data_.end(), data);
 }
 
 void binary::clear()
@@ -66,6 +74,16 @@ std::size_t binary::size() const
 std::uint8_t const* binary::data() const
 {
     return data_.data();
+}
+
+binary::const_iterator binary::begin() const
+{
+    return data_.begin();
+}
+
+binary::const_iterator binary::end() const
+{
+    return data_.end();
 }
 
 bool operator<(binary const& lhs, binary const& rhs)

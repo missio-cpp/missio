@@ -1,18 +1,18 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_json_detail_generate_hpp
-#define _missio_json_detail_generate_hpp
+#ifndef _missio_json_detail_generate_json_hpp
+#define _missio_json_detail_generate_json_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/json/detail/value_generator.hpp>
+// Implementation headers
+#include "value_generator.hpp"
 
 
 namespace missio
@@ -23,9 +23,10 @@ namespace detail
 {
 
 template <typename OutputIterator>
-bool generate(value const& value, OutputIterator out)
+bool generate_json(value const& value, OutputIterator out)
 {
     static value_generator<OutputIterator> const generator;
+
     return boost::spirit::karma::generate(out, generator, value);
 }
 
@@ -33,4 +34,4 @@ bool generate(value const& value, OutputIterator out)
 }   // namespace json
 }   // namespace missio
 
-#endif  // _missio_json_detail_generate_hpp
+#endif  // _missio_json_detail_generate_json_hpp

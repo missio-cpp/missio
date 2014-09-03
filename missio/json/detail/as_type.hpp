@@ -34,10 +34,24 @@ template <typename T>
 class as_visitor : public boost::static_visitor<T>
 {
 public:
-    typedef typename adapt<T>::type adapted_type;
+    template <typename U>
+    using is_convertible = typename std::is_convertible<U, T>::type;
+
+    template <typename U>
+    using is_adapted = typename std::is_same<U, typename adapt<T>::type>::type;
+
+    template <typename U>
+    using enable_if_convertible = typename std::enable_if<is_convertible<U>::value && !is_adapted<U>::value>::type;
+
+    template <typename U>
+    using enable_if_adapted = typename std::enable_if<!is_convertible<U>::value && is_adapted<U>::value>::type;
+
+    template <typename U>
+    using enable_if_invalid = typename std::enable_if<!is_convertible<U>::value && !is_adapted<U>::value>::type;
 
 public:
     as_visitor() = default;
+    ~as_visitor() = default;
 
     T const& operator()(T const& value) const
     {
@@ -45,15 +59,21 @@ public:
     }
 
     template <typename U>
-    typename std::enable_if<std::is_convertible<U, T>::value, T>::type operator()(U const& value) const
+    T operator()(U const& value, enable_if_convertible<U> const* = nullptr) const
     {
         return static_cast<T>(value);
     }
 
     template <typename U>
-    typename std::enable_if<std::is_same<U, adapted_type>::value, T>::type operator()(U const& value) const
+    T operator()(U const& value, enable_if_adapted<U> const* = nullptr) const
     {
         return adapt<T>::from(value);
+    }
+
+    template <typename U>
+    T operator()(U const& value, enable_if_invalid<U> const* = nullptr) const
+    {
+        throw exception("invalid value type");
     }
 };
 

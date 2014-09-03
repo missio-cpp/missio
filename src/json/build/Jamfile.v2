@@ -8,4 +8,5 @@ lib missio_json
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
+        /missio/unicode//missio_unicode
     ;

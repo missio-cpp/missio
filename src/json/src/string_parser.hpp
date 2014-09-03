@@ -11,8 +11,8 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/json/detail/extract_string.hpp>
+// Implementation headers
+#include "extract_string.hpp"
 
 // BOOST headers
 #include <boost/spirit/include/qi.hpp>
