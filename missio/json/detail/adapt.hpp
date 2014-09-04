@@ -78,28 +78,6 @@ struct adapt<T, typename std::enable_if<std::is_enum<T>::value>::type>
     }
 };
 
-template <typename T>
-struct adapt<reference<T>>
-{
-    typedef T const& type;
-
-    static T const& to(reference<T> const& value)
-    {
-        return static_cast<T const&>(value);
-    }
-};
-
-template <typename T>
-struct adapt<reference<T const>>
-{
-    typedef T const& type;
-
-    static T const& to(reference<T const> const& value)
-    {
-        return static_cast<T const&>(value);
-    }
-};
-
 template <>
 struct adapt<binary>
 {

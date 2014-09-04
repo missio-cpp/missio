@@ -42,11 +42,6 @@ template <typename T> T value::as() const
     return detail::as_type<T>::call(variant_);
 }
 
-template <typename T> value::operator T() const
-{
-    return detail::as_type<T>::call(variant_);
-}
-
 template <typename T> T& value::get()
 {
     detail::convert<T>::call(variant_);
@@ -61,4 +56,14 @@ template <typename T> T const& value::get() const
         throw exception("invalid value type");
 
     return *value;
+}
+
+template <typename T> value::operator T() const
+{
+    return as<T>();
+}
+
+template <typename T> value::operator T const&() const
+{
+    return get<T>();
 }

@@ -84,10 +84,12 @@ public:
     template <typename T> bool is() const;
 
     template <typename T> T as() const;
-    template <typename T> operator T() const;
 
     template <typename T> T& get();
     template <typename T> T const& get() const;
+
+    template <typename T> operator T() const;
+    template <typename T> operator T const&() const;
 
     variant_type const& variant() const;
 

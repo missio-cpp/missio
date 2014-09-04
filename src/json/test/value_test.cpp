@@ -161,6 +161,28 @@ BOOST_AUTO_TEST_CASE(non_const_get_changes_type_test)
     BOOST_CHECK_EQUAL(value.variant().which(), 0);
 }
 
+BOOST_AUTO_TEST_CASE(const_reference_to_array_cast_operator_test)
+{
+    missio::json::value value
+    {
+        missio::json::array { 1, 2, 3 }
+    };
+
+    BOOST_CHECK_NO_THROW(missio::json::array const& array = value);
+    BOOST_CHECK_THROW(missio::json::object const& object = value, missio::json::exception);
+}
+
+BOOST_AUTO_TEST_CASE(const_reference_to_object_cast_operator_test)
+{
+    missio::json::value value
+    {
+        missio::json::object { { "key", "value" } }
+    };
+
+    BOOST_CHECK_NO_THROW(missio::json::object const& object = value);
+    BOOST_CHECK_THROW(missio::json::array const& array = value, missio::json::exception);
+}
+
 BOOST_AUTO_TEST_CASE(index_operator_changes_type_test)
 {
     missio::json::value value;

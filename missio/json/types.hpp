@@ -29,9 +29,6 @@ typedef double real;
 typedef bool boolean;
 typedef long long integer;
 
-template <typename T>
-class reference;
-
 typedef std::pair<string, value> object_value;
 
 }   // namespace json

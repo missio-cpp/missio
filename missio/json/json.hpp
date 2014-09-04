@@ -17,8 +17,6 @@
 #include <missio/json/json_io.hpp>
 #include <missio/json/getters.hpp>
 #include <missio/json/value_get.hpp>
-#include <missio/json/array_ref.hpp>
-#include <missio/json/object_ref.hpp>
 #include <missio/json/object_get.hpp>
 
 #endif  // _missio_json_json_hpp
