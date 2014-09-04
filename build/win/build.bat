@@ -56,8 +56,6 @@ IF NOT EXIST "%BOOST_JAM%" (
     )
 )
 
-pushd "%MISSIO_ROOT%"
-
 SET JOBS_NUM=%NUMBER_OF_PROCESSORS%
 
 IF %JOBS_NUM% LEQ 0 (
@@ -66,6 +64,8 @@ IF %JOBS_NUM% LEQ 0 (
 
 SET BOOST_ROOT="%BOOST_ROOT%"
 SET BOOST_BUILD_PATH="%BOOST_BUILD_PATH%"
+
+pushd "%MISSIO_ROOT%"
 
 ECHO Starting build of missio
 "%BOOST_JAM%" -q -j%JOBS_NUM% %*
