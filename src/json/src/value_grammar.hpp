@@ -12,10 +12,11 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/json/value.hpp>
+#include <missio/json/detail/value_get.hpp>
 
 // Implementation headers
 #include "string_parser.hpp"
+#include "value_traits.hpp"
 
 // BOOST headers
 #include <boost/spirit/include/qi.hpp>
@@ -29,8 +30,8 @@ namespace json
 namespace detail
 {
 
-template <typename Iterator>
-struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), boost::spirit::qi::space_type>
+template <typename Iterator, typename Skipper = boost::spirit::qi::space_type>
+struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), Skipper>
 {
     value_grammar() : value_grammar::base_type(start_)
     {
@@ -51,47 +52,27 @@ struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), boost::spir
 
         boolean_    =   bool_;
 
-        array_      =   '['
-                    >> -(value_ % ',')
-                    >>  ']'
-                    ;
+        array_      =   '[' >> -(value_ % ',') >> ']';
 
-        pair_       =   string_
-                    >>  ':'
-                    >>  value_
-                    ;
+        pair_       =   string_ >> ':' >> value_;
 
-        object_     =   '{'
-                    >> -(pair_ % ',')
-                    >>  '}'
-                    ;
+        object_     =   '{'  >> -(pair_ % ',') >> '}' ;
 
-        value_      =   string_
-                    |   array_
-                    |   object_
-                    |   real_
-                    |   integer_
-                    |   boolean_
-                    |   null_
-                    ;
+        value_      =   object_ | array_ | boolean_ | string_ | real_ | integer_ | null_;
 
-        start_      =   array_
-                    |   object_
-                    ;
+        start_      =   object_ | array_;
     }
-
-    typedef object::value_type pair;
 
     boost::spirit::qi::rule<Iterator, null()> null_;
     boost::spirit::qi::rule<Iterator, real()> real_;
     boost::spirit::qi::rule<Iterator, string()> string_;
     boost::spirit::qi::rule<Iterator, integer()> integer_;
     boost::spirit::qi::rule<Iterator, boolean()> boolean_;
-    boost::spirit::qi::rule<Iterator, array(), boost::spirit::qi::space_type> array_;
-    boost::spirit::qi::rule<Iterator, pair(), boost::spirit::qi::space_type> pair_;
-    boost::spirit::qi::rule<Iterator, object(), boost::spirit::qi::space_type> object_;
-    boost::spirit::qi::rule<Iterator, value(), boost::spirit::qi::space_type> value_;
-    boost::spirit::qi::rule<Iterator, value(), boost::spirit::qi::space_type> start_;
+    boost::spirit::qi::rule<Iterator, array(), Skipper> array_;
+    boost::spirit::qi::rule<Iterator, object_value(), Skipper> pair_;
+    boost::spirit::qi::rule<Iterator, object(), Skipper> object_;
+    boost::spirit::qi::rule<Iterator, value(), Skipper> value_;
+    boost::spirit::qi::rule<Iterator, value(), Skipper> start_;
 };
 
 }   // namespace detail

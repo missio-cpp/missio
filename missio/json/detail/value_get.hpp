@@ -4,8 +4,8 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_json_value_get_hpp
-#define _missio_json_value_get_hpp
+#ifndef _missio_json_detail_value_get_hpp
+#define _missio_json_detail_value_get_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -19,11 +19,11 @@ namespace boost
 {
 
 template <typename T>
-inline T const& get(missio::json::value const& value)
+T const& get(missio::json::value const& value)
 {
     return value.get<T>();
 }
 
 }   // namespace boost
 
-#endif  // _missio_json_value_get_hpp
+#endif  // _missio_json_detail_value_get_hpp

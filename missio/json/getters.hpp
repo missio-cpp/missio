@@ -66,7 +66,7 @@ inline integer as_integer(value const& value)
     return value.as<integer>();
 }
 
-inline bool as_boolean(value const& value)
+inline boolean as_boolean(value const& value)
 {
     return value.as<boolean>();
 }
@@ -101,7 +101,7 @@ inline integer const& get_integer(value const& value)
     return value.get<integer>();
 }
 
-inline bool const& get_boolean(value const& value)
+inline boolean const& get_boolean(value const& value)
 {
     return value.get<boolean>();
 }

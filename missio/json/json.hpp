@@ -16,7 +16,5 @@
 #include <missio/json/binary.hpp>
 #include <missio/json/json_io.hpp>
 #include <missio/json/getters.hpp>
-#include <missio/json/value_get.hpp>
-#include <missio/json/object_get.hpp>
 
 #endif  // _missio_json_json_hpp

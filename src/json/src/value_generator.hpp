@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/json/value_get.hpp>
+#include <missio/json/detail/value_get.hpp>
 
 // Implementation headers
 #include "string_generator.hpp"
@@ -21,7 +21,6 @@
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
-#include <boost/spirit/include/phoenix.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 
 
@@ -63,15 +62,13 @@ struct value_generator : boost::spirit::karma::grammar<Iterator, value()>
         value_      =   object_ | array_ | boolean_ | string_ | real_ | integer_ | null_;
     }
 
-    typedef object::value_type pair;
-
     boost::spirit::karma::rule<Iterator, null()> null_;
     boost::spirit::karma::rule<Iterator, real()> real_;
     boost::spirit::karma::rule<Iterator, string()> string_;
     boost::spirit::karma::rule<Iterator, integer()> integer_;
     boost::spirit::karma::rule<Iterator, boolean()> boolean_;
     boost::spirit::karma::rule<Iterator, array()> array_;
-    boost::spirit::karma::rule<Iterator, pair()> pair_;
+    boost::spirit::karma::rule<Iterator, object_value()> pair_;
     boost::spirit::karma::rule<Iterator, object()> object_;
     boost::spirit::karma::rule<Iterator, value()> value_;
 };
