@@ -25,7 +25,7 @@ std::string exception::message() const
     return std::string(what());
 }
 
-char const* input_underflow_error::what() const throw()
+char const* input_underflow_error::what() const noexcept
 {
     return "input underflow error";
 }
@@ -35,12 +35,12 @@ invalid_utf32_code_point::invalid_utf32_code_point(std::uint32_t code_point) :
 {
 }
 
-std::uint32_t invalid_utf32_code_point::code_point() const throw()
+std::uint32_t invalid_utf32_code_point::code_point() const noexcept
 {
     return code_point_;
 }
 
-char const* invalid_utf32_code_point::what() const throw()
+char const* invalid_utf32_code_point::what() const noexcept
 {
     return "invalid UTF-32 code point";
 }
@@ -65,12 +65,12 @@ invalid_utf16_code_unit::invalid_utf16_code_unit(std::uint16_t code_unit) :
 {
 }
 
-std::uint16_t invalid_utf16_code_unit::code_unit() const throw()
+std::uint16_t invalid_utf16_code_unit::code_unit() const noexcept
 {
     return code_unit_;
 }
 
-char const* invalid_utf16_code_unit::what() const throw()
+char const* invalid_utf16_code_unit::what() const noexcept
 {
     return "invalid or unexpected UTF-16 code unit";
 }
@@ -95,12 +95,12 @@ invalid_utf8_sequence::invalid_utf8_sequence(std::string const& sequence) :
 {
 }
 
-std::string const& invalid_utf8_sequence::sequence() const throw()
+std::string const& invalid_utf8_sequence::sequence() const noexcept
 {
     return sequence_;
 }
 
-char const* invalid_utf8_sequence::what() const throw()
+char const* invalid_utf8_sequence::what() const noexcept
 {
     return "invalid UTF-8 sequence";
 }

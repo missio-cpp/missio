@@ -35,7 +35,7 @@ class input_underflow_error : public exception
 public:
     input_underflow_error() = default;
 
-    virtual char const* what() const throw();
+    char const* what() const noexcept override;
 };
 
 class invalid_utf32_code_point : public exception
@@ -43,11 +43,11 @@ class invalid_utf32_code_point : public exception
 public:
     explicit invalid_utf32_code_point(std::uint32_t code_point);
 
-    std::uint32_t code_point() const throw();
+    std::uint32_t code_point() const noexcept;
 
-    virtual char const* what() const throw();
+    char const* what() const noexcept override;
 
-    virtual std::string message() const;
+    std::string message() const override;
 
 private:
     std::uint32_t code_point_;
@@ -58,11 +58,11 @@ class invalid_utf16_code_unit : public exception
 public:
     explicit invalid_utf16_code_unit(std::uint16_t code_unit);
 
-    std::uint16_t code_unit() const throw();
+    std::uint16_t code_unit() const noexcept;
 
-    virtual char const* what() const throw();
+    char const* what() const noexcept override;
 
-    virtual std::string message() const;
+    std::string message() const override;
 
 private:
     std::uint16_t code_unit_;
@@ -79,11 +79,11 @@ public:
 
     explicit invalid_utf8_sequence(std::string const& sequence);
 
-    std::string const& sequence() const throw();
+    std::string const& sequence() const noexcept;
 
-    virtual char const* what() const throw();
+    char const* what() const noexcept override;
 
-    virtual std::string message() const;
+    std::string message() const override;
 
 private:
     std::string sequence_;
