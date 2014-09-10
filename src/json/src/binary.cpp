@@ -35,25 +35,10 @@ binary::binary(std::vector<std::uint8_t>&& data) :
 {
 }
 
-binary::binary(std::initializer_list<std::uint8_t> data) :
-    data_(data)
+binary& binary::operator=(std::vector<std::uint8_t>&& data)
 {
-}
-
-binary& binary::operator=(std::initializer_list<std::uint8_t> data)
-{
-    data_.assign(data);
+    data_ = std::forward<std::vector<std::uint8_t>>(data);
     return *this;
-}
-
-void binary::assign(std::initializer_list<std::uint8_t> data)
-{
-    data_.assign(data);
-}
-
-void binary::append(std::initializer_list<std::uint8_t> data)
-{
-    data_.insert(data_.end(), data);
 }
 
 void binary::clear()

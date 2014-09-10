@@ -39,14 +39,14 @@ public:
     array() = default;
     ~array() = default;
 
-    array(std::initializer_list<value> values);
-    array& operator=(std::initializer_list<value> values);
-
     array(array const&) = default;
     array& operator=(array const&) = default;
 
     array(array&&) = default;
     array& operator=(array&&) = default;
+
+    array(std::initializer_list<value> values);
+    array& operator=(std::initializer_list<value> values);
 
     bool empty() const;
     void clear();

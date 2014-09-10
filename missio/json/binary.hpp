@@ -44,37 +44,47 @@ public:
     binary() = default;
     ~binary() = default;
 
-    binary(std::vector<std::uint8_t>&& data);
-
-    binary(std::initializer_list<std::uint8_t> data);
-    binary& operator=(std::initializer_list<std::uint8_t> data);
-
-    template <typename T>
-    binary(T const& data, detail::enable_if_char_container<T> const* = nullptr);
-
-    template <typename T>
-    binary(T const* data, std::size_t size, detail::enable_if_char_type<T> const* = nullptr);
-
     binary(binary const&) = default;
     binary& operator=(binary const&) = default;
 
     binary(binary&&) = default;
     binary& operator=(binary&&) = default;
 
-    void assign(std::initializer_list<std::uint8_t> data);
-    void append(std::initializer_list<std::uint8_t> data);
+    binary(std::vector<std::uint8_t>&& data);
+    binary& operator=(std::vector<std::uint8_t>&& data);
 
-    template <typename T>
-    void assign(T const& data, detail::enable_if_char_container<T> const* = nullptr);
+    template <typename T, typename = detail::enable_if_char_container<T>>
+    binary(T const& data);
 
-    template <typename T>
-    void append(T const& data, detail::enable_if_char_container<T> const* = nullptr);
+    template <typename T, typename = detail::enable_if_char_container<T>>
+    binary& operator=(T const& data);
 
-    template <typename T>
-    void assign(T const* data, std::size_t size, detail::enable_if_char_type<T> const* = nullptr);
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    binary(std::initializer_list<T> data);
 
-    template <typename T>
-    void append(T const* data, std::size_t size, detail::enable_if_char_type<T> const* = nullptr);
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    binary& operator=(std::initializer_list<T> data);
+
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    binary(T const* data, std::size_t size);
+
+    template <typename T, typename = detail::enable_if_char_container<T>>
+    void assign(T const& data);
+
+    template <typename T, typename = detail::enable_if_char_container<T>>
+    void append(T const& data);
+
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    void assign(std::initializer_list<T> data);
+
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    void append(std::initializer_list<T> data);
+
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    void assign(T const* data, std::size_t size);
+
+    template <typename T, typename = detail::enable_if_char_type<T>>
+    void append(T const* data, std::size_t size);
 
     void clear();
 

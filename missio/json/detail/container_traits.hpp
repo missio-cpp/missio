@@ -34,23 +34,23 @@ struct is_container : std::false_type
 {
 };
 
-template <typename Char, std::size_t N>
-struct is_container<std::array<Char, N>> : std::true_type
+template <typename U, std::size_t N>
+struct is_container<std::array<U, N>> : std::true_type
 {
 };
 
-template <typename Char, typename Allocator>
-struct is_container<std::list<Char, Allocator>> : std::true_type
+template <typename U, typename Allocator>
+struct is_container<std::list<U, Allocator>> : std::true_type
 {
 };
 
-template <typename Char, typename Allocator>
-struct is_container<std::deque<Char, Allocator>> : std::true_type
+template <typename U, typename Allocator>
+struct is_container<std::deque<U, Allocator>> : std::true_type
 {
 };
 
-template <typename Char, typename Allocator>
-struct is_container<std::vector<Char, Allocator>> : std::true_type
+template <typename U, typename Allocator>
+struct is_container<std::vector<U, Allocator>> : std::true_type
 {
 };
 

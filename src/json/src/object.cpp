@@ -93,9 +93,9 @@ void object::clear()
     values_.clear();
 }
 
-void object::erase(iterator position)
+void object::erase(iterator pos)
 {
-    values_.erase(position);
+    values_.erase(pos);
 }
 
 void object::erase(iterator first, iterator last)
@@ -118,22 +118,22 @@ bool object::insert(value_type const& value)
     return insert(end(), value);
 }
 
-bool object::insert(iterator position, value_type&& value)
+bool object::insert(iterator pos, value_type&& value)
 {
     if(!contains(value.first))
     {
-        values_.insert(position, std::forward<value_type>(value));
+        values_.insert(pos, std::forward<value_type>(value));
         return true;
     }
 
     return false;
 }
 
-bool object::insert(iterator position, value_type const& value)
+bool object::insert(iterator pos, value_type const& value)
 {
     if(!contains(value.first))
     {
-        values_.insert(position, value);
+        values_.insert(pos, value);
         return true;
     }
 

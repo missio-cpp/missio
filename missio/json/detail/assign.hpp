@@ -48,21 +48,15 @@ public:
     ~assign_to() = delete;
 
     template <typename T>
-    static void call(Variant& variant, T&& value, enable_if_variant_type<T> const* = nullptr)
-    {
-        variant = std::forward<T>(value);
-    }
-
-    template <typename T>
     static void call(Variant& variant, T const& value, enable_if_variant_type<T> const* = nullptr)
     {
         variant = value;
     }
 
     template <typename T>
-    static void call(Variant& variant, T&& value, enable_if_non_variant_type<T> const* = nullptr)
+    static void call(Variant& variant, T&& value, enable_if_variant_type<T> const* = nullptr)
     {
-        variant = adapt<remove_reference_const<T>>::to(std::forward<T>(value));
+        variant = std::forward<T>(value);
     }
 
     template <typename T>
@@ -70,18 +64,24 @@ public:
     {
         variant = adapt<T>::to(value);
     }
-};
 
-template <typename Variant, typename T>
-void assign(Variant& variant, T&& value)
-{
-    assign_to<Variant>::call(variant, std::forward<T>(value));
-}
+    template <typename T>
+    static void call(Variant& variant, T&& value, enable_if_non_variant_type<T> const* = nullptr)
+    {
+        variant = adapt<remove_reference_const<T>>::to(std::forward<T>(value));
+    }
+};
 
 template <typename Variant, typename T>
 void assign(Variant& variant, T const& value)
 {
     assign_to<Variant>::call(variant, value);
+}
+
+template <typename Variant, typename T>
+void assign(Variant& variant, T&& value)
+{
+    assign_to<Variant>::call(variant, std::forward<T>(value));
 }
 
 }   // namespace detail

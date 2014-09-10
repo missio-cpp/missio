@@ -39,14 +39,14 @@ public:
     object() = default;
     ~object() = default;
 
-    object(std::initializer_list<value_type> values);
-    object& operator=(std::initializer_list<value_type> values);
-
     object(object const&) = default;
     object& operator=(object const&) = default;
 
     object(object&&) = default;
     object& operator=(object&&) = default;
+
+    object(std::initializer_list<value_type> values);
+    object& operator=(std::initializer_list<value_type> values);
 
     bool empty() const;
     std::size_t size() const;
@@ -64,15 +64,15 @@ public:
 
     void clear();
 
-    void erase(iterator position);
+    void erase(iterator pos);
     void erase(iterator first, iterator last);
     void erase(string const& key);
 
     bool insert(value_type&& value);
     bool insert(value_type const& value);
 
-    bool insert(iterator position, value_type&& value);
-    bool insert(iterator position, value_type const& value);
+    bool insert(iterator pos, value_type&& value);
+    bool insert(iterator pos, value_type const& value);
 
     void insert(std::initializer_list<value_type> values);
 
