@@ -25,7 +25,6 @@
 #include <missio/json/detail/type_traits.hpp>
 
 // BOOST headers
-#include <boost/mpl/contains.hpp>
 #include <boost/variant.hpp>
 
 // STL headers
