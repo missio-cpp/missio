@@ -20,11 +20,12 @@
 #include <missio/json/detail/assign.hpp>
 #include <missio/json/detail/convert.hpp>
 #include <missio/json/detail/is_type.hpp>
-#include <missio/json/detail/as_type.hpp>
+#include <missio/json/detail/get_type.hpp>
 #include <missio/json/detail/null_traits.hpp>
 #include <missio/json/detail/type_traits.hpp>
 
 // BOOST headers
+#include <boost/mpl/contains.hpp>
 #include <boost/variant.hpp>
 
 // STL headers
@@ -50,14 +51,10 @@ public:
         boost::recursive_wrapper<object>
     > variant_type;
 
-public:
     typedef variant_type::types types;
 
     template <typename T>
-    using is_value = typename std::is_same<detail::remove_ref_const<T>, value>::type;
-
-    template <typename T>
-    using enable_if_not_value = typename std::enable_if<!is_value<T>::value>::type;
+    using result_type_of_get = typename detail::get_type<T>::result_type;
 
 public:
     value() = default;
@@ -69,27 +66,26 @@ public:
     value(value&&) = default;
     value& operator=(value&&) = default;
 
-    template <typename T, typename Enable = enable_if_not_value<T>>
-    value(T const& value);
+    value(value&) = default;
+    value& operator=(value&) = default;
 
-    template <typename T, typename Enable = enable_if_not_value<T>>
-    value& operator=(T const& value);
+    template <typename T> value(T const& value);
+    template <typename T> value& operator=(T const& value);
 
-    template <typename T, typename Enable = enable_if_not_value<T>>
-    value(T&& value);
-
-    template <typename T, typename Enable = enable_if_not_value<T>>
-    value& operator=(T&& value);
+    template <typename T> value(T&& value);
+    template <typename T> value& operator=(T&& value);
 
     template <typename T> bool is() const;
 
-    template <typename T> T as() const;
+    template <typename T> result_type_of_get<T> get() const;
 
-    template <typename T> T& get();
-    template <typename T> T const& get() const;
+    template <typename T, typename = detail::enable_if_composite_type<T>>
+    operator T const&() const;
 
     template <typename T> operator T() const;
-    template <typename T> operator T const&() const;
+
+    object& to_object();
+    array& to_array();
 
     variant_type const& variant() const;
 

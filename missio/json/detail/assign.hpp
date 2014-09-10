@@ -16,8 +16,6 @@
 #include <missio/json/detail/adapt.hpp>
 
 // BOOST headers
-#include <boost/variant/static_visitor.hpp>
-#include <boost/variant/apply_visitor.hpp>
 #include <boost/mpl/contains.hpp>
 
 // STL headers
@@ -33,21 +31,21 @@ namespace detail
 {
 
 template <typename Variant>
-class assign_helper
+class assign_to
 {
 public:
     template <typename T>
-    using is_variant_type = typename boost::mpl::contains<typename Variant::types, remove_ref_const<T>>::type;
+    using is_variant_type = typename boost::mpl::contains<typename Variant::types, remove_reference_const<T>>::type;
+
+    template <typename T>
+    using enable_if_non_variant_type = typename std::enable_if<!is_variant_type<T>::value>::type;
 
     template <typename T>
     using enable_if_variant_type = typename std::enable_if<is_variant_type<T>::value>::type;
 
-    template <typename T>
-    using enable_if_not_variant_type = typename std::enable_if<!is_variant_type<T>::value>::type;
-
 public:
-    assign_helper() = delete;
-    ~assign_helper() = delete;
+    assign_to() = delete;
+    ~assign_to() = delete;
 
     template <typename T>
     static void call(Variant& variant, T&& value, enable_if_variant_type<T> const* = nullptr)
@@ -62,28 +60,28 @@ public:
     }
 
     template <typename T>
-    static void call(Variant& variant, T&& value, enable_if_not_variant_type<T> const* = nullptr)
+    static void call(Variant& variant, T&& value, enable_if_non_variant_type<T> const* = nullptr)
     {
-        variant = adapt<remove_ref_const<T>>::to(std::forward<T>(value));
+        variant = adapt<remove_reference_const<T>>::to(std::forward<T>(value));
     }
 
     template <typename T>
-    static void call(Variant& variant, T const& value, enable_if_not_variant_type<T> const* = nullptr)
+    static void call(Variant& variant, T const& value, enable_if_non_variant_type<T> const* = nullptr)
     {
         variant = adapt<T>::to(value);
     }
 };
 
 template <typename Variant, typename T>
-void assign_to_variant(Variant& variant, T&& value)
+void assign(Variant& variant, T&& value)
 {
-    assign_helper<Variant>::call(variant, std::forward<T>(value));
+    assign_to<Variant>::call(variant, std::forward<T>(value));
 }
 
 template <typename Variant, typename T>
-void assign_to_variant(Variant& variant, T const& value)
+void assign(Variant& variant, T const& value)
 {
-    assign_helper<Variant>::call(variant, value);
+    assign_to<Variant>::call(variant, value);
 }
 
 }   // namespace detail

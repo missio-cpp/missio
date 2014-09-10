@@ -14,6 +14,18 @@ namespace missio
 namespace json
 {
 
+object& value::to_object()
+{
+    detail::convert<object>::call(variant_);
+    return boost::get<object>(variant_);
+}
+
+array& value::to_array()
+{
+    detail::convert<array>::call(variant_);
+    return boost::get<array>(variant_);
+}
+
 value::variant_type const& value::variant() const
 {
     return variant_;
@@ -21,7 +33,7 @@ value::variant_type const& value::variant() const
 
 value& value::operator[](std::size_t index)
 {
-    return get<array>()[index];
+    return to_array()[index];
 }
 
 value const& value::operator[](std::size_t index) const
@@ -31,7 +43,7 @@ value const& value::operator[](std::size_t index) const
 
 value& value::operator[](string const& key)
 {
-    return get<object>()[key];
+    return to_object()[key];
 }
 
 value const& value::operator[](string const& key) const

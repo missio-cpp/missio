@@ -4,20 +4,22 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_json_detail_as_visitor_hpp
-#define _missio_json_detail_as_visitor_hpp
+#ifndef _missio_json_detail_get_type_hpp
+#define _missio_json_detail_get_type_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/json/exception.hpp>
+#include <missio/json/detail/type_traits.hpp>
 #include <missio/json/detail/adapt.hpp>
+#include <missio/json/exception.hpp>
 
 // BOOST headers
 #include <boost/variant/static_visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/get.hpp>
 
 // STL headers
 #include <type_traits>
@@ -31,7 +33,7 @@ namespace detail
 {
 
 template <typename T>
-class as_visitor : public boost::static_visitor<T>
+class get_visitor : public boost::static_visitor<T>
 {
 public:
     template <typename U>
@@ -50,8 +52,8 @@ public:
     using enable_if_invalid = typename std::enable_if<!is_convertible<U>::value && !is_adapted<U>::value>::type;
 
 public:
-    as_visitor() = default;
-    ~as_visitor() = default;
+    get_visitor() = default;
+    ~get_visitor() = default;
 
     T const& operator()(T const& value) const
     {
@@ -77,13 +79,35 @@ public:
     }
 };
 
+template <typename T, typename Enable = void>
+struct get_type;
+
 template <typename T>
-struct as_type
+struct get_type<T, enable_if_scalar_type<T>>
 {
+    typedef T result_type;
+
     template <typename Variant>
-    static T call(Variant const& variant)
+    static result_type call(Variant const& variant)
     {
-        return boost::apply_visitor(as_visitor<T>(), variant);
+        return boost::apply_visitor(get_visitor<T>(), variant);
+    }
+};
+
+template <typename T>
+struct get_type<T, enable_if_composite_type<T>>
+{
+    typedef T const& result_type;
+
+    template <typename Variant>
+    static result_type call(Variant const& variant)
+    {
+        T const* value = boost::get<T>(&variant);
+
+        if(!value)
+            throw exception("invalid value type");
+
+        return *value;
     }
 };
 
@@ -91,4 +115,4 @@ struct as_type
 }   // namespace json
 }   // namespace missio
 
-#endif  // _missio_json_detail_as_visitor_hpp
+#endif  // _missio_json_detail_get_type_hpp

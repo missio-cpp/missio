@@ -350,9 +350,9 @@ BOOST_FIXTURE_TEST_CASE(assign_to_value_test, binary_fixture)
     missio::json::binary binary(binary_data);
     missio::json::value value = binary;
 
-    BOOST_CHECK(value.as<missio::json::binary>() == binary);
+    BOOST_CHECK(value.get<missio::json::binary>() == binary);
     BOOST_CHECK_EQUAL(value.is<missio::json::string>(), true);
-    BOOST_CHECK_EQUAL(value.as<std::string>(), base64_string);
+    BOOST_CHECK_EQUAL(value.get<std::string>(), base64_string);
 }
 
 BOOST_FIXTURE_TEST_CASE(get_from_value_test, binary_fixture)
@@ -365,7 +365,7 @@ BOOST_FIXTURE_TEST_CASE(get_from_value_test, binary_fixture)
 
     missio::json::value invalid_value("not a BASE-64 encoded string");
 
-    BOOST_CHECK_THROW(invalid_value.as<missio::json::binary>(), missio::json::exception);
+    BOOST_CHECK_THROW(invalid_value.get<missio::json::binary>(), missio::json::exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
