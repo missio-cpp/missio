@@ -31,11 +31,11 @@ class console_writer : public writer_base
 {
 public:
     explicit console_writer(console_options const& options);
-    virtual ~console_writer() throw();
+    virtual ~console_writer() = default;
 
 protected:
-    virtual void write_impl(message const& message);
-    virtual void flush_impl();
+    void write_impl(message const& message) override;
+    void flush_impl() override;
 };
 
 class console_options : public basic_options<console_writer, console_options>

@@ -26,7 +26,7 @@ syslog_writer::syslog_writer(syslog_writer_options const& optins) :
     ::openlog(ident_.c_str(), LOG_PID, LOG_USER);
 }
 
-syslog_writer::~syslog_writer() throw()
+syslog_writer::~syslog_writer() noexcept
 {
     ::closelog();
 }

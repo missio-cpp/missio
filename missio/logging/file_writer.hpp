@@ -32,11 +32,11 @@ class file_writer : public writer_base
 {
 public:
     explicit file_writer(file_options const& options);
-    virtual ~file_writer() throw();
+    virtual ~file_writer() = default;
 
 protected:
-    virtual void write_impl(message const& message);
-    virtual void flush_impl();
+    void write_impl(message const& message) override;
+    void flush_impl() override;
 
 private:
     void backup_file();

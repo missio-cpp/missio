@@ -24,10 +24,6 @@ console_writer::console_writer(console_options const& options) :
 {
 }
 
-console_writer::~console_writer() throw()
-{
-}
-
 void console_writer::write_impl(message const& message)
 {
     format(std::clog, message);

@@ -34,13 +34,13 @@ public:
 
 public:
     explicit writer_base(options_base const& options);
-    virtual ~writer_base() throw();
+    virtual ~writer_base() = default;
 
     writer_base(writer_base const&) = delete;
     writer_base& operator=(writer_base const&) = delete;
 
-    void write(message const& message) throw();
-    void flush() throw();
+    void write(message const& message) noexcept;
+    void flush() noexcept;
 
 protected:
     virtual void write_impl(message const& message) = 0;

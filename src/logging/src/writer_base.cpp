@@ -24,11 +24,7 @@ writer_base::writer_base(options_base const& options) :
 {
 }
 
-writer_base::~writer_base() throw()
-{
-}
-
-void writer_base::write(message const& message) throw()
+void writer_base::write(message const& message) noexcept
 {
     if(message.get_severity() <= severity_)
     {
@@ -42,7 +38,7 @@ void writer_base::write(message const& message) throw()
     }
 }
 
-void writer_base::flush() throw()
+void writer_base::flush() noexcept
 {
     try
     {

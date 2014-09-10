@@ -34,10 +34,6 @@ file_writer::file_writer(file_options const& options) :
     initialize_file(true);
 }
 
-file_writer::~file_writer() throw()
-{
-}
-
 void file_writer::write_impl(message const& message)
 {
     if(!file_.is_open())

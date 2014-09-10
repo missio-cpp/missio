@@ -40,14 +40,14 @@ class syslog_writer : public writer_base
 {
 public:
     explicit syslog_writer(syslog_options const& optins);
-    virtual ~syslog_writer() throw();
+    virtual ~syslog_writer() noexcept;
 
     syslog_writer(syslog_writer const&) = delete;
     syslog_writer& operator=(syslog_writer const&) = delete;
 
 protected:
-    virtual void write_impl(message const& message);
-    virtual void flush_impl();
+    void write_impl(message const& message) override;
+    void flush_impl() override;
 
 private:
     static int get_level(message const& message);
