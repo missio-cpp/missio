@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
 
     BOOST_CHECK_EQUAL(value4.variant().which(), 3);
 
-    missio::json::string string;
+    missio::json::string string("string");
     missio::json::value value5(std::move(string));
 
     BOOST_CHECK_EQUAL(value5.variant().which(), 4);
@@ -94,19 +94,51 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
     BOOST_CHECK_EQUAL(value7.variant().which(), 6);
 }
 
+BOOST_AUTO_TEST_CASE(move_constructor_sanity_test)
+{
+    missio::json::string string{ "string" };
+    char const* old_str = string.c_str();
+
+    missio::json::value value1 = std::move(string);
+    BOOST_CHECK_EQUAL(value1.get<missio::json::string>().c_str(), old_str);
+
+    missio::json::array array{ 1, 2, 3 };
+    missio::json::value const* array_front = &array.front();
+
+    missio::json::value value2 = std::move(array);
+    BOOST_CHECK_EQUAL(&value2.get<missio::json::array>().front(), array_front);
+
+    missio::json::object object{ { "key", "value" } };
+    missio::json::object_value const* object_front = &*object.begin();
+
+    missio::json::value value3 = std::move(object);
+    BOOST_CHECK_EQUAL(&*value3.get<missio::json::object>().begin(), object_front);
+}
+
 BOOST_AUTO_TEST_CASE(construct_with_compatible_types_test)
 {
-    missio::json::value value1(float(0.0));
+    missio::json::value value1{ float(0.0) };
     BOOST_CHECK_EQUAL(value1.variant().which(), 1);
 
-    missio::json::value value2(short(0));
+    missio::json::value value2{ short(0) };
     BOOST_CHECK_EQUAL(value2.variant().which(), 2);
 
-    missio::json::value value3(std::string(""));
+    missio::json::value value3{ std::string{} };
     BOOST_CHECK_EQUAL(value3.variant().which(), 4);
 
-    missio::json::value value4(std::wstring(L""));
+    missio::json::value value4{ std::wstring{} };
     BOOST_CHECK_EQUAL(value4.variant().which(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(move_construct_with_compatible_types_test)
+{
+    std::string string{ "string" };
+    char const* old_str = string.c_str();
+
+    missio::json::value value = std::move(string);
+
+    BOOST_CHECK_EQUAL(value.variant().which(), 4);
+    BOOST_CHECK_EQUAL(value.get<missio::json::string>().c_str(), old_str);
 }
 
 BOOST_AUTO_TEST_CASE(assignment_changes_type_test)
@@ -135,20 +167,54 @@ BOOST_AUTO_TEST_CASE(assignment_changes_type_test)
     BOOST_CHECK_EQUAL(value.variant().which(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(convert_to_array_test)
+BOOST_AUTO_TEST_CASE(is_value_test)
 {
     missio::json::value value;
+    BOOST_CHECK_EQUAL(value.is_null(), true);
 
-    missio::json::array& array = value.to_array();
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
+    value = missio::json::real{ 3.14159 };
+    BOOST_CHECK_EQUAL(value.is_real(), true);
+
+    value = missio::json::integer{ 42 };
+    BOOST_CHECK_EQUAL(value.is_integer(), true);
+
+    value = missio::json::boolean{ true };
+    BOOST_CHECK_EQUAL(value.is_boolean(), true);
+
+    value = missio::json::string{ "string" };
+    BOOST_CHECK_EQUAL(value.is_string(), true);
+
+    value = missio::json::array { 1, 2, 3 };
+    BOOST_CHECK_EQUAL(value.is_array(), true);
+
+    value = missio::json::object { { "key", "value" } };
+    BOOST_CHECK_EQUAL(value.is_object(), true);
 }
 
-BOOST_AUTO_TEST_CASE(convert_to_object_test)
+BOOST_AUTO_TEST_CASE(to_array_test)
 {
     missio::json::value value;
 
-    missio::json::object& object = value.to_object();
-    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
+    value.to_array() = { 1, 2, 3 };
+    BOOST_CHECK_EQUAL(value.is_array(), true);
+
+    // subsequent to_array() calls should preserve content
+    BOOST_CHECK_EQUAL(value.to_array().size(), 3u);
+    BOOST_CHECK_EQUAL(value.to_array()[0], 1);
+    BOOST_CHECK_EQUAL(value.to_array()[1], 2);
+    BOOST_CHECK_EQUAL(value.to_array()[2], 3);
+}
+
+BOOST_AUTO_TEST_CASE(to_object_test)
+{
+    missio::json::value value;
+
+    value.to_object() = { { "key", "value" } };
+    BOOST_CHECK_EQUAL(value.is_object(), true);
+
+    // subsequent to_object() calls should preserve content
+    BOOST_CHECK_EQUAL(value.to_object().size(), 1u);
+    BOOST_CHECK_EQUAL(value.to_object()["key"], "value");
 }
 
 BOOST_AUTO_TEST_CASE(non_reference_type_cast_operator_test)

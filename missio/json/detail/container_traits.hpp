@@ -11,9 +11,6 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/json/detail/char_traits.hpp>
-
 // STL headers
 #include <type_traits>
 #include <vector>
@@ -55,7 +52,13 @@ struct is_container<std::vector<U, Allocator>> : std::true_type
 };
 
 template <typename T>
-using enable_if_char_container = typename std::enable_if<is_container<T>::value && is_char_type<typename T::value_type>::value>::type;
+using is_octet_type = std::integral_constant<bool, sizeof(T) == sizeof(char)>;
+
+template <typename T>
+using enable_if_octet_type = typename std::enable_if<is_octet_type<T>::value>::type;
+
+template <typename T>
+using enable_if_octet_container = typename std::enable_if<is_container<T>::value && is_octet_type<typename T::value_type>::value>::type;
 
 }   // namespace detail
 }   // namespace json

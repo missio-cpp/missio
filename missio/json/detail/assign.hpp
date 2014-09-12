@@ -12,7 +12,6 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application header
-#include <missio/json/detail/type_traits.hpp>
 #include <missio/json/detail/adapt.hpp>
 
 // BOOST headers
@@ -35,7 +34,7 @@ class assign_to
 {
 public:
     template <typename T>
-    using is_variant_type = typename boost::mpl::contains<typename Variant::types, remove_reference_const<T>>::type;
+    using is_variant_type = typename boost::mpl::contains<typename Variant::types, typename std::decay<T>::type>::type;
 
     template <typename T>
     using enable_if_non_variant_type = typename std::enable_if<!is_variant_type<T>::value>::type;
@@ -48,35 +47,17 @@ public:
     ~assign_to() = delete;
 
     template <typename T>
-    static void call(Variant& variant, T const& value, enable_if_variant_type<T> const* = nullptr)
-    {
-        variant = value;
-    }
-
-    template <typename T>
     static void call(Variant& variant, T&& value, enable_if_variant_type<T> const* = nullptr)
     {
         variant = std::forward<T>(value);
     }
 
     template <typename T>
-    static void call(Variant& variant, T const& value, enable_if_non_variant_type<T> const* = nullptr)
-    {
-        variant = adapt<T>::to(value);
-    }
-
-    template <typename T>
     static void call(Variant& variant, T&& value, enable_if_non_variant_type<T> const* = nullptr)
     {
-        variant = adapt<remove_reference_const<T>>::to(std::forward<T>(value));
+        variant = adapt<typename std::decay<T>::type>::to(std::forward<T>(value));
     }
 };
-
-template <typename Variant, typename T>
-void assign(Variant& variant, T const& value)
-{
-    assign_to<Variant>::call(variant, value);
-}
 
 template <typename Variant, typename T>
 void assign(Variant& variant, T&& value)

@@ -36,11 +36,6 @@ struct adapt
 };
 
 template <typename T>
-struct adapt<T const> : adapt<T>
-{
-};
-
-template <typename T>
 struct adapt<T, typename std::enable_if<std::is_integral<T>::value>::type>
 {
     typedef integer type;
@@ -99,14 +94,14 @@ struct adapt<std::basic_string<Char, Traits, Allocator>>
 {
     typedef string type;
 
-    static string to(std::basic_string<Char, Traits, Allocator>&& value)
-    {
-        return string(std::forward<std::basic_string<Char, Traits, Allocator>>(value));
-    }
-
     static string to(std::basic_string<Char, Traits, Allocator> const& value)
     {
         return string(value);
+    }
+
+    static string to(std::basic_string<Char, Traits, Allocator>&& value)
+    {
+        return string(std::forward<std::basic_string<Char, Traits, Allocator>>(value));
     }
 };
 
@@ -139,46 +134,6 @@ struct adapt<char const*> : adapt<char*>
 
 template <>
 struct adapt<wchar_t const*> : adapt<wchar_t*>
-{
-};
-
-template <std::size_t N>
-struct adapt<char[N]> : adapt<char*>
-{
-};
-
-template <std::size_t N>
-struct adapt<wchar_t[N]> : adapt<wchar_t*>
-{
-};
-
-template <std::size_t N>
-struct adapt<char const[N]> : adapt<char*>
-{
-};
-
-template <std::size_t N>
-struct adapt<wchar_t const[N]> : adapt<wchar_t*>
-{
-};
-
-template <std::size_t N>
-struct adapt<char(&)[N]> : adapt<char*>
-{
-};
-
-template <std::size_t N>
-struct adapt<wchar_t(&)[N]> : adapt<wchar_t*>
-{
-};
-
-template <std::size_t N>
-struct adapt<char const(&)[N]> : adapt<char*>
-{
-};
-
-template <std::size_t N>
-struct adapt<wchar_t const(&)[N]> : adapt<wchar_t*>
 {
 };
 

@@ -14,6 +14,41 @@ namespace missio
 namespace json
 {
 
+bool value::is_null() const
+{
+    return is<null>();
+}
+
+bool value::is_real() const
+{
+    return is<real>();
+}
+
+bool value::is_integer() const
+{
+    return is<integer>();
+}
+
+bool value::is_boolean() const
+{
+    return is<boolean>();
+}
+
+bool value::is_string() const
+{
+    return is<string>();
+}
+
+bool value::is_object() const
+{
+    return is<object>();
+}
+
+bool value::is_array() const
+{
+    return is<array>();
+}
+
 object& value::to_object()
 {
     detail::convert<object>::call(variant_);

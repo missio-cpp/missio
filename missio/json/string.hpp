@@ -25,6 +25,13 @@ class string
 {
 public:
     string() = default;
+    ~string() = default;
+
+    string(string const&) = default;
+    string& operator=(string const&) = default;
+
+    string(string&&) = default;
+    string& operator=(string&&) = default;
 
     string(char const* str);
     string(wchar_t const* str);
@@ -32,12 +39,6 @@ public:
     string(std::string&& str);
     string(std::string const& str);
     string(std::wstring const& str);
-
-    string(string const&) = default;
-    string& operator=(string const&) = default;
-
-    string(string&&) = default;
-    string& operator=(string&&) = default;
 
     char const* c_str() const;
 

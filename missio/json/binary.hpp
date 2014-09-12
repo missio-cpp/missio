@@ -53,37 +53,37 @@ public:
     binary(std::vector<std::uint8_t>&& data);
     binary& operator=(std::vector<std::uint8_t>&& data);
 
-    template <typename T, typename = detail::enable_if_char_container<T>>
+    template <typename T, typename = detail::enable_if_octet_container<T>>
     binary(T const& data);
 
-    template <typename T, typename = detail::enable_if_char_container<T>>
+    template <typename T, typename = detail::enable_if_octet_container<T>>
     binary& operator=(T const& data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     binary(std::initializer_list<T> data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     binary& operator=(std::initializer_list<T> data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     binary(T const* data, std::size_t size);
 
-    template <typename T, typename = detail::enable_if_char_container<T>>
+    template <typename T, typename = detail::enable_if_octet_container<T>>
     void assign(T const& data);
 
-    template <typename T, typename = detail::enable_if_char_container<T>>
+    template <typename T, typename = detail::enable_if_octet_container<T>>
     void append(T const& data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     void assign(std::initializer_list<T> data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     void append(std::initializer_list<T> data);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     void assign(T const* data, std::size_t size);
 
-    template <typename T, typename = detail::enable_if_char_type<T>>
+    template <typename T, typename = detail::enable_if_octet_type<T>>
     void append(T const* data, std::size_t size);
 
     void clear();
