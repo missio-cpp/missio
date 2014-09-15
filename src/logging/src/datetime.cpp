@@ -19,7 +19,7 @@ namespace detail
 static char const* const month_names[12] =
 {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-}
+};
 
 char const* datetime::get_month_name() const
 {

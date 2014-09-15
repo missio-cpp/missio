@@ -28,15 +28,15 @@ static int const days_in_month_leap_year[12] =
 
 static bool is_leap_year(std::uint32_t year)
 {
-    return (year % 4u == 0u) && (year % 100u != 0u) || (year % 400u == 0u);
+    return (year % 4u == 0u && year % 100u != 0u) || (year % 400u == 0u);
 }
 
-static int days_in_year(std::uint32_t year)
+static int get_days_in_year(std::uint32_t year)
 {
-    return is_leap_year(year) : 366 : 365;
+    return is_leap_year(year) ? 366 : 365;
 }
 
-static int days_in_month(std::uint32_t year, std::uint32_t month)
+static int get_days_in_month(std::uint32_t year, std::uint32_t month)
 {
     return is_leap_year(year) ? days_in_month_leap_year[month] : days_in_month[month];
 }
@@ -68,23 +68,28 @@ datetime timestamp::to_datetime() const
     datetime.minutes = time_of_day % 3600L / 60L;
     datetime.seconds = time_of_day % 60L;
 
-    std::chrono::seconds const seconds = std::duration_cast<std::chrono::seconds>(value_);
+    datetime.fractional_seconds = 0ULL;
 
-    datetime.fractional_seconds = std::duration_cast<std::chrono::microseconds>(value_ - seconds).count();
+    //TODO: fix me!
+    //timestamp::clock_time_point time_point = clock::from_time_t(time);
+
+    //datetime.fractional_seconds = std::duration_cast<std::chrono::microseconds>(value_ - time_point).count();
 
     for(datetime.year = 1970u;
-        day_number >= days_in_year(datetime.year);
-        day_number -= days_in_year(datetime.year), ++datetime.year)
+        day_number >= get_days_in_year(datetime.year);
+        day_number -= get_days_in_year(datetime.year), ++datetime.year)
     {
     }
 
     for(datetime.month = 1u;
-        day_number >= days_in_month(year, datetime.month - 1);
-        day_number -= days_in_month(year, datetime.month - 1), ++datetime.month)
+        day_number >= get_days_in_month(datetime.year, datetime.month - 1);
+        day_number -= get_days_in_month(datetime.year, datetime.month - 1), ++datetime.month)
     {
     }
 
     datetime.day = day_number + 1;
+
+    return datetime;
 }
 
 }   // namespace detail

@@ -60,7 +60,7 @@ BOOST_FIXTURE_TEST_CASE(format_test, message_fixture)
     std::string sink;
 
     warning_message.format(sink, "{0}");
-    BOOST_CHECK_EQUAL(sink, std::string("2"));    // 1 = error_message, 2 = warning_message
+    BOOST_CHECK_EQUAL(sink.empty(), false);   // cannot retrieve identifier from the message
 
     sink.erase();
 
@@ -95,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(format_test, message_fixture)
     sink.erase();
 
     warning_message.format(sink, "{7}");
-    BOOST_CHECK_EQUAL(sink, location.file());
+    BOOST_CHECK_EQUAL(sink, location.filename());
 
     sink.erase();
 

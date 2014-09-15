@@ -3,6 +3,9 @@ import testing ;
 
 project missio/logging/test ;
 
+# Windows libraries
+lib ws2_32 ;
+
 unit-test missio_logging_test
     :
         ## sources ##
@@ -12,7 +15,9 @@ unit-test missio_logging_test
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
+        <library>/missio/format//missio_format
         <library>/boost/system//boost_system
+        <target-os>windows:<library>ws2_32
     ;
 
 always missio_logging_test ;
