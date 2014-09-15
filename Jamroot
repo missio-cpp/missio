@@ -33,7 +33,6 @@ project missio
         <target-os>windows:<define>NOMINMAX
         <target-os>windows:<define>WIN32_LEAN_AND_MEAN
         <target-os>windows:<define>_WIN32_WINNT=0x0601
-        <toolset>msvc:<runtime-link>static
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
         <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
@@ -48,7 +47,6 @@ project missio
         <toolset>msvc:<cxxflags>/wd4702
         <toolset>msvc:<cxxflags>/wd4714
         <toolset>msvc:<cxxflags>/wd4800
-        <toolset>gcc:<runtime-link>shared
         <toolset>gcc:<cxxflags>-std=gnu++1y
         <toolset>gcc:<cxxflags>-Wno-long-long
         <toolset>gcc:<cxxflags>-Wno-attributes
