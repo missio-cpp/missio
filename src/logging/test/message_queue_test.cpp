@@ -12,10 +12,11 @@
 #include <boost/test/unit_test.hpp>
 
 // STL headers
+#include <cstdint>
 #include <vector>
 #include <thread>
 
-/*
+
 BOOST_AUTO_TEST_SUITE(logging_message_queue_test_suite)
 
 struct common_fixture
@@ -77,7 +78,7 @@ struct consumer_producer_fixture : common_fixture
 
     void consume()
     {
-        int local_count(0);
+        std::uint32_t local_count = 0;
 
         wait_ready();
 
@@ -99,7 +100,7 @@ struct consumer_producer_fixture : common_fixture
     }
 
     bool ready;
-    int total_count;
+    std::uint64_t total_count;
     std::mutex mutex;
     std::condition_variable event;
     std::vector<std::thread> producer_threads;
@@ -129,9 +130,10 @@ BOOST_FIXTURE_TEST_CASE(message_queue_disable_test, common_fixture)
     queue.push(std::move(info_message));
     queue.push(std::move(error_message));
 
-    BOOST_CHECK_NO_THROW(queue.pop());
-
     queue.disable();
+
+    BOOST_CHECK_NO_THROW(queue.pop());
+    BOOST_CHECK_NO_THROW(queue.pop());
 
     BOOST_CHECK_EQUAL(queue.push(std::move(warning_message)), false);
     BOOST_CHECK_THROW(queue.pop(), missio::logging::detail::message_queue_disabled);
@@ -143,14 +145,14 @@ BOOST_FIXTURE_TEST_CASE(message_queue_enable_test, common_fixture)
 
     queue.disable();
 
+    BOOST_CHECK_NO_THROW(queue.pop());
+
     BOOST_CHECK_EQUAL(queue.push(std::move(error_message)), false);
     BOOST_CHECK_THROW(queue.pop(), missio::logging::detail::message_queue_disabled);
 
     queue.enable();
 
     BOOST_CHECK_EQUAL(queue.push(std::move(warning_message)), true);
-
-    BOOST_CHECK_NO_THROW(queue.pop());
     BOOST_CHECK_NO_THROW(queue.pop());
 }
 
@@ -161,15 +163,17 @@ BOOST_FIXTURE_TEST_CASE(message_queue_flush_test, common_fixture)
 
     queue.flush();
 
-    BOOST_CHECK_THROW(queue.pop(), missio::logging::detail::message_queue_flushed);
+    BOOST_CHECK_NO_THROW(queue.pop());
+    BOOST_CHECK_NO_THROW(queue.pop());
 
-    BOOST_CHECK_NO_THROW(queue.pop());
-    BOOST_CHECK_NO_THROW(queue.pop());
+    BOOST_CHECK_THROW(queue.pop(), missio::logging::detail::message_queue_flushed);
 }
 
 BOOST_FIXTURE_TEST_CASE(consumer_producer_test, consumer_producer_fixture)
 {
-    for(int i = 0; i < 2; ++i)
+    unsigned const threads_num = std::max(2u, std::thread::hardware_concurrency());
+
+    for(unsigned i = 0; i < threads_num; ++i)
     {
         producer_threads.emplace_back([this](){ produce(); });
         consumer_threads.emplace_back([this](){ consume(); });
@@ -192,8 +196,7 @@ BOOST_FIXTURE_TEST_CASE(consumer_producer_test, consumer_producer_fixture)
     producer_threads.clear();
     consumer_threads.clear();
 
-    BOOST_CHECK_EQUAL(total_count, 20000);
+    BOOST_CHECK_EQUAL(total_count, threads_num * 10000u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-*/

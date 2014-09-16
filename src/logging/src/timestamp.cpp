@@ -68,12 +68,8 @@ datetime timestamp::to_datetime() const
     datetime.minutes = time_of_day % 3600L / 60L;
     datetime.seconds = time_of_day % 60L;
 
-    datetime.fractional_seconds = 0ULL;
-
-    //TODO: fix me!
-    //timestamp::clock_time_point time_point = clock::from_time_t(time);
-
-    //datetime.fractional_seconds = std::duration_cast<std::chrono::microseconds>(value_ - time_point).count();
+    clock::duration const fractional_seconds = value_ - std::chrono::time_point_cast<std::chrono::seconds>(value_);
+    datetime.fractional_seconds = std::chrono::duration_cast<std::chrono::microseconds>(fractional_seconds).count();
 
     for(datetime.year = 1970u;
         day_number >= get_days_in_year(datetime.year);

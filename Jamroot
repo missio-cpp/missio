@@ -64,8 +64,7 @@ project missio
         <runtime-link>static
         <link>static
     :
-        build-dir
-        obj
+        build-dir obj
     ;
 
 use-project /missio : $(TOP) ;
