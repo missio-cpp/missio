@@ -38,7 +38,6 @@ project missio
         <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
         <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_CRT_NONSTDC_NO_DEPRECATE
-        <toolset>msvc:<warnings>on
         <toolset>msvc:<cxxflags>/wd4100
         <toolset>msvc:<cxxflags>/wd4127
         <toolset>msvc:<cxxflags>/wd4244
