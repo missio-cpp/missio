@@ -77,26 +77,6 @@ BOOST_AUTO_TEST_CASE(construct_from_vector_test)
     BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), vector.begin(), vector.end());
 }
 
-BOOST_AUTO_TEST_CASE(construct_from_deque_test)
-{
-    std::deque<char> deque { 'f', 'o', 'o', 'b', 'a', 'r' };
-
-    missio::json::binary binary { deque };
-
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), deque.begin(), deque.end());
-}
-
-BOOST_AUTO_TEST_CASE(construct_from_list_test)
-{
-    std::list<char> list { 'f', 'o', 'o', 'b', 'a', 'r' };
-
-    missio::json::binary binary { list };
-
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), list.begin(), list.end());
-}
-
 BOOST_AUTO_TEST_CASE(move_construct_from_vector_test)
 {
     std::vector<char> vector { 'f', 'o', 'o', 'b', 'a', 'r' };
@@ -196,30 +176,6 @@ BOOST_AUTO_TEST_CASE(assign_from_vector_test)
     BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), vector.begin(), vector.end());
 }
 
-BOOST_AUTO_TEST_CASE(assign_from_deque_test)
-{
-    std::deque<char> deque { 'f', 'o', 'o', 'b', 'a', 'r' };
-
-    missio::json::binary binary;
-
-    binary.assign(deque);
-
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), deque.begin(), deque.end());
-}
-
-BOOST_AUTO_TEST_CASE(assign_from_list_test)
-{
-    std::list<char> list { 'f', 'o', 'o', 'b', 'a', 'r' };
-
-    missio::json::binary binary;
-
-    binary.assign(list);
-
-    BOOST_CHECK_EQUAL(binary.empty(), false);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.end(), list.begin(), list.end());
-}
-
 BOOST_AUTO_TEST_CASE(append_from_initializer_list_test)
 {
     missio::json::binary binary;
@@ -264,36 +220,6 @@ BOOST_AUTO_TEST_CASE(append_from_vector_test)
     BOOST_CHECK_EQUAL(binary.size(), 6u);
     BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, vector1.begin(), vector1.end());
     BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), vector2.begin(), vector2.end());
-}
-
-BOOST_AUTO_TEST_CASE(append_from_deque_test)
-{
-    std::deque<char> deque1 { 'f', 'o', 'o' };
-    std::deque<char> deque2 { 'b', 'a', 'r' };
-
-    missio::json::binary binary;
-
-    binary.append(deque1);
-    binary.append(deque2);
-
-    BOOST_CHECK_EQUAL(binary.size(), 6u);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, deque1.begin(), deque1.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), deque2.begin(), deque2.end());
-}
-
-BOOST_AUTO_TEST_CASE(append_from_list_test)
-{
-    std::list<char> list1 { 'f', 'o', 'o' };
-    std::list<char> list2 { 'b', 'a', 'r' };
-
-    missio::json::binary binary;
-
-    binary.append(list1);
-    binary.append(list2);
-
-    BOOST_CHECK_EQUAL(binary.size(), 6u);
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin(), binary.begin() + 3, list1.begin(), list1.end());
-    BOOST_CHECK_EQUAL_COLLECTIONS(binary.begin() + 3, binary.end(), list2.begin(), list2.end());
 }
 
 BOOST_FIXTURE_TEST_CASE(comparison_operators_test, binary_fixture)

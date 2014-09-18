@@ -6,70 +6,26 @@
 //---------------------------------------------------------------------------
 
 
-template <typename T, typename>
-binary::binary(T const& data) :
-    data_(data.begin(), data.end())
+template <typename Container, typename>
+binary::binary(Container const& container) : binary(container.data(), container.size())
 {
 }
 
-template <typename T, typename>
-binary& binary::operator=(T const& data)
+template <typename Container, typename>
+binary& binary::operator=(Container const& container)
 {
-    data_.assign(data.begin(), data.end());
+    assign(container.data(), container.size());
     return *this;
 }
 
-template <typename T, typename>
-binary::binary(std::initializer_list<T> data) :
-    data_(data.begin(), data.end())
+template <typename Container, typename>
+void binary::assign(Container const& container)
 {
+    assign(container.data(), container.size());
 }
 
-template <typename T, typename>
-binary& binary::operator=(std::initializer_list<T> data)
+template <typename Container, typename>
+void binary::append(Container const& container)
 {
-    data_.assign(data.begin(), data.end());
-    return *this;
-}
-
-template <typename T, typename>
-binary::binary(T const* data, std::size_t size) :
-    data_(data, data + size)
-{
-}
-
-template <typename T, typename>
-void binary::assign(T const& data)
-{
-    data_.assign(data.begin(), data.end());
-}
-
-template <typename T, typename>
-void binary::append(T const& data)
-{
-    data_.insert(data_.end(), data.begin(), data.end());
-}
-
-template <typename T, typename>
-void binary::assign(std::initializer_list<T> data)
-{
-    data_.assign(data.begin(), data.end());
-}
-
-template <typename T, typename>
-void binary::append(std::initializer_list<T> data)
-{
-    data_.insert(data_.end(), data.begin(), data.end());
-}
-
-template <typename T, typename>
-void binary::assign(T const* data, std::size_t size)
-{
-    data_.assign(data, data + size);
-}
-
-template <typename T, typename>
-void binary::append(T const* data, std::size_t size)
-{
-    data_.insert(data_.end(), data, data + size);
+    append(container.data(), container.size());
 }

@@ -14,9 +14,7 @@
 // STL headers
 #include <type_traits>
 #include <vector>
-#include <deque>
 #include <array>
-#include <list>
 
 
 namespace missio
@@ -33,16 +31,6 @@ struct is_container : std::false_type
 
 template <typename U, std::size_t N>
 struct is_container<std::array<U, N>> : std::true_type
-{
-};
-
-template <typename U, typename Allocator>
-struct is_container<std::list<U, Allocator>> : std::true_type
-{
-};
-
-template <typename U, typename Allocator>
-struct is_container<std::deque<U, Allocator>> : std::true_type
 {
 };
 

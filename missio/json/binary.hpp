@@ -36,6 +36,9 @@ public:
     typedef std::vector<value_type>::iterator iterator;
     typedef std::vector<value_type>::const_iterator const_iterator;
 
+    template <typename T>
+    using enable_if_octet_container = detail::enable_if_octet_container<T>;
+
 public:
     static binary from_base64_string(string const& str);
     static string to_base64_string(binary const& value);
@@ -50,66 +53,52 @@ public:
     binary(binary&&) = default;
     binary& operator=(binary&&) = default;
 
-    binary(std::vector<std::uint8_t>&& data);
-    binary& operator=(std::vector<std::uint8_t>&& data);
+    binary(void const* data, std::size_t size);
 
-    template <typename T, typename = detail::enable_if_octet_container<T>>
-    binary(T const& data);
+    binary(std::vector<value_type>&& data);
+    binary& operator=(std::vector<value_type>&& data);
 
-    template <typename T, typename = detail::enable_if_octet_container<T>>
-    binary& operator=(T const& data);
+    binary(std::initializer_list<value_type> data);
+    binary& operator=(std::initializer_list<value_type> data);
 
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    binary(std::initializer_list<T> data);
+    template <typename Container, typename = enable_if_octet_container<Container>>
+    binary(Container const& container);
 
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    binary& operator=(std::initializer_list<T> data);
+    template <typename Container, typename = enable_if_octet_container<Container>>
+    binary& operator=(Container const& container);
 
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    binary(T const* data, std::size_t size);
+    void assign(void const* data, std::size_t size);
+    void append(void const* data, std::size_t size);
 
-    template <typename T, typename = detail::enable_if_octet_container<T>>
-    void assign(T const& data);
+    void assign(std::initializer_list<value_type> data);
+    void append(std::initializer_list<value_type> data);
 
-    template <typename T, typename = detail::enable_if_octet_container<T>>
-    void append(T const& data);
+    template <typename Container, typename = enable_if_octet_container<Container>>
+    void assign(Container const& container);
 
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    void assign(std::initializer_list<T> data);
-
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    void append(std::initializer_list<T> data);
-
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    void assign(T const* data, std::size_t size);
-
-    template <typename T, typename = detail::enable_if_octet_type<T>>
-    void append(T const* data, std::size_t size);
+    template <typename Container, typename = enable_if_octet_container<Container>>
+    void append(Container const& container);
 
     void clear();
 
     bool empty() const;
-    std::size_t size() const;
+    size_type size() const;
 
-    std::uint8_t const* data() const;
+    const_pointer data() const;
 
     const_iterator begin() const;
     const_iterator end() const;
 
-    friend bool operator<(binary const& lhs, binary const& rhs);
-    friend bool operator==(binary const& lhs, binary const& rhs);
-
 private:
-    std::vector<std::uint8_t> data_;
+    std::vector<value_type> data_;
 };
 
 // Implementation headers
 #include <missio/json/binary.inl>
 
-inline bool operator!=(binary const& lhs, binary const& rhs) { return !operator==(lhs, rhs); }
-inline bool operator<=(binary const& lhs, binary const& rhs) { return !operator<(rhs, lhs); }
-inline bool operator>=(binary const& lhs, binary const& rhs) { return !operator<(lhs, rhs); }
-inline bool operator>(binary const& lhs, binary const& rhs) { return operator<(rhs, lhs); } 
+bool operator<(binary const& lhs, binary const& rhs);
+bool operator==(binary const& lhs, binary const& rhs);
+bool operator!=(binary const& lhs, binary const& rhs);
 
 }   // namespace json
 }   // namespace missio
