@@ -35,10 +35,22 @@ template <typename T>
 using is_string = typename std::is_same<typename std::decay<T>::type, string>::type;
 
 template <typename T>
-using enable_if_scalar_type = typename std::enable_if<!is_array<T>::value && !is_object<T>::value && !is_string<T>::value>::type;
+using is_supported_type = std::integral_constant<bool, std::is_arithmetic<T>::value || std::is_class<T>::value || std::is_enum<T>::value>;
 
 template <typename T>
-using enable_if_composite_type = typename std::enable_if<is_array<T>::value || is_object<T>::value || is_string<T>::value>::type;
+using is_composite_type = std::integral_constant<bool, is_array<T>::value || is_object<T>::value || is_string<T>::value>;
+
+template <typename T>
+using is_scalar_type = std::integral_constant<bool, !is_composite_type<T>::value && is_supported_type<T>::value>;
+
+template <typename T>
+using enable_if_supported_type = typename std::enable_if<is_supported_type<T>::value>::type;
+
+template <typename T>
+using enable_if_composite_type = typename std::enable_if<is_composite_type<T>::value>::type;
+
+template <typename T>
+using enable_if_scalar_type = typename std::enable_if<is_scalar_type<T>::value>::type;
 
 }   // namespace detail
 }   // namespace json

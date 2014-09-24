@@ -48,7 +48,7 @@ struct is_visitor : boost::static_visitor<bool>
     }
 };
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct is_type;
 
 template <typename T>

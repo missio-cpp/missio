@@ -56,6 +56,9 @@ public:
     using result_type_of_get = typename detail::get_type<T>::result_type;
 
     template <typename T>
+    using enable_if_supported_type = detail::enable_if_supported_type<T>;
+
+    template <typename T>
     using enable_if_composite_type = detail::enable_if_composite_type<T>;
 
 public:
@@ -81,10 +84,8 @@ public:
 
     template <typename T> result_type_of_get<T> get() const;
 
-    template <typename T, typename = enable_if_composite_type<T>>
-    operator T const&() const;
-
-    template <typename T> operator T() const;
+    template <typename T, typename = enable_if_supported_type<T>> operator T() const;
+    template <typename T, typename = enable_if_composite_type<T>> operator T const&() const;
 
     bool is_null() const;
     bool is_real() const;

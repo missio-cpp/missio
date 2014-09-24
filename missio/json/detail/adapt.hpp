@@ -29,7 +29,7 @@ namespace json
 namespace detail
 {
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct adapt
 {
     typedef void type;

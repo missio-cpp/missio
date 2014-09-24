@@ -79,7 +79,7 @@ public:
     }
 };
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct get_type;
 
 template <typename T>
