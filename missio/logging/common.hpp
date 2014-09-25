@@ -29,6 +29,13 @@
 #define LOG_STRINGIZE_LIT(x)    #x
 #define LOG_STRINGIZE(x)        LOG_STRINGIZE_LIT(x)
 
+#define LOG_BIN(x, ...)         missio::format::bin(x, ##__VA_ARGS__)
+#define LOG_OCT(x, ...)         missio::format::oct(x, ##__VA_ARGS__)
+#define LOG_HEX(x, ...)         missio::format::hex(x, ##__VA_ARGS__)
+
+#define LOG_LOWER(s)            missio::format::lower(s)
+#define LOG_UPPER(s)            missio::format::upper(s)
+
 #define LOG_SEV_FAILURE         missio::logging::failure
 #define LOG_SEV_ERROR           missio::logging::error
 #define LOG_SEV_WARNING         missio::logging::warning
