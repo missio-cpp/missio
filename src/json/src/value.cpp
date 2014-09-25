@@ -61,6 +61,16 @@ array& value::to_array()
     return boost::get<array>(variant_);
 }
 
+object const& value::get_object() const
+{
+    return get<object>();
+}
+
+array const& value::get_array() const
+{
+    return get<array>();
+}
+
 value::variant_type const& value::variant() const
 {
     return variant_;

@@ -98,6 +98,9 @@ public:
     object& to_object();
     array& to_array();
 
+    object const& get_object() const;
+    array const& get_array() const;
+
     variant_type const& variant() const;
 
     value& operator[](std::size_t index);
