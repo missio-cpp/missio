@@ -11,9 +11,6 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/logging/detail/datetime.hpp>
-
 // STL headers
 #include <chrono>
 
@@ -34,17 +31,13 @@ public:
 public:
     timestamp();
 
-    explicit timestamp(clock_time_point const& value);
+    timestamp(timestamp const&) = default;
+    timestamp& operator=(timestamp const&) = default;
 
     timestamp(timestamp&&) = default;
     timestamp& operator=(timestamp&&) = default;
 
-    timestamp(timestamp const&) = default;
-    timestamp& operator=(timestamp const&) = default;
-
     clock_time_point const& value() const;
-
-    datetime to_datetime() const;
 
 private:
     clock_time_point value_;

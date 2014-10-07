@@ -113,10 +113,8 @@ void file_writer::initialize_file(bool is_new_session)
         if(file_.tellp() > 0)
             format::write(file_, '\n', '\n');
 
-        detail::timestamp const timestamp;
-
         format::write(file_, format::repeat('=', 40), ' ');
-        format::write(file_, timestamp.to_datetime(), ' ');
+        format::write(file_, detail::timestamp().value(), ' ');
         format::write(file_, format::repeat('=', 40), '\n');
 
         file_.flush();
