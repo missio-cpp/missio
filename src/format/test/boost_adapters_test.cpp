@@ -7,9 +7,7 @@
 
 // Application headers
 #include <missio/format/format.hpp>
-#include <missio/format/adapters/std.hpp>
 #include <missio/format/adapters/boost.hpp>
-#include <missio/format/adapters/pointer.hpp>
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
@@ -21,12 +19,11 @@
 #include <boost/config.hpp>
 
 // BOOST headers
-#include <stdexcept>
 #include <iostream>
 #include <cmath>
 
 
-BOOST_AUTO_TEST_SUITE(format_adapters_test_suite)
+BOOST_AUTO_TEST_SUITE(format_boost_adapters_test_suite)
 
 struct common_fixture
 {
@@ -46,18 +43,6 @@ struct common_fixture
     {
         return boost::lexical_cast<std::string>(value);
     }
-};
-
-struct pointer_fixture : common_fixture
-{
-    pointer_fixture() :
-        pointer(reinterpret_cast<void const*>(0x123abc)),
-        null_pointer(reinterpret_cast<void const*>(0))
-    {
-    }
-
-    void const* pointer;
-    void const* null_pointer;
 };
 
 struct asio_v4_fixture : common_fixture
@@ -164,120 +149,6 @@ struct system_fixture : common_fixture
 
     boost::system::error_code const error_code;
 };
-
-BOOST_FIXTURE_TEST_CASE(pointer_write_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::write(sink, pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), 32));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(pointer_print_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::print(sink, "{0}", pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), 32));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(null_pointer_write_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::write(sink, null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(null_pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), 32));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(null_pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(null_pointer_print_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::print(sink, "{0}", null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(null_pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), 32));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(null_pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(exception_write_test, common_fixture)
-{
-    std::string sink;
-
-    // exceptions derived from std::exception should be supported as well
-    std::runtime_error const runtime_error("runtime error");
-
-    missio::format::write(sink, runtime_error);
-    BOOST_CHECK_EQUAL(sink, "runtime error");
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(runtime_error, 20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", 20));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(runtime_error, -20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", -20));
-}
-
-BOOST_FIXTURE_TEST_CASE(exception_print_test, common_fixture)
-{
-    std::string sink;
-
-    // exceptions derived from std::exception should be supported as well
-    std::runtime_error const runtime_error("runtime error");
-
-    missio::format::print(sink, "{0}", runtime_error);
-    BOOST_CHECK_EQUAL(sink, "runtime error");
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(runtime_error, 20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", 20));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(runtime_error, -20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", -20));
-}
 
 BOOST_FIXTURE_TEST_CASE(boost_asio_ip_v4_address_write_test, asio_v4_fixture)
 {

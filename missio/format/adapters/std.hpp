@@ -12,6 +12,8 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
+#include <missio/format/adapters/std/chrono_duration.hpp>
+#include <missio/format/adapters/std/chrono_time_point.hpp>
 #include <missio/format/adapters/std/error_code.hpp>
 #include <missio/format/adapters/std/error_condition.hpp>
 #include <missio/format/adapters/std/exception.hpp>
