@@ -28,7 +28,7 @@ struct type_adapter<boost::system::error_code>
     template <typename Sink>
     static void format(Sink& sink, boost::system::error_code const& value)
     {
-        write(sink, value.category().name(), ':', value.value());
+        write(sink, value.message(), " (", value.category().name(), ':', value.value(), ')');
     }
 };
 

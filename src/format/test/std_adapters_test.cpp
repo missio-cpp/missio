@@ -6,52 +6,27 @@
 //--------------------------------------------------------------------------- 
 
 // Application headers
-#include <missio/format/format.hpp>
+#include <missio/format/write.hpp>
+#include <missio/format/print.hpp>
 #include <missio/format/adapters/std.hpp>
-#include <missio/format/adapters/pointer.hpp>
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/config.hpp>
 
 // STL headers
 #include <stdexcept>
-#include <cmath>
 
 
 BOOST_AUTO_TEST_SUITE(format_std_adapters_test_suite)
 
 struct common_fixture
 {
-    static std::string make_aligned(std::string const& str, int align)
-    {
-        int const size = static_cast<int>(str.size());
-        int const width = std::max(size, std::abs(align));
-
-        if(align > 0)
-            return std::string(width - size, ' ').append(str);
-
-        return std::string(str).append(std::string(width - size, ' '));
-    }
-
     template <typename T>
     static std::string make_string(T const& value)
     {
         return boost::lexical_cast<std::string>(value);
     }
-};
-
-struct pointer_fixture : common_fixture
-{
-    pointer_fixture() :
-        pointer(reinterpret_cast<void const*>(0x123abc)),
-        null_pointer(reinterpret_cast<void const*>(0))
-    {
-    }
-
-    void const* pointer;
-    void const* null_pointer;
 };
 
 struct smart_ptr_fixture : common_fixture
@@ -81,93 +56,7 @@ struct smart_ptr_fixture : common_fixture
     std::unique_ptr<int> const empty_unique_pointer;
 };
 
-struct system_fixture : common_fixture
-{
-    system_fixture() :
-        error_code(std::make_error_code(std::errc::bad_address))
-    {
-    }
-
-    std::error_code const error_code;
-};
-
-struct chrono_fixture : common_fixture
-{
-};
-
-BOOST_FIXTURE_TEST_CASE(pointer_write_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::write(sink, pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), 32));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(pointer_print_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::print(sink, "{0}", pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), 32));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(null_pointer_write_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::write(sink, null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(null_pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), 32));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(null_pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(null_pointer_print_test, pointer_fixture)
-{
-    std::string sink;
-
-    missio::format::print(sink, "{0}", null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(null_pointer, 32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), 32));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(null_pointer, -32));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(null_pointer), -32));
-}
-
-BOOST_FIXTURE_TEST_CASE(exception_write_test, common_fixture)
+BOOST_FIXTURE_TEST_CASE(exception_test, common_fixture)
 {
     std::string sink;
 
@@ -179,37 +68,11 @@ BOOST_FIXTURE_TEST_CASE(exception_write_test, common_fixture)
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::align(runtime_error, 20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", 20));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(runtime_error, -20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", -20));
-}
-
-BOOST_FIXTURE_TEST_CASE(exception_print_test, common_fixture)
-{
-    std::string sink;
-
-    // exceptions derived from std::exception should be supported as well
-    std::runtime_error const runtime_error("runtime error");
-
     missio::format::print(sink, "{0}", runtime_error);
     BOOST_CHECK_EQUAL(sink, "runtime error");
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(runtime_error, 20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", 20));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(runtime_error, -20));
-    BOOST_CHECK_EQUAL(sink, make_aligned("runtime error", -20));
 }
 
-BOOST_FIXTURE_TEST_CASE(shared_ptr_write_test, smart_ptr_fixture)
+BOOST_FIXTURE_TEST_CASE(shared_ptr_test, smart_ptr_fixture)
 {
     std::string sink;
 
@@ -218,75 +81,29 @@ BOOST_FIXTURE_TEST_CASE(shared_ptr_write_test, smart_ptr_fixture)
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::align(empty_shared_pointer, 10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(empty_shared_pointer), 10));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(empty_shared_pointer, -10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(empty_shared_pointer), -10));
-
-    sink.erase();
-
     missio::format::write(sink, shared_pointer);
     BOOST_CHECK_EQUAL(sink, make_string(shared_pointer));
 
     sink.erase();
-
-    missio::format::write(sink, missio::format::align(shared_pointer, 10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(shared_pointer), 10));
-
-    sink.erase();
-
-    missio::format::write(sink, missio::format::align(shared_pointer, -10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(shared_pointer), -10));
-}
-
-BOOST_FIXTURE_TEST_CASE(shared_ptr_print_test, smart_ptr_fixture)
-{
-    std::string sink;
 
     missio::format::print(sink, "{0}", empty_shared_pointer);
     BOOST_CHECK_EQUAL(sink, make_string(empty_shared_pointer));
 
     sink.erase();
 
-    missio::format::print(sink, "{0}", missio::format::align(empty_shared_pointer, 10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(empty_shared_pointer), 10));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(empty_shared_pointer, -10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(empty_shared_pointer), -10));
-
-    sink.erase();
-
     missio::format::print(sink, "{0}", shared_pointer);
     BOOST_CHECK_EQUAL(sink, make_string(shared_pointer));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(shared_pointer, 10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(shared_pointer), 10));
-
-    sink.erase();
-
-    missio::format::print(sink, "{0}", missio::format::align(shared_pointer, -10));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(shared_pointer), -10));
 }
 
-BOOST_FIXTURE_TEST_CASE(weak_ptr_write_test, smart_ptr_fixture)
+BOOST_FIXTURE_TEST_CASE(weak_ptr_test, smart_ptr_fixture)
 {
   //TODO: implement!
 }
 
-BOOST_FIXTURE_TEST_CASE(weak_ptr_print_test, smart_ptr_fixture)
+BOOST_FIXTURE_TEST_CASE(error_code_test, common_fixture)
 {
-  //TODO: implement!
-}
-/*
-BOOST_FIXTURE_TEST_CASE(error_code_write_test, system_fixture)
-{
+    std::error_code const error_code = std::make_error_code(std::errc::bad_address);
+
     std::string sink;
 
     missio::format::write(sink, error_code);
@@ -294,61 +111,69 @@ BOOST_FIXTURE_TEST_CASE(error_code_write_test, system_fixture)
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::align(error_code, 40));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(error_code), 40));
+    missio::format::print(sink, "{0}", error_code);
+    BOOST_CHECK_EQUAL(sink, make_string(error_code));
+}
+
+BOOST_AUTO_TEST_CASE(chrono_duration_test)
+{
+    auto const duration = std::chrono::hours(33) +
+                          std::chrono::minutes(17) +
+                          std::chrono::seconds(24) +
+                          std::chrono::milliseconds(397);
+
+    std::string sink;
+
+    missio::format::write(sink, duration);
+    BOOST_CHECK_EQUAL(sink, "1d 9h 17m 24s 397ms");
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::align(error_code, -40));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(error_code), -40));
+    missio::format::print(sink, "{0}", duration);
+    BOOST_CHECK_EQUAL(sink, "1d 9h 17m 24s 397ms");
+
+    //TODO: add more test cases
 }
 
-BOOST_FIXTURE_TEST_CASE(error_code_print_test, system_fixture)
+BOOST_AUTO_TEST_CASE(chrono_time_point_test)
+{
+  //TODO: implement!
+}
+
+BOOST_AUTO_TEST_CASE(pair_test)
 {
     std::string sink;
 
-    missio::format::print(sink, "{0}", error_code);
-    BOOST_CHECK_EQUAL(sink, make_string(error_code));
+    missio::format::write(sink, std::make_pair("string", 42));
+    BOOST_CHECK_EQUAL(sink, "(string, 42)");
 
     sink.erase();
 
-    missio::format::print(sink, "{0}", missio::format::align(error_code, 40));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(error_code), 40));
+    missio::format::print(sink, "{0}", std::make_pair("string", 42));
+    BOOST_CHECK_EQUAL(sink, "(string, 42)");
+}
+
+BOOST_AUTO_TEST_CASE(tuple_test)
+{
+    std::string sink;
+
+    missio::format::write(sink, std::make_tuple("string", 42, true));
+    BOOST_CHECK_EQUAL(sink, "(string, 42, true)");
 
     sink.erase();
 
-    missio::format::print(sink, "{0}", missio::format::align(error_code, -40));
-    BOOST_CHECK_EQUAL(sink, make_aligned(make_string(error_code), -40));
-}
-*/
-BOOST_FIXTURE_TEST_CASE(chrono_duration_write_test, chrono_fixture)
-{
-  //TODO: implement!
-}
+    missio::format::write(sink, std::make_tuple());
+    BOOST_CHECK_EQUAL(sink, "()");
 
-BOOST_FIXTURE_TEST_CASE(chrono_duration_print_test, chrono_fixture)
-{
-  //TODO: implement!
-}
+    sink.erase();
 
-BOOST_FIXTURE_TEST_CASE(chrono_time_point_write_test, chrono_fixture)
-{
-  //TODO: implement!
-}
+    missio::format::print(sink, "{0}", std::make_tuple("string", 42, true));
+    BOOST_CHECK_EQUAL(sink, "(string, 42, true)");
 
-BOOST_FIXTURE_TEST_CASE(chrono_time_point_print_test, chrono_fixture)
-{
-  //TODO: implement!
-}
+    sink.erase();
 
-BOOST_FIXTURE_TEST_CASE(pair_write_test, chrono_fixture)
-{
-  //TODO: implement!
-}
-
-BOOST_FIXTURE_TEST_CASE(pair_print_test, chrono_fixture)
-{
-  //TODO: implement!
+    missio::format::print(sink, "{0}", std::make_tuple());
+    BOOST_CHECK_EQUAL(sink, "()");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -28,7 +28,7 @@ struct type_adapter<std::pair<T1, T2>>
     template <typename Sink>
     static void format(Sink& sink, std::pair<T1, T2> const& value)
     {
-        write(sink, "[", value.first, ", ", value.second, "]");
+        write(sink, '(', value.first, ", ", value.second, ')');
     }
 };
 

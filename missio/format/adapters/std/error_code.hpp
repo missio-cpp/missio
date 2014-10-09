@@ -28,7 +28,7 @@ struct type_adapter<std::error_code>
     template <typename Sink>
     static void format(Sink& sink, std::error_code const& value)
     {
-        write(sink, value.message(), " (", value.value(), ")");
+        write(sink, value.message(), " (", value.category().name(), ':', value.value(), ')');
     }
 };
 

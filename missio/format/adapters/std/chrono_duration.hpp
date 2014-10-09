@@ -11,8 +11,8 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// STL headers
-#include <chrono>
+// Application headers
+#include <missio/format/detail/duration.hpp>
 
 
 namespace missio
@@ -28,24 +28,30 @@ struct type_adapter<std::chrono::duration<Rep, Period>>
     template <typename Sink>
     static void format(Sink& sink, std::chrono::duration<Rep, Period> const& value)
     {
-/*
-//TODO: implement!
+        bool output_started = false;
 
-        duration const duration = make_duration(value);
+        duration const duration = convert_duration(value);
 
-        if(duration.hours > 0u)
-            write(sink, duration.hours, "h");
+        write_duration(sink, duration.days, "d", output_started);
+        write_duration(sink, duration.hours, "h", output_started);
+        write_duration(sink, duration.minutes, "m", output_started);
+        write_duration(sink, duration.seconds, "s", output_started);
+        write_duration(sink, duration.milliseconds, "ms", output_started);
+    }
 
-        if(duration.minutes > 0u)
-            write(sink, date_time.minutes, "m");
+    template <typename Sink, typename Value>
+    static void write_duration(Sink& sink, Value const& value, char const* suffix, bool& output_started)
+    {
+        if(value > 0)
+        {
+            if(output_started)
+            {
+                write(sink, ' ');
+            }
 
-        if(duration.seconds > 0u)
-            write(sink, date_time.seconds, "s");
-
-        if(duration.microseconds > 0u)
-            write(sink, date_time.microseconds, "ms");
-*/
-        write(sink, value.count());
+            write(sink, value, suffix);
+            output_started = true;
+        }
     }
 };
 

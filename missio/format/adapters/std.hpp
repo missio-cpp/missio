@@ -19,6 +19,7 @@
 #include <missio/format/adapters/std/exception.hpp>
 #include <missio/format/adapters/std/pair.hpp>
 #include <missio/format/adapters/std/shared_ptr.hpp>
+#include <missio/format/adapters/std/tuple.hpp>
 #include <missio/format/adapters/std/unique_ptr.hpp>
 #include <missio/format/adapters/std/weak_ptr.hpp>
 

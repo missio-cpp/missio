@@ -31,7 +31,7 @@ struct type_adapter<boost::asio::ip::basic_endpoint<InternetProtocol>>
         boost::asio::ip::address const address = value.address();
 
         if(address.is_v6())
-            write(sink, '[', address, ']', ':', value.port());
+            write(sink, '[', address, "]:", value.port());
         else
             write(sink, address, ':', value.port());
     }

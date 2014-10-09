@@ -28,7 +28,7 @@ struct type_adapter<std::error_condition>
     template <typename Sink>
     static void format(Sink& sink, std::error_condition const& value)
     {
-        write(sink, value.message(), " (", value.value(), ")");
+        write(sink, value.message(), " (", value.category().name(), ':', value.value(), ')');
     }
 };
 

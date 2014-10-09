@@ -4,8 +4,8 @@
 //    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_format_detail_date_time_hpp
-#define _missio_format_detail_date_time_hpp
+#ifndef _missio_format_detail_time_point_hpp
+#define _missio_format_detail_time_point_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -23,24 +23,24 @@ namespace format
 namespace detail
 {
 
-struct date_time
+struct time_point
 {
-    std::uint32_t year;
-    std::uint32_t month;
-    std::uint32_t day;
+    std::int32_t year;
+    std::int32_t month;
+    std::int32_t day;
 
-    std::uint32_t hours;
-    std::uint32_t minutes;
-    std::uint32_t seconds;
-    std::uint64_t microseconds;
+    std::int32_t hours;
+    std::int32_t minutes;
+    std::int32_t seconds;
+    std::int64_t microseconds;
 
     char const* get_month_name() const;
 };
 
-date_time make_date_time(std::chrono::system_clock::time_point const& value);
+time_point convert_time_point(std::chrono::system_clock::time_point const& value);
 
 }   // namespace detail
 }   // namespace format
 }   // namespace missio
 
-#endif  // _missio_format_detail_date_time_hpp
+#endif  // _missio_format_detail_time_point_hpp
