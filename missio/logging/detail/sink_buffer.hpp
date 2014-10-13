@@ -14,10 +14,8 @@
 // Application headers
 #include <missio/format/format.hpp>
 
-// BOOST headers
-#include <boost/range.hpp>
-
 // STL headers
+#include <algorithm>
 #include <cstddef>
 
 
@@ -94,7 +92,7 @@ struct type_adapter<logging::detail::sink_buffer>
     template <typename Sink>
     static void format(Sink& sink, logging::detail::sink_buffer const& value)
     {
-         write(sink, boost::make_iterator_range(value.begin(), value.end()));
+        std::copy(std::begin(value), std::end(value), sink_iterator<Sink>(sink));
     }
 };
 
