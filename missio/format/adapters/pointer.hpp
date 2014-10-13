@@ -15,6 +15,7 @@
 #include <missio/format/inserters.hpp>
 
 // STL headers
+#include <cstddef>
 #include <cstdint>
 
 
@@ -31,29 +32,27 @@ struct type_adapter<void*>
     template <typename Sink>
     static void format(Sink& sink, void const* value)
     {
-        format(sink, reinterpret_cast<std::uintptr_t>(value));
+        write_pointer(sink, reinterpret_cast<std::uintptr_t>(value));
     }
 
-#if defined(_WIN32) || defined(_WIN64)
-
     template <typename Sink>
-    static void format(Sink& sink, std::uintptr_t const& value)
-    {
-        write(sink, hex(value, 2 * sizeof(value), true));
-    }
-
-#else
-
-    template <typename Sink>
-    static void format(Sink& sink, std::uintptr_t const& value)
+    static void write_pointer(Sink& sink, std::uintptr_t value)
     {
         write(sink, '0');
 
         if(value)
             write(sink, 'x', hex(value));
     }
+};
 
-#endif
+template <>
+struct type_adapter<std::nullptr_t>
+{
+    template <typename Sink>
+    static void format(Sink& sink, std::nullptr_t const& value)
+    {
+        write(sink, '0');
+    }
 };
 
 }   // namespace detail

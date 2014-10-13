@@ -60,7 +60,7 @@ class sink_adapter<char[N]>
 public:
     explicit sink_adapter(char (&sink)[N]) :
         sink_(sink),
-        pos_(0)
+        pos_(0u)
     {
     }
 

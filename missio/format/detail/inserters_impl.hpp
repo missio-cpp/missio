@@ -66,9 +66,15 @@ auto scientific(Value const& value, int precision = -1, bool upper_case = false,
 }
 
 template <typename Value>
-auto align(Value const& value, int align)
+auto left_align(Value const& value, unsigned int align, char pad = ' ')
 {
-    return make_group_value(value, align_inserter(align));
+    return make_group_value(value, left_align_inserter(align, pad));
+}
+
+template <typename Value>
+auto right_align(Value const& value, unsigned int align, char pad = ' ')
+{
+    return make_group_value(value, right_align_inserter(align, pad));
 }
 
 template <typename Value>

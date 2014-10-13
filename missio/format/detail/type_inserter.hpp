@@ -12,15 +12,16 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Applciation headers
-#include <missio/format/detail/repeat_directive.hpp>
 #include <missio/format/detail/generate_value.hpp>
-#include <missio/format/detail/type_generator.hpp>
 #include <missio/format/detail/real_generator.hpp>
 #include <missio/format/detail/int_generator.hpp>
 #include <missio/format/detail/type_adapter.hpp>
 
 // BOOST headers
 #include <boost/spirit/include/karma.hpp>
+
+// STL headers
+#include <algorithm>
 
 
 namespace missio
@@ -43,13 +44,13 @@ struct int_inserter
     template <typename Sink, typename Value>
     void call(Sink& sink, Value value) const
     {
-        int_generator<Value, Radix> const& generator(make_generator<Value>());
+        int_generator<Value, Radix> const& generator = make_int_generator<Value>();
         generate_value(sink, value, generator(precision_, force_sign_, upper_case_));
     }
 
 private:
     template <typename Value>
-    static int_generator<Value, Radix> const& make_generator()
+    static int_generator<Value, Radix> const& make_int_generator()
     {
         static int_generator<Value, Radix> const generator;
         return generator;
@@ -74,14 +75,7 @@ struct real_inserter
     template <typename Sink, typename Value>
     void call(Sink& sink, Value value) const
     {
-        generate_value(sink, value, make_generator<Value>(precision_, force_sign_, upper_case_));
-    }
-
-private:
-    template <typename Value>
-    static typename real_generator<Value, Format>::type make_generator(int precision, bool force_sign, bool upper_case)
-    {
-        return real_generator<Value, Format>::make(precision, force_sign, upper_case);
+        generate_value(sink, value, make_real_generator<Value, Format>(precision_, force_sign_, upper_case_));
     }
 
 private:
@@ -90,10 +84,36 @@ private:
     bool upper_case_;
 };
 
-struct align_inserter
+struct left_align_inserter
 {
-    explicit align_inserter(int align) :
-        align_(align)
+    explicit left_align_inserter(std::size_t align, char pad = ' ') :
+        align_(align),
+        pad_(pad)
+    {
+    }
+
+    template <typename Sink, typename Value>
+    void call(Sink& sink, Value const& value) const
+    {
+        sink_iterator<Sink, counting_policy> sink_iterator(sink);
+        counting_policy const& counter = sink_iterator.policy();
+
+        type_adapter<Value>::format(sink_iterator, value);
+
+        if(align_ > counter.count)
+            std::fill_n(sink_iterator, align_ - counter.count, pad_);
+    }
+
+private:
+    std::size_t align_;
+    char pad_;
+};
+
+struct right_align_inserter
+{
+    explicit right_align_inserter(std::size_t align, char pad = ' ') :
+        align_(align),
+        pad_(pad)
     {
     }
 
@@ -104,20 +124,17 @@ struct align_inserter
 
         type_adapter<Value>::format(buffer, value);
 
-        call(sink, buffer, type_generator<sink_buffer>::get());
-    }
+        sink_iterator<Sink> sink_iterator(sink);
 
-    template <typename Sink, typename Value, typename Generator>
-    void call(Sink& sink, Value const& value, Generator const& generator) const
-    {
-        if(align_ > 0)
-            generate_value(sink, value, boost::spirit::karma::right_align(align_)[generator]);
-        else
-            generate_value(sink, value, boost::spirit::karma::left_align(-align_)[generator]);
+        if(align_ > buffer.size())
+            std::fill_n(sink_iterator, align_ - buffer.size(), pad_);
+
+        std::copy(std::begin(buffer), std::end(buffer), sink_iterator);
     }
 
 private:
-    int align_;
+    std::size_t align_;
+    char pad_;
 };
 
 struct repeat_inserter
@@ -130,17 +147,10 @@ struct repeat_inserter
     template <typename Sink, typename Value>
     void call(Sink& sink, Value const& value) const
     {
-        sink_buffer buffer;
-
-        type_adapter<Value>::format(buffer, value);
-
-        call(sink, buffer, type_generator<sink_buffer>::get());
-    }
-
-    template <typename Sink, typename Value, typename Generator>
-    void call(Sink& sink, Value const& value, Generator const& generator) const
-    {
-        generate_value(sink, value, repeat_directive(count_)[generator]);
+        for(unsigned int i = 0; i < count_; ++i)
+        {
+            type_adapter<Value>::format(sink, value);
+        }
     }
 
 private:
@@ -152,13 +162,9 @@ struct lower_case_inserter
     template <typename Sink, typename Value>
     static void call(Sink& sink, Value const& value)
     {
-        call(sink, value, type_generator<Value>::get());
-    }
+        sink_iterator<Sink, lower_case_policy> sink_iterator(sink);
 
-    template <typename Sink, typename Value, typename Generator>
-    static void call(Sink& sink, Value const& value, Generator const& generator)
-    {
-        generate_value(sink, value, boost::spirit::karma::lower[generator]);
+        type_adapter<Value>::format(sink_iterator, value);
     }
 };
 
@@ -167,13 +173,9 @@ struct upper_case_inserter
     template <typename Sink, typename Value>
     static void call(Sink& sink, Value const& value)
     {
-        call(sink, value, type_generator<Value>::get());
-    }
+        sink_iterator<Sink, upper_case_policy> sink_iterator(sink);
 
-    template <typename Sink, typename Value, typename Generator>
-    static void call(Sink& sink, Value const& value, Generator const& generator)
-    {
-        generate_value(sink, value, boost::spirit::karma::upper[generator]);
+        type_adapter<Value>::format(sink_iterator, value);
     }
 };
 

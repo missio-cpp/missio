@@ -7,6 +7,10 @@
 #ifndef _missio_format_detail_real_policies_hpp
 #define _missio_format_detail_real_policies_hpp
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
+# pragma once
+#endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
 // Application headers
 #include <missio/format/detail/real_format.hpp>
 

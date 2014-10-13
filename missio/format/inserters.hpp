@@ -63,9 +63,15 @@ auto scientific(Value const& value, int precision = -1, bool upper_case = false,
 }
 
 template <typename Value>
-auto align(Value const& value, int align)
+auto left_align(Value const& value, unsigned int align, char pad = ' ')
 {
-    return detail::align(value, align);
+    return detail::left_align(value, align, pad);
+}
+
+template <typename Value>
+auto right_align(Value const& value, unsigned int align, char pad = ' ')
+{
+    return detail::right_align(value, align, pad);
 }
 
 template <typename Value>

@@ -14,6 +14,7 @@
 // STL headers
 #include <iterator>
 #include <cstddef>
+#include <cctype>
 
 
 namespace missio
@@ -23,7 +24,51 @@ namespace format
 namespace detail
 {
 
-template <typename Sink>
+struct null_policy
+{
+    template <typename Char>
+    Char operator()(Char ch) const
+    {
+        return ch;
+    }
+};
+
+struct counting_policy
+{
+    counting_policy() :
+        count(0u)
+    {
+    }
+
+    template <typename Char>
+    Char operator()(Char ch) const
+    {
+        ++count;
+        return ch;
+    }
+
+    mutable std::size_t count;
+};
+
+struct lower_case_policy
+{
+    template <typename Char>
+    Char operator()(Char ch) const
+    {
+        return std::tolower(ch);
+    }
+};
+
+struct upper_case_policy
+{
+    template <typename Char>
+    Char operator()(Char ch) const
+    {
+        return std::toupper(ch);
+    }
+};
+
+template <typename Sink, typename Policy = null_policy>
 class sink_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {
 public:
@@ -35,10 +80,21 @@ public:
     sink_iterator(sink_iterator const&) = default;
     sink_iterator& operator=(sink_iterator const&) = delete;
 
+    Policy const& policy() const
+    {
+        return policy_;
+    }
+
+    template <typename Char>
+    void put(Char ch)
+    {
+        sink_.put(policy_(ch));
+    }
+
     template <typename Char>
     sink_iterator& operator=(Char ch)
     {
-        sink_.put(static_cast<char>(ch));
+        sink_.put(policy_(ch));
         return *this;
     }
 
@@ -59,6 +115,7 @@ public:
 
 private:
     Sink& sink_;
+    Policy policy_;
 };
 
 }   // namespace detail

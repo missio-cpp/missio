@@ -8,6 +8,7 @@
 // Application headers
 #include <missio/format/write.hpp>
 #include <missio/format/print.hpp>
+#include <missio/format/adapters/array.hpp>
 #include <missio/format/adapters/pointer.hpp>
 
 // BOOST headers
@@ -26,44 +27,56 @@ struct common_fixture
     }
 };
 
-struct pointer_fixture : common_fixture
+BOOST_FIXTURE_TEST_CASE(array_test, common_fixture)
 {
-    pointer_fixture() :
-        pointer(reinterpret_cast<void const*>(0x123abc)),
-        null_pointer(reinterpret_cast<void const*>(0))
-    {
-    }
+    int const int_array[] = { 1, 2, 3, 4, 5, 6, 7 };
+    float const float_array[] = { 1.23, 4.56, 7.89 };
 
-    void const* pointer;
-    void const* null_pointer;
-};
+    std::string sink;
 
-BOOST_FIXTURE_TEST_CASE(pointer_test, pointer_fixture)
+    missio::format::write(sink, int_array);
+    BOOST_CHECK_EQUAL(sink, "[1, 2, 3, 4, 5, 6, 7]");
+
+    sink.erase();
+
+    missio::format::write(sink, float_array);
+    BOOST_CHECK_EQUAL(sink, "[1.23, 4.56, 7.89]");
+}
+
+BOOST_FIXTURE_TEST_CASE(pointer_test, common_fixture)
 {
+    void const* pointer = reinterpret_cast<void const*>(0x123abc);
+    void const* null_pointer = reinterpret_cast<void const*>(0);
+
     std::string sink;
 
     missio::format::write(sink, pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
+    BOOST_CHECK_EQUAL(sink, "0x123abc");
 
     sink.erase();
 
     missio::format::print(sink, "{0}", pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(pointer));
+    BOOST_CHECK_EQUAL(sink, "0x123abc");
 
     sink.erase();
 
     missio::format::write(sink, null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
+    BOOST_CHECK_EQUAL(sink, "0");
 
     sink.erase();
 
     missio::format::print(sink, "{0}", null_pointer);
-    BOOST_CHECK_EQUAL(sink, make_string(null_pointer));
-}
+    BOOST_CHECK_EQUAL(sink, "0");
 
-BOOST_AUTO_TEST_CASE(array_test)
-{
-    //TODO: implement!
+    sink.erase();
+
+    missio::format::write(sink, nullptr);
+    BOOST_CHECK_EQUAL(sink, "0");
+
+    sink.erase();
+
+    missio::format::print(sink, "{0}", nullptr);
+    BOOST_CHECK_EQUAL(sink, "0");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

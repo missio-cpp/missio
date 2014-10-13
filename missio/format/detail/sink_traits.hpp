@@ -12,6 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
+#include <missio/format/detail/sink_iterator.hpp>
 #include <missio/format/detail/sink_adapter.hpp>
 #include <missio/format/detail/sink_buffer.hpp>
 
@@ -33,6 +34,12 @@ template <typename Sink>
 struct sink_traits<detail::sink_adapter<Sink>>
 {
     typedef detail::sink_adapter<Sink>& adapter_type;
+};
+
+template <typename Sink, typename Policy>
+struct sink_traits<detail::sink_iterator<Sink, Policy>>
+{
+    typedef detail::sink_iterator<Sink, Policy>& adapter_type;
 };
 
 template <>

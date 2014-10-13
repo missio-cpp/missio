@@ -26,28 +26,21 @@ namespace format
 namespace detail
 {
 
+template <typename T, real_format Format>
+auto make_real_generator(int precision, bool force_sign, bool upper_case)
+{
+    return boost::spirit::karma::real_generator<T, real_policies<T, Format>>{{precision, force_sign, upper_case}};
+}
+
 template <typename T>
-struct default_real_generator
+auto make_default_real_generator()
 {
-    typedef boost::spirit::karma::real_generator<T, default_real_policies<T>> type;
+    return boost::spirit::karma::real_generator<T, default_real_policies<T>>{};
+}
 
-    static type const& get()
-    {
-        static type generator;
-        return generator;
-    }
-};
-
-template <typename T, real_format Format = real_format::general>
-struct real_generator
-{
-    typedef boost::spirit::karma::real_generator<T, real_policies<T, Format>> type;
-
-    static type make(int precision, bool force_sign, bool upper_case)
-    {
-        return type(real_policies<T, Format>(precision, force_sign, upper_case));
-    }
-};
+auto const float_generator = make_default_real_generator<float>();
+auto const double_generator = make_default_real_generator<double>();
+auto const long_double_generator = make_default_real_generator<long double>();
 
 }   // namespace detail
 }   // namespace format

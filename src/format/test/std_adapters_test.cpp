@@ -56,6 +56,14 @@ struct smart_ptr_fixture : common_fixture
     std::unique_ptr<int> const empty_unique_pointer;
 };
 
+struct system_fixture : common_fixture
+{
+    static std::string make_string(std::error_code const& value)
+    {
+        return value.message() + " (" + value.category().name() + ':' + common_fixture::make_string(value.value()) + ')';
+    }
+};
+
 BOOST_FIXTURE_TEST_CASE(exception_test, common_fixture)
 {
     std::string sink;
@@ -100,7 +108,7 @@ BOOST_FIXTURE_TEST_CASE(weak_ptr_test, smart_ptr_fixture)
   //TODO: implement!
 }
 
-BOOST_FIXTURE_TEST_CASE(error_code_test, common_fixture)
+BOOST_FIXTURE_TEST_CASE(error_code_test, system_fixture)
 {
     std::error_code const error_code = std::make_error_code(std::errc::bad_address);
 

@@ -122,6 +122,11 @@ struct smart_ptr_fixture : common_fixture
 
 struct system_fixture : common_fixture
 {
+    static std::string make_string(boost::system::error_code const& value)
+    {
+        return value.message() + " (" + value.category().name() + ':' + common_fixture::make_string(value.value()) + ')';
+    }
+
     system_fixture() :
         error_code(boost::system::errc::make_error_code(boost::system::errc::bad_address))
     {
