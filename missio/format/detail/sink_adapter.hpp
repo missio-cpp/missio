@@ -11,12 +11,7 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/format/detail/sink_buffer.hpp>
-#include <missio/format/detail/sink_writer.hpp>
-
 // STL headers
-#include <iostream>
 #include <string>
 
 
@@ -39,47 +34,63 @@ public:
     sink_adapter(sink_adapter const&) = default;
     sink_adapter& operator=(sink_adapter const&) = delete;
 
-    ~sink_adapter()
+    template <typename Char>
+    void put(Char ch)
     {
-        sink_writer<Sink>::call(sink_, buffer_);
-    }
-
-    void put(char ch)
-    {
-        buffer_.put(ch);
+        sink_.put(ch);
     }
 
 private:
     Sink& sink_;
-    sink_buffer buffer_;
 };
 
-template <std::size_t N>
-class sink_adapter<char[N]>
+template <typename Char, typename Traits, typename Allocator>
+class sink_adapter<std::basic_string<Char, Traits, Allocator>>
 {
 public:
-    explicit sink_adapter(char (&sink)[N]) :
-        sink_(sink),
-        pos_(0u)
+    explicit sink_adapter(std::basic_string<Char, Traits, Allocator>& sink) :
+        sink_(sink)
     {
     }
 
     sink_adapter(sink_adapter const&) = default;
     sink_adapter& operator=(sink_adapter const&) = delete;
 
-    ~sink_adapter()
+    void put(Char ch)
     {
-        sink_[pos_] = '\0';
+        sink_.push_back(ch);
     }
 
-    void put(char ch)
+private:
+    std::basic_string<Char, Traits, Allocator>& sink_;
+};
+
+template <typename Char, std::size_t N>
+class sink_adapter<Char[N]>
+{
+public:
+    explicit sink_adapter(Char (&sink)[N]) :
+        sink_(sink),
+        pos_(0u)
+    {
+    }
+
+    ~sink_adapter()
+    {
+        sink_[pos_] = Char('\0');
+    }
+
+    sink_adapter(sink_adapter const&) = default;
+    sink_adapter& operator=(sink_adapter const&) = delete;
+
+    void put(Char ch)
     {
         if(pos_ < N - 1)
             sink_[pos_++] = ch;
     }
 
 private:
-    char* sink_;
+    Char* sink_;
     std::size_t pos_;
 };
 
