@@ -39,7 +39,7 @@ void write_impl(Sink& sink, Value const& value, Args const& ... args)
 template <typename Sink, typename ... Args>
 void write(Sink& sink, Args const& ... args)
 {
-    typename traits::sink_traits<Sink>::adapter_type sink_adapter(sink);
+    sink_adapter_type<Sink> sink_adapter(sink);
 
     write_impl(sink_adapter, args...);
 }

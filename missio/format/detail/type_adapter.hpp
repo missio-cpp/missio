@@ -320,7 +320,7 @@ struct type_adapter<basic_string_view<Char, Traits>>
     template <typename Sink>
     static void format(Sink& sink, basic_string_view<Char, Traits> const& value)
     {
-        std::copy(std::begin(value), std::end(value), sink);
+        std::copy(std::begin(value), std::end(value), sink_iterator<Sink>(sink));
     }
 };
 
@@ -330,7 +330,7 @@ struct type_adapter<sink_buffer>
     template <typename Sink>
     static void format(Sink& sink, sink_buffer const& value)
     {
-        std::copy(std::begin(value), std::end(value), sink);
+        std::copy(std::begin(value), std::end(value), sink_iterator<Sink>(sink));
     }
 };
 

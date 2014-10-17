@@ -25,18 +25,10 @@ namespace format
 namespace detail
 {
 
-template <typename Sink, typename Policy, typename Value, typename Generator>
-void generate_value(sink_iterator<Sink, Policy>& sink_iterator, Value const& value, Generator const& generator)
-{
-    boost::spirit::karma::generate(sink_iterator, generator, value);
-}
-
 template <typename Sink, typename Value, typename Generator>
 void generate_value(Sink& sink, Value const& value, Generator const& generator)
 {
-    sink_iterator<Sink> sink_iterator(sink);
-
-    boost::spirit::karma::generate(sink_iterator, generator, value);
+    boost::spirit::karma::generate(sink_iterator<Sink>(sink), generator, value);
 }
 
 }   // namespace detail

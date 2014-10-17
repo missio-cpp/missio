@@ -26,12 +26,14 @@ namespace detail
 template <typename Sink>
 void insert_string(Sink& sink, string_view const& str)
 {
-    insert_string(sink_iterator<Sink>(sink), str.begin(), str.end());
+    insert_string(sink, std::begin(str), std::end(str));
 }
 
 template <typename Sink, typename Iterator>
-void insert_string(Sink sink, Iterator first, Iterator last)
+void insert_string(Sink& sink, Iterator first, Iterator last)
 {
+    sink_iterator<Sink> sink_iterator(sink);
+
     while(first != last)
     {
         switch(*first)
@@ -41,7 +43,7 @@ void insert_string(Sink sink, Iterator first, Iterator last)
                 ++first;    // no break after, intentionally
 
             default:
-                *sink++ = *first;
+                *sink_iterator++ = *first;
         }
 
         ++first;

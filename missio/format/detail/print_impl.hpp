@@ -42,8 +42,8 @@ void insert(Sink& sink, std::uint32_t const index, Value const& value, Args cons
 template <typename Sink, typename Format, typename ... Args>
 void print(Sink& sink, Format const& format, Args const& ... args)
 {
-    typename traits::sink_traits<Sink>::adapter_type sink_adapter(sink);
-    typename traits::format_traits<Format>::adapter_type format_adapter(format);
+    sink_adapter_type<Sink> sink_adapter(sink);
+    format_adapter_type<Format> format_adapter(format);
 
     for(format_item const& item : format_adapter.items())
     {

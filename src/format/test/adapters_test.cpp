@@ -79,4 +79,22 @@ BOOST_FIXTURE_TEST_CASE(pointer_test, common_fixture)
     BOOST_CHECK_EQUAL(sink, "0");
 }
 
+BOOST_FIXTURE_TEST_CASE(array_of_pointers_test, common_fixture)
+{
+    void const* ptr1 = reinterpret_cast<void const*>(0x123abc);
+    void const* ptr2 = reinterpret_cast<void const*>(0x456def);
+
+    void const* ptr_array[] = { ptr1, ptr2, nullptr };
+
+    std::string sink;
+
+    missio::format::write(sink, ptr_array);
+    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, 0]");
+
+    sink.erase();
+
+    missio::format::print(sink, "{0}", ptr_array);
+    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, 0]");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -19,7 +19,7 @@ namespace missio
 {
 namespace format
 {
-namespace traits
+namespace detail
 {
 
 template <typename Format>
@@ -69,6 +69,9 @@ template <std::size_t N>
 struct format_traits<char const(&)[N]> : format_traits<char const*>
 {
 };
+
+template <typename Format>
+using format_adapter_type = typename format_traits<Format>::adapter_type;
 
 }   // namespace detail
 }   // namespace format

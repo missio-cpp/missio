@@ -21,7 +21,7 @@ namespace missio
 {
 namespace format
 {
-namespace traits
+namespace detail
 {
 
 template <typename Sink>
@@ -48,7 +48,10 @@ struct sink_traits<detail::sink_buffer>
     typedef detail::sink_buffer& adapter_type;
 };
 
-}   // namespace traits
+template <typename Sink>
+using sink_adapter_type = typename sink_traits<Sink>::adapter_type;
+
+}   // namespace detail
 }   // namespace format
 }   // namespace missio
 
