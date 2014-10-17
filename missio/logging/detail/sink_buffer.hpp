@@ -96,18 +96,13 @@ struct type_adapter<logging::detail::sink_buffer>
     }
 };
 
-}   // namespace detail
-
-namespace traits
-{
-
 template <>
 struct sink_traits<logging::detail::sink_buffer>
 {
     typedef logging::detail::sink_buffer& adapter_type;
 }; 
 
-}   // namespace traits
+}   // namespace detail
 }   // namespace format
 }   // namespace missio
 
