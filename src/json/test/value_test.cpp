@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE(integer_value_test)
     BOOST_CHECK_EQUAL(value.get<short>(), 42);
     BOOST_CHECK_EQUAL(value.get<int>(), 42);
     BOOST_CHECK_EQUAL(value.get<long>(), 42);
-    BOOST_CHECK_CLOSE(value.get<double>(), 42.0, 0.000001);
+    BOOST_CHECK_EQUAL(value.get<double>(), 42.0);
     BOOST_CHECK_EQUAL(value.get<bool>(), true);
 
     // test invalid conversions
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(enum_value_test)
     BOOST_CHECK_EQUAL(value.get<short>(), 2);
     BOOST_CHECK_EQUAL(value.get<int>(), 2);
     BOOST_CHECK_EQUAL(value.get<long>(), 2);
-    BOOST_CHECK_CLOSE(value.get<double>(), 2.0, 0.000001);
+    BOOST_CHECK_EQUAL(value.get<double>(), 2.0);
     BOOST_CHECK_EQUAL(value.get<bool>(), true);
 
     // test invalid conversions
@@ -473,7 +473,7 @@ BOOST_AUTO_TEST_CASE(real_value_test)
     BOOST_CHECK_EQUAL(value.is<bool>(), true);      // convertible
 
     BOOST_CHECK_CLOSE(value.get<float>(), 3.141592, 0.000001);
-    BOOST_CHECK_CLOSE(value.get<double>(), 3.141592, 0.000001);
+    BOOST_CHECK_EQUAL(value.get<double>(), 3.141592);
     BOOST_CHECK_EQUAL(value.get<int>(), 3);
     BOOST_CHECK_EQUAL(value.get<bool>(), true);
 
@@ -502,7 +502,7 @@ BOOST_AUTO_TEST_CASE(boolean_value_test)
 
     BOOST_CHECK_EQUAL(value.get<bool>(), true);
     BOOST_CHECK_EQUAL(value.get<int>(), 1);
-    BOOST_CHECK_CLOSE(value.get<double>(), 1.0, 0.000001);
+    BOOST_CHECK_EQUAL(value.get<double>(), 1.0);
 
     // test invalid conversions
 
