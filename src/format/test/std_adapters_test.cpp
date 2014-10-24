@@ -43,16 +43,10 @@ struct smart_ptr_fixture : common_fixture
         return value ? common_fixture::make_string(*value) : std::string();
     }
 
-    smart_ptr_fixture() :
-        shared_pointer(new int(-42)),
-        unique_pointer(new int(-42))
-    {
-    }
+    std::shared_ptr<int> const shared_pointer{ new int(-42) };
+    std::unique_ptr<int> const unique_pointer{ new int(-42) };
 
-    std::shared_ptr<int> const shared_pointer;
     std::shared_ptr<int> const empty_shared_pointer;
-
-    std::unique_ptr<int> const unique_pointer;
     std::unique_ptr<int> const empty_unique_pointer;
 };
 

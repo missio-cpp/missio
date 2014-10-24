@@ -57,24 +57,12 @@ struct optional_fixture : common_fixture
         return value ? common_fixture::make_string(*value) : std::string();
     }
 
-    optional_fixture() :
-        int_optional(-42)
-    {
-    }
-
     boost::optional<int> const empty_optional;
-    boost::optional<int> const int_optional;
+    boost::optional<int> const int_optional{ -42 };
 };
 
 struct intrusive_test
 {
-    std::size_t ref_count;
-
-    intrusive_test() :
-        ref_count(0)
-    {
-    }
-
     inline friend void intrusive_ptr_add_ref(intrusive_test* ptr)
     {
         ++ptr->ref_count;
@@ -82,9 +70,11 @@ struct intrusive_test
 
     inline friend void intrusive_ptr_release(intrusive_test* ptr)
     {
-        if(0 == --ptr->ref_count)
+        if(0u == --ptr->ref_count)
             delete ptr;
     }
+
+    std::size_t ref_count{ 0u };
 };
 
 std::ostream& operator<<(std::ostream& os, intrusive_test const& /*intrusive_test*/)

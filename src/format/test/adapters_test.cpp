@@ -29,8 +29,8 @@ struct common_fixture
 
 BOOST_FIXTURE_TEST_CASE(array_test, common_fixture)
 {
-    int const int_array[] = { 1, 2, 3, 4, 5, 6, 7 };
-    float const float_array[] = { 1.23, 4.56, 7.89 };
+    int const int_array[] { 1, 2, 3, 4, 5, 6, 7 };
+    float const float_array[] { 1.23, 4.56, 7.89 };
 
     std::string sink;
 
