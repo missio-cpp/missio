@@ -19,6 +19,7 @@
 #include <boost/asio/steady_timer.hpp>
 
 // STL headers
+#include <atomic>
 #include <thread>
 #include <memory>
 #include <list>
@@ -67,7 +68,7 @@ private:
     std::thread work_thread_;
     std::thread io_thread_;
 
-    volatile bool started_;
+    std::atomic_bool started_;
 
     writer_list writers_;
 };

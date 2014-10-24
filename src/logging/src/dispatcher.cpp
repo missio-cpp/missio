@@ -32,10 +32,8 @@ dispatcher::~dispatcher()
 
 void dispatcher::start()
 {
-    if(!started_)
+    if(!started_.exchange(true))
     {
-        started_ = true;
-
         messages_.enable();
         start_work_thread();
 
@@ -46,10 +44,8 @@ void dispatcher::start()
 
 void dispatcher::stop()
 {
-    if(started_)
+    if(started_.exchange(false))
     {
-        started_ = false;
-
         timer_.cancel();
         io_thread_.join();
         io_service_.reset();
