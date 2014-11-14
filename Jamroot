@@ -3,6 +3,7 @@ import modules ;
 
 path-constant TOP : . ;
 path-constant SRC : src ;
+path-constant OBJ : obj ;
 path-constant LIB : lib ;
 
 BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
@@ -63,7 +64,7 @@ project missio
         <runtime-link>static
         <link>static
     :
-        build-dir obj
+        build-dir $(OBJ)
     ;
 
 use-project /missio : $(TOP) ;

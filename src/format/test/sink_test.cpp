@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(grow_buffer_test)
     sink.put(char(127));
 
     BOOST_CHECK_EQUAL(sink.size(), 128u);
-    BOOST_CHECK_EQUAL(sink.capacity(), 128u * 4u);
+    BOOST_CHECK_EQUAL(sink.capacity(), 3u * 128u / 2u);
 
     for(int i = 0; i < 128; ++i)
         BOOST_CHECK_EQUAL(sink.data()[i], char(i));

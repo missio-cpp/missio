@@ -76,7 +76,7 @@ sink_buffer::const_iterator sink_buffer::end() const
 
 void sink_buffer::grow_buffer()
 {
-    size_type const capacity = capacity_ * 4u;
+    size_type const capacity = 3u * capacity_ / 2u;
 
     if(buffer_ptr_ == static_buffer_)
     {

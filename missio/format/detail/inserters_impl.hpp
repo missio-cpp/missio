@@ -66,19 +66,25 @@ auto scientific(Value const& value, int precision = -1, bool upper_case = false,
 }
 
 template <typename Value>
-auto left_align(Value const& value, unsigned int align, char pad = ' ')
+auto left_align(Value const& value, std::size_t align, char pad = ' ')
 {
     return make_group_value(value, left_align_inserter(align, pad));
 }
 
 template <typename Value>
-auto right_align(Value const& value, unsigned int align, char pad = ' ')
+auto right_align(Value const& value, std::size_t align, char pad = ' ')
 {
     return make_group_value(value, right_align_inserter(align, pad));
 }
 
 template <typename Value>
-auto repeat(Value const& value, unsigned int count)
+auto max_width(Value const& value, std::size_t max_width)
+{
+    return make_group_value(value, max_width_inserter(max_width));
+}
+
+template <typename Value>
+auto repeat(Value const& value, std::size_t count)
 {
     return make_group_value(value, repeat_inserter(count));
 }

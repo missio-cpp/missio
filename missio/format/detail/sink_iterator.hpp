@@ -27,9 +27,9 @@ namespace detail
 struct null_policy
 {
     template <typename Char>
-    Char operator()(Char ch) const
+    bool operator()(Char ch) const
     {
-        return ch;
+        return true;
     }
 };
 
@@ -41,10 +41,10 @@ struct counting_policy
     }
 
     template <typename Char>
-    Char operator()(Char ch) const
+    bool operator()(Char ch) const
     {
         ++count;
-        return ch;
+        return true;
     }
 
     mutable std::size_t count;
@@ -53,19 +53,39 @@ struct counting_policy
 struct lower_case_policy
 {
     template <typename Char>
-    Char operator()(Char ch) const
+    bool operator()(Char& ch) const
     {
-        return std::tolower(ch);
+        ch = std::tolower(ch);
+        return true;
     }
 };
 
 struct upper_case_policy
 {
     template <typename Char>
-    Char operator()(Char ch) const
+    bool operator()(Char& ch) const
     {
-        return std::toupper(ch);
+        ch = std::toupper(ch);
+        return true;
     }
+};
+
+struct limit_count_policy
+{
+    explicit limit_count_policy(std::size_t max_count) :
+        max_count(max_count),
+        count(0u)
+    {
+    }
+
+    template <typename Char>
+    bool operator()(Char ch) const
+    {
+        return count++ < max_count;
+    }
+
+    std::size_t max_count;
+    mutable std::size_t count;
 };
 
 template <typename Sink, typename Policy = null_policy>
@@ -74,6 +94,12 @@ class sink_iterator : public std::iterator<std::output_iterator_tag, void, void,
 public:
     explicit sink_iterator(Sink& sink) :
         sink_(sink)
+    {
+    }
+
+    sink_iterator(Sink& sink, Policy const& policy) :
+        sink_(sink),
+        policy_(policy)
     {
     }
 
@@ -88,13 +114,16 @@ public:
     template <typename Char>
     void put(Char ch)
     {
-        sink_.put(policy_(ch));
+        if(policy_(ch))
+            sink_.put(ch);
     }
 
     template <typename Char>
     sink_iterator& operator=(Char ch)
     {
-        sink_.put(policy_(ch));
+        if(policy_(ch))
+            sink_.put(ch);
+
         return *this;
     }
 

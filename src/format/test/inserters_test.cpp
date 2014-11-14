@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(right_align_test)
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::right_align("string", 5));
+    missio::format::write(sink, missio::format::right_align("string", 4));
     BOOST_CHECK_EQUAL(sink, "string");
 
     sink.erase();
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(right_align_test)
 
     sink.erase();
 
-    missio::format::print(sink, "{0}", missio::format::right_align("string", 5));
+    missio::format::print(sink, "{0}", missio::format::right_align("string", 4));
     BOOST_CHECK_EQUAL(sink, "string");
 }
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(left_align_test)
 
     sink.erase();
 
-    missio::format::write(sink, missio::format::left_align("string", 5));
+    missio::format::write(sink, missio::format::left_align("string", 4));
     BOOST_CHECK_EQUAL(sink, "string");
 
     sink.erase();
@@ -76,8 +76,31 @@ BOOST_AUTO_TEST_CASE(left_align_test)
 
     sink.erase();
 
-    missio::format::print(sink, "{0}", missio::format::left_align("string", 5));
+    missio::format::print(sink, "{0}", missio::format::left_align("string", 4));
     BOOST_CHECK_EQUAL(sink, "string");
+}
+
+BOOST_AUTO_TEST_CASE(max_width_test)
+{
+    std::string sink;
+
+    missio::format::write(sink, missio::format::max_width("1234567890", 10));
+    BOOST_CHECK_EQUAL(sink, "1234567890");
+
+    sink.erase();
+
+    missio::format::write(sink, missio::format::max_width(1234567890ULL, 10));
+    BOOST_CHECK_EQUAL(sink, "1234567890");
+
+    sink.erase();
+
+    missio::format::print(sink, "{0}", missio::format::max_width("1234567890", 5));
+    BOOST_CHECK_EQUAL(sink, "12345");
+
+    sink.erase();
+
+    missio::format::print(sink, "{0}", missio::format::max_width(1234567890ULL, 5));
+    BOOST_CHECK_EQUAL(sink, "12345");
 }
 
 BOOST_AUTO_TEST_CASE(repeat_test)

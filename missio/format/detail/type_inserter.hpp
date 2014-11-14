@@ -137,9 +137,30 @@ private:
     char pad_;
 };
 
+struct max_width_inserter
+{
+    explicit max_width_inserter(std::size_t max_width) :
+        max_width_(max_width)
+    {
+    }
+
+    template <typename Sink, typename Value>
+    void call(Sink& sink, Value const& value) const
+    {
+        limit_count_policy const policy(max_width_);
+
+        sink_iterator<Sink, limit_count_policy> sink_iterator(sink, policy);
+
+        type_adapter<Value>::format(sink_iterator, value);
+    }
+
+private:
+    std::size_t max_width_;
+};
+
 struct repeat_inserter
 {
-    explicit repeat_inserter(unsigned int count) :
+    explicit repeat_inserter(std::size_t count) :
         count_(count)
     {
     }
@@ -147,14 +168,14 @@ struct repeat_inserter
     template <typename Sink, typename Value>
     void call(Sink& sink, Value const& value) const
     {
-        for(unsigned int i = 0; i < count_; ++i)
+        for(std::size_t i = 0; i < count_; ++i)
         {
             type_adapter<Value>::format(sink, value);
         }
     }
 
 private:
-    unsigned int count_;
+    std::size_t count_;
 };
 
 struct lower_case_inserter
