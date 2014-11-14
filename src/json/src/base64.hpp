@@ -55,7 +55,9 @@ void base64::encode(InputIterator first, InputIterator last, OutputIterator dest
     while(first != last)
     {
         for(count = 0; first != last && count < 3; ++first, ++count)
+        {
             bytes[count] = static_cast<std::uint8_t>(*first);
+        }
 
         switch(count)
         {
@@ -92,7 +94,9 @@ void base64::decode(InputIterator first, InputIterator last, OutputIterator dest
     while(first != last)
     {
         for(count = 0; first != last && count < 4; ++first, ++count)
+        {
             bytes[count] = static_cast<std::uint8_t>(*first);
+        }
 
         if(4 != count)
             throw exception("invalid BASE-64 data");
