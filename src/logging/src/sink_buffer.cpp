@@ -102,7 +102,7 @@ sink_buffer::size_type sink_buffer::capacity() const
 
 void sink_buffer::grow_buffer()
 {
-    size_type const new_capacity = capacity() ? 4u * capacity() : 128u;
+    size_type const new_capacity = capacity() ? 3u * capacity() / 2u : 128u;
 
     void* buffer = std::realloc(buffer_beg_, new_capacity);
 

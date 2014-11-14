@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(move_assignment_operator_test)
     BOOST_CHECK_EQUAL(sink2.capacity(), 128u);
     BOOST_CHECK_EQUAL(sink2.data()[0], 'R');
 
-    // check that moved object might be re-used
+    // check that moved object may be re-used
     sink1.put('S');
 
     BOOST_CHECK_EQUAL(sink1.size(), 1u);
@@ -118,10 +118,9 @@ BOOST_AUTO_TEST_CASE(grow_buffer_test)
     sink.put(char(random[128]));
 
     BOOST_CHECK_EQUAL(sink.size(), 129u);
-    BOOST_CHECK_EQUAL(sink.capacity(), 128u * 4u);
+    BOOST_CHECK_EQUAL(sink.capacity(), 3u * 128u / 2u);
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(random, random + sizeof(random),
-                                  sink.data(), sink.data() + sink.size());
+    BOOST_CHECK_EQUAL_COLLECTIONS(std::begin(random), std::end(random), std::begin(sink), std::end(sink));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
