@@ -100,6 +100,15 @@ build-project $(SRC)/json/test ;
 build-project $(SRC)/format/perf ;
 #build-project $(SRC)/json/perf ;
 
+alias /missio/lib
+    :
+        ## sources ##
+        /missio/logging
+        /missio/unicode
+        /missio/format
+        /missio/json
+    ;
+
 alias /missio/test
     :
         ## sources ##
@@ -118,13 +127,10 @@ alias /missio/perf
         #/missio/json/perf
     ;
 
-install missio
+install missio-lib
     :
         ## sources ##
-        /missio/logging
-        /missio/unicode
-        /missio/format
-        /missio/json
+        /missio/lib
     :
         ## build requirements ##
         <variant>release:<location>$(LIB)/release
