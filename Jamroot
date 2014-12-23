@@ -5,6 +5,7 @@ path-constant TOP : . ;
 path-constant SRC : src ;
 path-constant OBJ : obj ;
 path-constant LIB : lib ;
+path-constant PERF : perf ;
 
 BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
 
@@ -129,4 +130,15 @@ install missio
         <variant>release:<location>$(LIB)/release
         <variant>profile:<location>$(LIB)/profile
         <variant>debug:<location>$(LIB)/debug
+    ;
+
+install missio-perf
+    :
+        ## sources ##
+        /missio/perf
+    :
+        ## build requirements ##
+        <variant>release:<location>$(PERF)/release
+        <variant>profile:<location>$(PERF)/profile
+        <variant>debug:<location>$(PERF)/debug
     ;
