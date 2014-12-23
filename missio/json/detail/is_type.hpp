@@ -11,9 +11,6 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-// Application headers
-#include <missio/json/detail/type_traits.hpp>
-
 // BOOST headers
 #include <boost/variant/static_visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
@@ -48,11 +45,8 @@ struct is_visitor : boost::static_visitor<bool>
     }
 };
 
-template <typename T, typename = void>
-struct is_type;
-
 template <typename T>
-struct is_type<T, enable_if_scalar_type<T>>
+struct is_type
 {
     template <typename Variant>
     static bool call(Variant const& variant)
@@ -62,13 +56,28 @@ struct is_type<T, enable_if_scalar_type<T>>
 };
 
 template <typename T>
-struct is_type<T, enable_if_composite_type<T>>
+struct is_type_impl
 {
     template <typename Variant>
     static bool call(Variant const& variant)
     {
         return nullptr != boost::get<T>(&variant);
     }
+};
+
+template <>
+struct is_type<string> : is_type_impl<string>
+{
+};
+
+template <>
+struct is_type<object> : is_type_impl<object>
+{
+};
+
+template <>
+struct is_type<array> : is_type_impl<array>
+{
 };
 
 }   // namespace detail

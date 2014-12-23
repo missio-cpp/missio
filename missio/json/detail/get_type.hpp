@@ -12,7 +12,6 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/json/detail/type_traits.hpp>
 #include <missio/json/detail/adapt.hpp>
 #include <missio/json/exception.hpp>
 
@@ -55,7 +54,7 @@ public:
     get_visitor() = default;
     ~get_visitor() = default;
 
-    T const& operator()(T const& value) const
+    T operator()(T const& value) const
     {
         return value;
     }
@@ -79,28 +78,21 @@ public:
     }
 };
 
-template <typename T, typename = void>
-struct get_type;
-
 template <typename T>
-struct get_type<T, enable_if_scalar_type<T>>
+struct get_type
 {
-    typedef T result_type;
-
     template <typename Variant>
-    static result_type call(Variant const& variant)
+    static T call(Variant const& variant)
     {
         return boost::apply_visitor(get_visitor<T>(), variant);
     }
 };
 
 template <typename T>
-struct get_type<T, enable_if_composite_type<T>>
+struct get_type_impl
 {
-    typedef T const& result_type;
-
     template <typename Variant>
-    static result_type call(Variant const& variant)
+    static T const& call(Variant const& variant)
     {
         T const* value = boost::get<T>(&variant);
 
@@ -109,6 +101,21 @@ struct get_type<T, enable_if_composite_type<T>>
 
         return *value;
     }
+};
+
+template <>
+struct get_type<string> : get_type_impl<string>
+{
+};
+
+template <>
+struct get_type<object> : get_type_impl<object>
+{
+};
+
+template <>
+struct get_type<array> : get_type_impl<array>
+{
 };
 
 }   // namespace detail

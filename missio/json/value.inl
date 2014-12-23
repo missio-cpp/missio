@@ -33,17 +33,12 @@ template <typename T> bool value::is() const
     return detail::is_type<T>::call(variant_);
 }
 
-template <typename T> value::result_type_of_get<T> value::get() const
+template <typename T> T value::get() const
 {
     return detail::get_type<T>::call(variant_);
 }
 
-template <typename T, typename> value::operator T() const
+template <typename T> value::operator T() const
 {
-    return get<T>();
-}
-
-template <typename T, typename> value::operator T const&() const
-{
-    return get<T>();
+    return detail::get_type<T>::call(variant_);
 }

@@ -19,9 +19,9 @@ namespace boost
 {
 
 template <typename T>
-missio::json::value::result_type_of_get<T> get(missio::json::value const& value)
+T const& get(missio::json::value const& value)
 {
-    return value.get<T>();
+    return boost::get<T>(value.variant());
 }
 
 }   // namespace boost

@@ -22,7 +22,6 @@
 #include <missio/json/detail/is_type.hpp>
 #include <missio/json/detail/get_type.hpp>
 #include <missio/json/detail/null_traits.hpp>
-#include <missio/json/detail/type_traits.hpp>
 
 // BOOST headers
 #include <boost/variant.hpp>
@@ -52,15 +51,6 @@ public:
 
     typedef variant_type::types types;
 
-    template <typename T>
-    using result_type_of_get = typename detail::get_type<T>::result_type;
-
-    template <typename T>
-    using enable_if_supported_type = detail::enable_if_supported_type<T>;
-
-    template <typename T>
-    using enable_if_composite_type = detail::enable_if_composite_type<T>;
-
 public:
     value() = default;
     ~value() = default;
@@ -82,10 +72,8 @@ public:
 
     template <typename T> bool is() const;
 
-    template <typename T> result_type_of_get<T> get() const;
-
-    template <typename T, typename = enable_if_supported_type<T>> operator T() const;
-    template <typename T, typename = enable_if_composite_type<T>> operator T const&() const;
+    template <typename T> T get() const;
+    template <typename T> operator T() const;
 
     bool is_null() const;
     bool is_real() const;

@@ -96,23 +96,17 @@ BOOST_AUTO_TEST_CASE(move_constructor_test)
 
 BOOST_AUTO_TEST_CASE(move_constructor_sanity_test)
 {
-    missio::json::string string{ "string" };
-    char const* old_str = string.c_str();
-
-    missio::json::value value1 = std::move(string);
-    BOOST_CHECK_EQUAL(value1.get<missio::json::string>().c_str(), old_str);
-
-    missio::json::array array{ 1, 2, 3 };
+    missio::json::array array { 1, 2, 3 };
     missio::json::value const* array_front = &array.front();
 
     missio::json::value value2 = std::move(array);
-    BOOST_CHECK_EQUAL(&value2.get<missio::json::array>().front(), array_front);
+    BOOST_CHECK_EQUAL(&value2.get_array().front(), array_front);
 
-    missio::json::object object{ { "key", "value" } };
+    missio::json::object object { { "key", "value" } };
     missio::json::object_value const* object_front = &*object.begin();
 
     missio::json::value value3 = std::move(object);
-    BOOST_CHECK_EQUAL(&*value3.get<missio::json::object>().begin(), object_front);
+    BOOST_CHECK_EQUAL(&*value3.get_object().begin(), object_front);
 }
 
 BOOST_AUTO_TEST_CASE(construct_with_compatible_types_test)
@@ -231,103 +225,26 @@ BOOST_AUTO_TEST_CASE(non_reference_type_cast_operator_test)
     BOOST_CHECK_NO_THROW(missio::json::array value = missio::json::value(array));
 }
 
-BOOST_AUTO_TEST_CASE(const_reference_to_array_cast_operator_test)
+BOOST_AUTO_TEST_CASE(get_array_test)
 {
     missio::json::value value
     {
         missio::json::array { 1, 2, 3 }
     };
 
-    BOOST_CHECK_NO_THROW(missio::json::array const& array = value);
-    BOOST_CHECK_THROW(missio::json::object const& object = value, missio::json::exception);
+    BOOST_CHECK_NO_THROW(value.get_array());
+    BOOST_CHECK_THROW(value.get_object(), missio::json::exception);
 }
 
-BOOST_AUTO_TEST_CASE(const_reference_to_object_cast_operator_test)
+BOOST_AUTO_TEST_CASE(get_object_test)
 {
     missio::json::value value
     {
         missio::json::object { { "key", "value" } }
     };
 
-    BOOST_CHECK_NO_THROW(missio::json::object const& object = value);
-    BOOST_CHECK_THROW(missio::json::array const& array = value, missio::json::exception);
-}
-
-BOOST_AUTO_TEST_CASE(const_reference_to_string_cast_operator_test)
-{
-    missio::json::value value
-    {
-        missio::json::string { "string" }
-    };
-
-    BOOST_CHECK_NO_THROW(missio::json::string const& string = value);
-    BOOST_CHECK_THROW(missio::json::array const& array = value, missio::json::exception);
-}
-
-BOOST_AUTO_TEST_CASE(non_reference_cast_operator_should_be_used_for_scalar_types_test)
-{
-    missio::json::value value
-    {
-        missio::json::integer { 42 }
-    };
-
-    missio::json::integer const& integer = value;
-    BOOST_CHECK_NE(&boost::get<missio::json::integer>(value.variant()), &integer);
-}
-
-BOOST_AUTO_TEST_CASE(const_reference_cast_operator_should_be_used_for_composite_types_test)
-{
-    missio::json::value value
-    {
-        missio::json::array { 1, 2, 3 }
-    };
-
-    missio::json::array const& array = value;
-    BOOST_CHECK_EQUAL(&boost::get<missio::json::array>(value.variant()), &array);
-}
-
-BOOST_AUTO_TEST_CASE(get_returns_simple_types_by_value_test)
-{
-    missio::json::value value
-    {
-        missio::json::integer { 42 }
-    };
-
-    missio::json::integer const& integer = value.get<missio::json::integer>();
-    BOOST_CHECK_NE(&boost::get<missio::json::integer>(value.variant()), &integer);
-}
-
-BOOST_AUTO_TEST_CASE(get_returns_array_by_const_reference_test)
-{
-    missio::json::value value
-    {
-        missio::json::array { 1, 2, 3 }
-    };
-
-    missio::json::array const& array = value.get<missio::json::array>();
-    BOOST_CHECK_EQUAL(&boost::get<missio::json::array>(value.variant()), &array);
-}
-
-BOOST_AUTO_TEST_CASE(get_returns_object_by_const_reference_test)
-{
-    missio::json::value value
-    {
-        missio::json::object { { "key", "value" } }
-    };
-
-    missio::json::object const& object = value.get<missio::json::object>();
-    BOOST_CHECK_EQUAL(&boost::get<missio::json::object>(value.variant()), &object);
-}
-
-BOOST_AUTO_TEST_CASE(get_returns_string_by_const_reference_test)
-{
-    missio::json::value value
-    {
-        missio::json::string { "string" }
-    };
-
-    missio::json::string const& string = value.get<missio::json::string>();
-    BOOST_CHECK_EQUAL(&boost::get<missio::json::string>(value.variant()), &string);
+    BOOST_CHECK_NO_THROW(value.get_object());
+    BOOST_CHECK_THROW(value.get_array(), missio::json::exception);
 }
 
 BOOST_AUTO_TEST_CASE(index_operator_changes_type_test)
@@ -420,7 +337,7 @@ BOOST_AUTO_TEST_CASE(integer_value_test)
     BOOST_CHECK_THROW(value.get<missio::json::string>(), missio::json::exception);
 }
 
-// should be defined in global scope otherwise GCC does not recognize it as enumeration
+// should be defined in global scope due to C++03 restrictions
 enum numbers
 {
     zero,
@@ -583,7 +500,7 @@ BOOST_AUTO_TEST_CASE(array_value_test)
     missio::json::value value = missio::json::array();
 
     BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>(), missio::json::array());
+    BOOST_CHECK_EQUAL(value.get<missio::json::array>(), missio::json::array{});
 
     // test invalid conversions
 
@@ -600,7 +517,7 @@ BOOST_AUTO_TEST_CASE(object_value_test)
     missio::json::value value = missio::json::object();
 
     BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::object>(), missio::json::object());
+    BOOST_CHECK_EQUAL(value.get<missio::json::object>(), missio::json::object{});
 
     // test invalid conversions
 

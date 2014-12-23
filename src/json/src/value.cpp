@@ -63,12 +63,12 @@ array& value::to_array()
 
 object const& value::get_object() const
 {
-    return get<object>();
+    return detail::get_type<object>::call(variant_); 
 }
 
 array const& value::get_array() const
 {
-    return get<array>();
+    return detail::get_type<array>::call(variant_); 
 }
 
 value::variant_type const& value::variant() const
@@ -83,7 +83,7 @@ value& value::operator[](std::size_t index)
 
 value const& value::operator[](std::size_t index) const
 {
-    return get<array>()[index];
+    return get_array()[index];
 }
 
 value& value::operator[](string const& key)
@@ -93,7 +93,7 @@ value& value::operator[](string const& key)
 
 value const& value::operator[](string const& key) const
 {
-    return get<object>()[key];
+    return get_object()[key];
 }
 
 bool operator==(value const& lhs, value const& rhs)
