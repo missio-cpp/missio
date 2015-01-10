@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_value_grammar_hpp
@@ -33,7 +33,7 @@ namespace detail
 template <typename Iterator, typename Skipper = boost::spirit::qi::space_type>
 struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), Skipper>
 {
-    value_grammar() : value_grammar::base_type(start_)
+    value_grammar() : value_grammar::base_type(value_)
     {
         using namespace boost::spirit::qi;
 
@@ -59,8 +59,6 @@ struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), Skipper>
         object_     =   '{'  >> -(pair_ % ',') >> '}' ;
 
         value_      =   object_ | array_ | boolean_ | string_ | real_ | integer_ | null_;
-
-        start_      =   object_ | array_;
     }
 
     boost::spirit::qi::rule<Iterator, null()> null_;
@@ -72,7 +70,6 @@ struct value_grammar : boost::spirit::qi::grammar<Iterator, value(), Skipper>
     boost::spirit::qi::rule<Iterator, object_value(), Skipper> pair_;
     boost::spirit::qi::rule<Iterator, object(), Skipper> object_;
     boost::spirit::qi::rule<Iterator, value(), Skipper> value_;
-    boost::spirit::qi::rule<Iterator, value(), Skipper> start_;
 };
 
 }   // namespace detail

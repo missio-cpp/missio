@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -14,6 +14,101 @@
 
 BOOST_AUTO_TEST_SUITE(json_read_test_suite)
 
+BOOST_AUTO_TEST_CASE(null_read_test)
+{
+    std::string const data = "null";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<missio::json::null>(), true);
+}
+
+BOOST_AUTO_TEST_CASE(integer_read_test)
+{
+    std::string const data = "129";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<int>(), true);
+    BOOST_CHECK_EQUAL(value.get<int>(), 129);
+}
+
+BOOST_AUTO_TEST_CASE(real_read_test)
+{
+    std::string const data = "3.141592";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<double>(), true);
+    BOOST_CHECK_EQUAL(value.get<double>(), 3.141592);
+}
+
+BOOST_AUTO_TEST_CASE(extended_real_read_test)
+{
+    BOOST_CHECK_EQUAL(missio::json::read("0.5"), 0.5);
+    BOOST_CHECK_EQUAL(missio::json::read("0.25"), 0.25);
+    BOOST_CHECK_EQUAL(missio::json::read("1.25"), 1.25);
+    BOOST_CHECK_EQUAL(missio::json::read("10.25"), 10.25);
+    BOOST_CHECK_EQUAL(missio::json::read("10e2"), 10e2);
+    BOOST_CHECK_EQUAL(missio::json::read("10E2"), 10e2);
+    BOOST_CHECK_EQUAL(missio::json::read("10e+2"), 10e2);
+    BOOST_CHECK_EQUAL(missio::json::read("10e-1"), 10e-1);
+    BOOST_CHECK_EQUAL(missio::json::read("1e-10"), 1e-10);
+    BOOST_CHECK_EQUAL(missio::json::read("0.5e10"), 0.5e10);
+    BOOST_CHECK_EQUAL(missio::json::read("1.5e10"), 1.5e10);
+}
+
+BOOST_AUTO_TEST_CASE(boolean_true_read_test)
+{
+    std::string const data = "true";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);
+    BOOST_CHECK_EQUAL(value.get<bool>(), true);
+}
+
+BOOST_AUTO_TEST_CASE(boolean_false_read_test)
+{
+    std::string const data = "false";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);
+    BOOST_CHECK_EQUAL(value.get<bool>(), false);
+}
+
+BOOST_AUTO_TEST_CASE(string_read_test)
+{
+    std::string const data = "\"test\"";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.get<std::string>(), "test");
+}
+
+BOOST_AUTO_TEST_CASE(string_with_escapes_read_test)
+{
+    std::string const data = "\"\\b\\f\\n\\r\\t\\\"\\\\\"";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.get<std::string>(), "\b\f\n\r\t\"\\");
+}
+
+BOOST_AUTO_TEST_CASE(unicode_string_read_test)
+{
+    std::string const data = "\"\\u043C\\u0438\\u0440\"";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.get<std::string>(), "\xD0\xBC\xD0\xB8\xD1\x80");
+}
+
+BOOST_AUTO_TEST_CASE(utf16_surrogate_pair_string_read_test)
+{
+    std::string const data = "\"\\uD834\\uDD1E\"";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<std::string>(), true);
+    BOOST_CHECK_EQUAL(value.get<std::string>(), "\xF0\x9D\x84\x9E");
+}
+
 BOOST_AUTO_TEST_CASE(empty_array_read_test)
 {
     std::string const data = "[]";
@@ -21,128 +116,6 @@ BOOST_AUTO_TEST_CASE(empty_array_read_test)
 
     BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
     BOOST_CHECK_EQUAL(value.get<missio::json::array>().empty(), true);
-}
-
-BOOST_AUTO_TEST_CASE(empty_object_read_test)
-{
-    std::string const data = "{}";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::object>().empty(), true);
-}
-
-BOOST_AUTO_TEST_CASE(null_read_test)
-{
-    std::string const data = "[null]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<missio::json::null>(), true);
-}
-
-BOOST_AUTO_TEST_CASE(integer_read_test)
-{
-    std::string const data = "[129]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<int>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<int>(), 129);
-}
-
-BOOST_AUTO_TEST_CASE(real_read_test)
-{
-    std::string const data = "[3.141592]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<double>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<double>(), 3.141592);
-}
-
-BOOST_AUTO_TEST_CASE(extended_real_read_test)
-{
-    BOOST_CHECK_EQUAL(missio::json::read("[0.5]")[0], 0.5);
-    BOOST_CHECK_EQUAL(missio::json::read("[0.25]")[0], 0.25);
-    BOOST_CHECK_EQUAL(missio::json::read("[1.25]")[0], 1.25);
-    BOOST_CHECK_EQUAL(missio::json::read("[10.25]")[0], 10.25);
-    BOOST_CHECK_EQUAL(missio::json::read("[10e2]")[0], 10e2);
-    BOOST_CHECK_EQUAL(missio::json::read("[10E2]")[0], 10e2);
-    BOOST_CHECK_EQUAL(missio::json::read("[10e+2]")[0], 10e2);
-    BOOST_CHECK_EQUAL(missio::json::read("[10e-1]")[0], 10e-1);
-    BOOST_CHECK_EQUAL(missio::json::read("[1e-10]")[0], 1e-10);
-    BOOST_CHECK_EQUAL(missio::json::read("[0.5e10]")[0], 0.5e10);
-    BOOST_CHECK_EQUAL(missio::json::read("[1.5e10]")[0], 1.5e10);
-}
-
-BOOST_AUTO_TEST_CASE(boolean_read_test)
-{
-    std::string const data = "[true,false]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 2u);
-
-    BOOST_CHECK_EQUAL(value[0].is<bool>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<bool>(), true);
-
-    BOOST_CHECK_EQUAL(value[1].is<bool>(), true);
-    BOOST_CHECK_EQUAL(value[1].get<bool>(), false);
-}
-
-BOOST_AUTO_TEST_CASE(string_read_test)
-{
-    std::string const data = "[\"test\"]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<std::string>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<std::string>(), "test");
-}
-
-BOOST_AUTO_TEST_CASE(string_with_escapes_read_test)
-{
-    std::string const data = "[\"\\b\\f\\n\\r\\t\\\"\\\\\"]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<std::string>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<std::string>(), "\b\f\n\r\t\"\\");
-}
-
-BOOST_AUTO_TEST_CASE(unicode_string_read_test)
-{
-    std::string const data = "[\"\\u043C\\u0438\\u0440\"]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<std::string>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<std::string>(), "\xD0\xBC\xD0\xB8\xD1\x80");
-}
-
-BOOST_AUTO_TEST_CASE(utf16_surrogate_pair_string_read_test)
-{
-    std::string const data = "[\"\\uD834\\uDD1E\"]";
-    missio::json::value const value = missio::json::read(data);
-
-    BOOST_CHECK_EQUAL(value.is<missio::json::array>(), true);
-    BOOST_CHECK_EQUAL(value.get<missio::json::array>().size(), 1u);
-
-    BOOST_CHECK_EQUAL(value[0].is<std::string>(), true);
-    BOOST_CHECK_EQUAL(value[0].get<std::string>(), "\xF0\x9D\x84\x9E");
 }
 
 BOOST_AUTO_TEST_CASE(array_read_test)
@@ -160,6 +133,15 @@ BOOST_AUTO_TEST_CASE(array_read_test)
     BOOST_CHECK_EQUAL(value[0].get<std::string>(), "string");
     BOOST_CHECK_EQUAL(value[1].get<double>(), 3.141592);
     BOOST_CHECK_EQUAL(value[2].get<bool>(), true);
+}
+
+BOOST_AUTO_TEST_CASE(empty_object_read_test)
+{
+    std::string const data = "{}";
+    missio::json::value const value = missio::json::read(data);
+
+    BOOST_CHECK_EQUAL(value.is<missio::json::object>(), true);
+    BOOST_CHECK_EQUAL(value.get<missio::json::object>().empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(object_read_test)
@@ -213,9 +195,8 @@ BOOST_AUTO_TEST_CASE(complex_read_test)
 BOOST_AUTO_TEST_CASE(invalid_read_test)
 {
     BOOST_CHECK_THROW(missio::json::read(""), missio::json::exception);
-    BOOST_CHECK_THROW(missio::json::read("null"), missio::json::exception);
     BOOST_CHECK_THROW(missio::json::read("invalid"), missio::json::exception);
-    BOOST_CHECK_THROW(missio::json::read("[1 2 3]"), missio::json::exception);
+    BOOST_CHECK_THROW(missio::json::read("[1 2 3 4]"), missio::json::exception);
     BOOST_CHECK_THROW(missio::json::read("[naked value]"), missio::json::exception);
     BOOST_CHECK_THROW(missio::json::read("[\"line\nbreak\"]"), missio::json::exception);
     BOOST_CHECK_THROW(missio::json::read("[\"extra close\"]]"), missio::json::exception);

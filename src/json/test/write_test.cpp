@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -106,14 +106,6 @@ BOOST_AUTO_TEST_CASE(empty_array_write_test)
     BOOST_CHECK_EQUAL(data, "[]");
 }
 
-BOOST_AUTO_TEST_CASE(empty_object_write_test)
-{
-    missio::json::value value = missio::json::object();
-    std::string data = missio::json::write(value);
-
-    BOOST_CHECK_EQUAL(data, "{}");
-}
-
 BOOST_AUTO_TEST_CASE(array_write_test)
 {
     missio::json::array value;
@@ -124,6 +116,14 @@ BOOST_AUTO_TEST_CASE(array_write_test)
 
     std::string data = missio::json::write(value);
     BOOST_CHECK_EQUAL(data, "[42,true,\"test\"]");
+}
+
+BOOST_AUTO_TEST_CASE(empty_object_write_test)
+{
+    missio::json::value value = missio::json::object();
+    std::string data = missio::json::write(value);
+
+    BOOST_CHECK_EQUAL(data, "{}");
 }
 
 BOOST_AUTO_TEST_CASE(object_write_test)
