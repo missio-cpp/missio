@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -19,12 +19,7 @@ bool value::is_null() const
     return is<null>();
 }
 
-bool value::is_real() const
-{
-    return is<real>();
-}
-
-bool value::is_integer() const
+bool value::is_number() const
 {
     return is<integer>();
 }

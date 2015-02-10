@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_json_io_hpp
@@ -26,8 +26,7 @@ namespace json
 
 value read(std::string const& str);
 
-std::string write(value const& value);
-std::string write_formatted(value const& value);
+std::string write(value const& value, std::size_t indent = 0);
 
 std::istream& operator>>(std::istream& is, value& value);
 std::ostream& operator<<(std::ostream& os, value const& value);

@@ -101,9 +101,9 @@ BOOST_AUTO_TEST_CASE(utf8_string_write_test)
 BOOST_AUTO_TEST_CASE(empty_array_write_test)
 {
     missio::json::value value = missio::json::array();
-    std::string data = missio::json::write(value);
 
-    BOOST_CHECK_EQUAL(data, "[]");
+    BOOST_CHECK_EQUAL(missio::json::write(value), "[]");
+    BOOST_CHECK_EQUAL(missio::json::write(value, 4), "[]");
 }
 
 BOOST_AUTO_TEST_CASE(array_write_test)
@@ -116,14 +116,23 @@ BOOST_AUTO_TEST_CASE(array_write_test)
 
     std::string data = missio::json::write(value);
     BOOST_CHECK_EQUAL(data, "[42,true,\"test\"]");
+
+    std::string formatted_data = missio::json::write(value, 4);
+
+    BOOST_CHECK_EQUAL(formatted_data,
+                      "[\n"
+                      "    42,\n"
+                      "    true,\n"
+                      "    \"test\"\n"
+                      "]");
 }
 
 BOOST_AUTO_TEST_CASE(empty_object_write_test)
 {
     missio::json::value value = missio::json::object();
-    std::string data = missio::json::write(value);
 
-    BOOST_CHECK_EQUAL(data, "{}");
+    BOOST_CHECK_EQUAL(missio::json::write(value), "{}");
+    BOOST_CHECK_EQUAL(missio::json::write(value, 4), "{}");
 }
 
 BOOST_AUTO_TEST_CASE(object_write_test)
@@ -133,9 +142,19 @@ BOOST_AUTO_TEST_CASE(object_write_test)
     value["key1"] = 42;
     value["key2"] = true;
     value["key3"] = "test";
+    value["key3"] = "test";
 
     std::string data = missio::json::write(value);
     BOOST_CHECK_EQUAL(data, "{\"key1\":42,\"key2\":true,\"key3\":\"test\"}");
+
+    std::string formatted_data = missio::json::write(value, 4);
+
+    BOOST_CHECK_EQUAL(formatted_data,
+                      "{\n"
+                      "    \"key1\": 42,\n"
+                      "    \"key2\": true,\n"
+                      "    \"key3\": \"test\"\n"
+                      "}");
 }
 
 BOOST_AUTO_TEST_CASE(complex_write_test)
@@ -153,6 +172,24 @@ BOOST_AUTO_TEST_CASE(complex_write_test)
 
     std::string data = missio::json::write(value);
     BOOST_CHECK_EQUAL(data, "[{\"key1\":\"value\",\"key2\":true},{\"key\":[123,4.5,null]},42]");
+
+    std::string formatted_data = missio::json::write(value, 4);
+
+    BOOST_CHECK_EQUAL(formatted_data,
+                      "[\n"
+                      "    {\n"
+                      "        \"key1\": \"value\",\n"
+                      "        \"key2\": true\n"
+                      "    },\n"
+                      "    {\n"
+                      "        \"key\": [\n"
+                      "            123,\n"
+                      "            4.5,\n"
+                      "            null\n"
+                      "        ]\n"
+                      "    },\n"
+                      "    42\n"
+                      "]");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

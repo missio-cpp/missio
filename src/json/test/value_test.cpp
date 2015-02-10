@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -167,13 +167,13 @@ BOOST_AUTO_TEST_CASE(is_value_test)
     BOOST_CHECK_EQUAL(value.is_null(), true);
 
     value = missio::json::real{ 3.14159 };
-    BOOST_CHECK_EQUAL(value.is_real(), true);
+    BOOST_CHECK_EQUAL(value.is<float>(), true);
 
     value = missio::json::integer{ 42 };
-    BOOST_CHECK_EQUAL(value.is_integer(), true);
+    BOOST_CHECK_EQUAL(value.is<int>(), true);
 
     value = missio::json::boolean{ true };
-    BOOST_CHECK_EQUAL(value.is_boolean(), true);
+    BOOST_CHECK_EQUAL(value.is<bool>(), true);
 
     value = missio::json::string{ "string" };
     BOOST_CHECK_EQUAL(value.is_string(), true);

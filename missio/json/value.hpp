@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_value_hpp
@@ -76,8 +76,7 @@ public:
     template <typename T> operator T() const;
 
     bool is_null() const;
-    bool is_real() const;
-    bool is_integer() const;
+    bool is_number() const;
     bool is_boolean() const;
     bool is_string() const;
     bool is_object() const;

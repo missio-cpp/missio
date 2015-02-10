@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -33,20 +33,22 @@ value read(std::string const& str)
     return value;
 }
 
-std::string write(value const& value)
+std::string write(value const& value, std::size_t indent)
 {
     std::string str;
 
-    if(!detail::generate_json(value, std::back_inserter(str)))
-        throw exception("cannot generate JSON string");
+    if(indent > 0)
+    {
+        if(!detail::generate_json(value, indent, std::back_inserter(str)))
+            throw exception("cannot generate formatted JSON string");
+    }
+    else
+    {
+        if(!detail::generate_json(value, std::back_inserter(str)))
+            throw exception("cannot generate JSON string");
+    }
 
     return str;
-}
-
-//TODO: formatted write is not implemented
-std::string write_formatted(value const& value)
-{
-    return write(value);
 }
 
 std::istream& operator>>(std::istream& is, value& value)
@@ -61,7 +63,7 @@ std::istream& operator>>(std::istream& is, value& value)
 
 std::ostream& operator<<(std::ostream& os, value const& value)
 {
-    os << write_formatted(value);
+    os << write(value, 4);
     return os;
 }
 
