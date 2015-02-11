@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Implementation headers
-#include "formatted_value_generator.hpp"
+#include "pretty_value_generator.hpp"
 #include "value_generator.hpp"
 
 
@@ -26,7 +26,7 @@ namespace detail
 template <typename OutputIterator>
 bool generate_json(value const& value, std::size_t indent, OutputIterator out)
 {
-    static formatted_value_generator<OutputIterator> const generator;
+    static pretty_value_generator<OutputIterator> const generator;
     return boost::spirit::karma::generate(out, generator(indent), value);
 }
 

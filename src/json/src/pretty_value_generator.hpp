@@ -4,8 +4,8 @@
 //    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
-#ifndef _missio_json_detail_formatted_value_generator_hpp
-#define _missio_json_detail_formatted_value_generator_hpp
+#ifndef _missio_json_detail_pretty_value_generator_hpp
+#define _missio_json_detail_pretty_value_generator_hpp
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -33,9 +33,9 @@ namespace detail
 {
 
 template <typename Iterator>
-struct formatted_value_generator : boost::spirit::karma::grammar<Iterator, value(std::size_t)>
+struct pretty_value_generator : boost::spirit::karma::grammar<Iterator, value(std::size_t)>
 {
-    formatted_value_generator() : formatted_value_generator::base_type(start_)
+    pretty_value_generator() : pretty_value_generator::base_type(start_)
     {
         using namespace boost::spirit::karma;
 
@@ -45,25 +45,25 @@ struct formatted_value_generator : boost::spirit::karma::grammar<Iterator, value
         int_generator<integer> int_generator;
 
         null_       =   lit("null")[_1];
-    
+
         string_     =   string_generator;
-    
+
         real_       =   real_generator;
-    
+
         integer_    =   int_generator;
-    
+
         boolean_    =   bool_;
-    
+
         indent_     =   repeat(_r1)[' '];
-    
+
         entry_      =   eol << indent_(_r1) <<  value_(_r1, _r2);
-    
+
         array_      =   '[' << -((entry_(_r1 + _r2, _r2) % ',') << eol << indent_(_r1)) <<  ']';
-    
+
         pair_       =   eol << indent_(_r1) << string_ << ':' << ' ' << value_(_r1, _r2);
-    
+
         object_     =   '{' << -((pair_(_r1 + _r2, _r2) % ',') << eol << indent_(_r1)) << '}';
-    
+
         value_      =   object_(_r1, _r2) | array_(_r1, _r2) | boolean_ | string_ | real_ | integer_ | null_;
 
         start_      =   value_(0, _r1);
@@ -90,4 +90,4 @@ struct formatted_value_generator : boost::spirit::karma::grammar<Iterator, value
 }   // namespace json
 }   // namespace missio
 
-#endif  // _missio_json_detail_formatted_value_generator_hpp
+#endif  // _missio_json_detail_pretty_value_generator_hpp
