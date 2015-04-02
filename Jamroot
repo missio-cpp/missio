@@ -22,7 +22,8 @@ use-project /boost : $(BOOST_ROOT) ;
 project missio
     :
         requirements
-        <warnings>all
+        <warnings>on
+        <warnings-as-errors>on
         <include>$(TOP)
         <include>$(BOOST_ROOT)
         <define>BOOST_ALL_NO_LIB
@@ -49,12 +50,13 @@ project missio
         <toolset>msvc:<cxxflags>/wd4714
         <toolset>msvc:<cxxflags>/wd4800
         <toolset>gcc:<cxxflags>-std=gnu++1y
-        <toolset>gcc:<cxxflags>-Wno-long-long
-        <toolset>gcc:<cxxflags>-Wno-attributes
-        <toolset>gcc:<cxxflags>-Wno-strict-aliasing
-        <toolset>gcc:<cxxflags>-Wno-unused-parameter
+        <toolset>gcc:<cxxflags>-Wempty-body
+        <toolset>gcc:<cxxflags>-Wsign-compare
+        <toolset>gcc:<cxxflags>-Wtype-limits
         <toolset>gcc:<cxxflags>-Wno-unused-variable
+        <toolset>gcc:<cxxflags>-Wno-unused-parameter
         <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
+        <toolset>gcc:<cxxflags>-fdiagnostics-show-option
     :
         usage-requirements
         <include>$(TOP)

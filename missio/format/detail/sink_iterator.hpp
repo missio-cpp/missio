@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_sink_iterator_hpp
@@ -27,7 +27,7 @@ namespace detail
 struct null_policy
 {
     template <typename Char>
-    bool operator()(Char ch) const
+    bool operator()(Char) const
     {
         return true;
     }
@@ -41,7 +41,7 @@ struct counting_policy
     }
 
     template <typename Char>
-    bool operator()(Char ch) const
+    bool operator()(Char) const
     {
         ++count;
         return true;
@@ -79,7 +79,7 @@ struct limit_count_policy
     }
 
     template <typename Char>
-    bool operator()(Char ch) const
+    bool operator()(Char) const
     {
         return count++ < max_count;
     }

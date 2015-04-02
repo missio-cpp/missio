@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_adapters_pointer_hpp
@@ -49,7 +49,7 @@ template <>
 struct type_adapter<std::nullptr_t>
 {
     template <typename Sink>
-    static void format(Sink& sink, std::nullptr_t const& value)
+    static void format(Sink& sink, std::nullptr_t)
     {
         write(sink, '0');
     }

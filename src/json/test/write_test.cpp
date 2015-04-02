@@ -142,7 +142,6 @@ BOOST_AUTO_TEST_CASE(object_write_test)
     value["key1"] = 42;
     value["key2"] = true;
     value["key3"] = "test";
-    value["key3"] = "test";
 
     std::string data = missio::json::write(value);
     BOOST_CHECK_EQUAL(data, "{\"key1\":42,\"key2\":true,\"key3\":\"test\"}");

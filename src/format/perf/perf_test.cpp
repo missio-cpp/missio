@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -283,7 +283,7 @@ void test_performance_format_write_char_buffer()
     std::cout << result << std::endl << std::endl;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     try
     {
