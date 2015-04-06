@@ -49,10 +49,11 @@ project missio
         <toolset>msvc:<cxxflags>/wd4702
         <toolset>msvc:<cxxflags>/wd4714
         <toolset>msvc:<cxxflags>/wd4800
-        <toolset>gcc:<cxxflags>-std=gnu++1y
+        <toolset>gcc:<cxxflags>-std=c++14
         <toolset>gcc:<cxxflags>-Wempty-body
         <toolset>gcc:<cxxflags>-Wsign-compare
         <toolset>gcc:<cxxflags>-Wtype-limits
+        <toolset>gcc:<cxxflags>-Wno-unknown-pragmas
         <toolset>gcc:<cxxflags>-Wno-unused-variable
         <toolset>gcc:<cxxflags>-Wno-unused-parameter
         <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs

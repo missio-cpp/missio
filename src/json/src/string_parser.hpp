@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.JSON library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_json_detail_string_parser_hpp
@@ -58,6 +58,8 @@ struct any_string_parser : boost::spirit::qi::primitive_parser<any_string_parser
     {
         typedef string type;
     };
+
+    any_string_parser() = default;
 
     any_string_parser(any_string_parser const&) = default;
     any_string_parser& operator=(any_string_parser const&) = delete;
