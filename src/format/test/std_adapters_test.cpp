@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -43,11 +43,11 @@ struct smart_ptr_fixture : common_fixture
         return value ? common_fixture::make_string(*value) : std::string();
     }
 
-    std::shared_ptr<int> const shared_pointer{ new int(-42) };
-    std::unique_ptr<int> const unique_pointer{ new int(-42) };
+    std::shared_ptr<int> shared_pointer{ new int(-42) };
+    std::unique_ptr<int> unique_pointer{ new int(-42) };
 
-    std::shared_ptr<int> const empty_shared_pointer;
-    std::unique_ptr<int> const empty_unique_pointer;
+    std::shared_ptr<int> empty_shared_pointer;
+    std::unique_ptr<int> empty_unique_pointer;
 };
 
 struct system_fixture : common_fixture

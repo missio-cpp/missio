@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -43,10 +43,10 @@ struct asio_fixture : common_fixture
     {
     }
 
-    boost::asio::ip::address const address_v4;
-    boost::asio::ip::tcp::endpoint const endpoint_v4;
-    boost::asio::ip::address const address_v6;
-    boost::asio::ip::tcp::endpoint const endpoint_v6;
+    boost::asio::ip::address address_v4;
+    boost::asio::ip::tcp::endpoint endpoint_v4;
+    boost::asio::ip::address address_v6;
+    boost::asio::ip::tcp::endpoint endpoint_v6;
 };
 
 struct optional_fixture : common_fixture
@@ -57,8 +57,8 @@ struct optional_fixture : common_fixture
         return value ? common_fixture::make_string(*value) : std::string();
     }
 
-    boost::optional<int> const empty_optional;
-    boost::optional<int> const int_optional{ -42 };
+    boost::optional<int> empty_optional;
+    boost::optional<int> int_optional{ -42 };
 };
 
 struct intrusive_test
@@ -103,11 +103,11 @@ struct smart_ptr_fixture : common_fixture
     {
     }
 
-    boost::shared_ptr<int> const shared_pointer;
-    boost::shared_ptr<int> const empty_shared_pointer;
+    boost::shared_ptr<int> shared_pointer;
+    boost::shared_ptr<int> empty_shared_pointer;
 
-    boost::intrusive_ptr<intrusive_test> const intrusive_pointer;
-    boost::intrusive_ptr<intrusive_test> const empty_intrusive_pointer;
+    boost::intrusive_ptr<intrusive_test> intrusive_pointer;
+    boost::intrusive_ptr<intrusive_test> empty_intrusive_pointer;
 };
 
 struct system_fixture : common_fixture
@@ -122,7 +122,7 @@ struct system_fixture : common_fixture
     {
     }
 
-    boost::system::error_code const error_code;
+    boost::system::error_code error_code;
 };
 
 BOOST_FIXTURE_TEST_CASE(boost_asio_ip_address_test, asio_fixture)

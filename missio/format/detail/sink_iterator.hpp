@@ -93,18 +93,18 @@ class sink_iterator : public std::iterator<std::output_iterator_tag, void, void,
 {
 public:
     explicit sink_iterator(Sink& sink) :
-        sink_(sink)
+        sink_(&sink)
     {
     }
 
     sink_iterator(Sink& sink, Policy const& policy) :
-        sink_(sink),
+        sink_(&sink),
         policy_(policy)
     {
     }
 
     sink_iterator(sink_iterator const&) = default;
-    sink_iterator& operator=(sink_iterator const&) = delete;
+    sink_iterator& operator=(sink_iterator const&) = default;
 
     Policy const& policy() const
     {
@@ -115,14 +115,14 @@ public:
     void put(Char ch)
     {
         if(policy_(ch))
-            sink_.put(ch);
+            sink_->put(ch);
     }
 
     template <typename Char>
     sink_iterator& operator=(Char ch)
     {
         if(policy_(ch))
-            sink_.put(ch);
+            sink_->put(ch);
 
         return *this;
     }
@@ -143,7 +143,7 @@ public:
     }
 
 private:
-    Sink& sink_;
+    Sink* sink_;
     Policy policy_;
 };
 

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_sink_adapter_hpp
@@ -27,21 +27,21 @@ class sink_adapter
 {
 public:
     explicit sink_adapter(Sink& sink) :
-        sink_(sink)
+        sink_(&sink)
     {
     }
 
     sink_adapter(sink_adapter const&) = default;
-    sink_adapter& operator=(sink_adapter const&) = delete;
+    sink_adapter& operator=(sink_adapter const&) = default;
 
     template <typename Char>
     void put(Char ch)
     {
-        sink_.put(ch);
+        sink_->put(ch);
     }
 
 private:
-    Sink& sink_;
+    Sink* sink_;
 };
 
 template <typename Char, typename Traits, typename Allocator>
@@ -49,20 +49,20 @@ class sink_adapter<std::basic_string<Char, Traits, Allocator>>
 {
 public:
     explicit sink_adapter(std::basic_string<Char, Traits, Allocator>& sink) :
-        sink_(sink)
+        sink_(&sink)
     {
     }
 
     sink_adapter(sink_adapter const&) = default;
-    sink_adapter& operator=(sink_adapter const&) = delete;
+    sink_adapter& operator=(sink_adapter const&) = default;
 
     void put(Char ch)
     {
-        sink_.push_back(ch);
+        sink_->push_back(ch);
     }
 
 private:
-    std::basic_string<Char, Traits, Allocator>& sink_;
+    std::basic_string<Char, Traits, Allocator>* sink_;
 };
 
 template <typename Char, std::size_t N>
@@ -81,7 +81,7 @@ public:
     }
 
     sink_adapter(sink_adapter const&) = default;
-    sink_adapter& operator=(sink_adapter const&) = delete;
+    sink_adapter& operator=(sink_adapter const&) = default;
 
     void put(Char ch)
     {

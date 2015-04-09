@@ -1,12 +1,15 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
 // Application headers
 #include <missio/format/detail/time_point.hpp>
+
+// STL headers
+#include <ctime>
 
 
 namespace missio
