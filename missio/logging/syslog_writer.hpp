@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_logging_syslog_writer_hpp
@@ -64,7 +64,7 @@ friend class syslog_writer;
 public:
     explicit syslog_options(severity severity);
 
-    syslog_writer_options(syslog_options const&) = default;
+    syslog_options(syslog_options const&) = default;
     syslog_options& operator=(syslog_options const&) = delete;
 
     syslog_options& ident(std::string const& ident);
