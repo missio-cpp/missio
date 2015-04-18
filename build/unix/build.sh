@@ -39,7 +39,8 @@ then
         exit 1
     fi
 
-    pushd "$BOOST_ROOT" > /dev/null
+    OLD_PATH=`pwd`
+    cd "$BOOST_ROOT"
 
     echo Building Boost.Jam build engine
     ./bootstrap.sh 1>/dev/null 2>/dev/null
@@ -51,7 +52,7 @@ then
         exit 1
     fi
 
-    popd > /dev/null
+    cd $OLD_PATH
 fi
 
 OS_NAME=`uname -s`
@@ -66,14 +67,21 @@ case "$OS_NAME" in
     *)
         JOBS_NUM=2
         ;;
-esac 
+esac
 
 export BOOST_ROOT="\"$BOOST_ROOT\""
 export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 
-pushd "$MISSIO_ROOT" > /dev/null
+OLD_PATH=`pwd`
+cd "$MISSIO_ROOT"
 
 echo Starting build of missio
 "$BOOST_JAM" -q -j$JOBS_NUM $*
 
-popd > /dev/null
+if [ $? -ne 0 ]
+then
+    echo Error building missio
+    exit 1
+fi
+
+cd $OLD_PATH
