@@ -70,4 +70,9 @@ pushd "%MISSIO_ROOT%"
 ECHO Starting build of missio
 "%BOOST_JAM%" -q -j%JOBS_NUM% %*
 
+IF ERRORLEVEL 1 (
+    ECHO Error building missio
+    EXIT /B 1
+)
+
 popd
