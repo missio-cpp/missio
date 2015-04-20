@@ -55,20 +55,6 @@ then
     cd $OLD_PATH
 fi
 
-OS_NAME=`uname -s`
-
-case "$OS_NAME" in
-    Linux)
-        JOBS_NUM=`getconf _NPROCESSORS_ONLN`
-        ;;
-    *BSD)
-        JOBS_NUM=`sysctl -n hw.ncpu`
-        ;;
-    *)
-        JOBS_NUM=2
-        ;;
-esac
-
 export BOOST_ROOT="\"$BOOST_ROOT\""
 export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 
@@ -76,7 +62,7 @@ OLD_PATH=`pwd`
 cd "$MISSIO_ROOT"
 
 echo Starting build of missio
-"$BOOST_JAM" -q -j$JOBS_NUM $*
+"$BOOST_JAM" -q
 
 if [ $? -ne 0 ]
 then
