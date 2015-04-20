@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ namespace missio
 namespace logging
 {
 
-syslog_writer::syslog_writer(syslog_writer_options const& optins) :
+syslog_writer::syslog_writer(syslog_options const& options) :
     writer_base(options),
     ident_(options.ident_)
 {
@@ -47,14 +47,25 @@ void syslog_writer::flush_impl()
 
 int syslog_writer::get_level(message const& message)
 {
-    switch(message.severity())
+    switch(message.get_severity())
     {
-        case failure: return LOG_CRIT;
-        case error:   return LOG_ERR;
-        case warning: return LOG_WARNING;
-        case notice:  return LOG_NOTICE;
-        case info:    return LOG_INFO;
-        case debug:   return LOG_DEBUG;
+        case failure:
+            return LOG_CRIT;
+
+        case error:
+            return LOG_ERR;
+
+        case warning:
+            return LOG_WARNING;
+
+        case notice:
+            return LOG_NOTICE;
+
+        case info:
+            return LOG_INFO;
+
+        default:
+            ;
     }
 
     return LOG_DEBUG;
