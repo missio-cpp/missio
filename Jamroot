@@ -36,6 +36,8 @@ project missio
         <target-os>windows:<define>NOMINMAX
         <target-os>windows:<define>WIN32_LEAN_AND_MEAN
         <target-os>windows:<define>_WIN32_WINNT=0x0601
+        <toolset>msvc:<runtime-link>static
+        <toolset>msvc:<link>static
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
         <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
         <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
@@ -49,6 +51,8 @@ project missio
         <toolset>msvc:<cxxflags>/wd4702
         <toolset>msvc:<cxxflags>/wd4714
         <toolset>msvc:<cxxflags>/wd4800
+        <toolset>gcc:<runtime-link>shared
+        <toolset>gcc:<link>shared
         <toolset>gcc:<cxxflags>-std=c++1y
         <toolset>gcc:<cxxflags>-Wempty-body
         <toolset>gcc:<cxxflags>-Wsign-compare
@@ -60,6 +64,8 @@ project missio
         <toolset>gcc:<cxxflags>-fdiagnostics-show-option
         <toolset>clang:<cxxflags>-std=c++1y
         <toolset>clang:<cxxflags>-Wno-deprecated-register
+        <toolset>clang:<runtime-link>shared
+        <toolset>clang:<link>shared
     :
         usage-requirements
         <include>$(TOP)
@@ -67,8 +73,6 @@ project missio
         default-build
         release debug
         <threading>multi
-        <runtime-link>static
-        <link>static
     :
         build-dir $(OBJ)
     ;
