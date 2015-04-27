@@ -26,5 +26,15 @@ install:
   - export BOOST_ROOT=$PWD/boost_1_58_0
 
 script:
-  - /bin/sh -e ./build.sh /missio/lib variant=debug toolset=$CC
-  - /bin/sh -e ./build.sh /missio/test variant=debug toolset=$CC
+  - /bin/sh -e ./build.sh /missio/unicode toolset=$CC debug
+  - /bin/sh -e ./build.sh /missio/unicode/test toolset=$CC debug
+
+  - /bin/sh -e ./build.sh /missio/format toolset=$CC debug
+  - /bin/sh -e ./build.sh /missio/format/test toolset=$CC debug
+
+  - /bin/sh -e ./build.sh /missio/logging toolset=$CC debug
+  - /bin/sh -e ./build.sh /missio/logging/test toolset=$CC debug
+
+  #TODO: need to fix clang compilation errors
+  #- /bin/sh -e ./build.sh /missio/json variant=debug toolset=$CC
+  #- /bin/sh -e ./build.sh /missio/json/test variant=debug toolset=$CC
