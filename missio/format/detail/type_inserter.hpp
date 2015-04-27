@@ -44,7 +44,9 @@ struct int_inserter
     template <typename Sink, typename Value>
     void call(Sink& sink, Value value) const
     {
-        generate_value(sink, value, int_generator<Value, Radix>(precision_, force_sign_, upper_case_));
+        static int_generator<Value, Radix> const generator{};
+
+        generate_value(sink, value, generator(precision_, force_sign_, upper_case_));
     }
 
 private:
