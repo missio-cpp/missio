@@ -16,7 +16,6 @@ unit-test missio_logging_test
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
         <library>/missio/format//missio_format
-        <library>/boost/system//boost_system
         <target-os>windows:<library>ws2_32
     ;
 

@@ -10,3 +10,5 @@ Jamfile.v2 text
 
 *.sh text eol=lf
 *.bat text eol=crlf
+
+.travis.yml text eol=lf

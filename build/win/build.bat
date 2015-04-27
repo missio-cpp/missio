@@ -50,24 +50,20 @@ IF NOT EXIST "%BOOST_JAM%" (
     popd
 
     IF ERRORLEVEL 1 (
-        ECHO Error building Boost.Jam build engine.
-        ECHO See %BOOST_JAM_LOG% for details.
+        ECHO Error building Boost.Jam build engine
+        ECHO See %BOOST_JAM_LOG% for details
         EXIT /B 1
     )
 )
 
-SET JOBS_NUM=%NUMBER_OF_PROCESSORS%
-
-IF %JOBS_NUM% LEQ 0 (
-    SET JOBS_NUM=2
-)
-
-SET BOOST_ROOT="%BOOST_ROOT%"
-SET BOOST_BUILD_PATH="%BOOST_BUILD_PATH%"
-
 pushd "%MISSIO_ROOT%"
 
 ECHO Starting build of missio
-"%BOOST_JAM%" -q -j%JOBS_NUM% %*
+"%BOOST_JAM%" -q
+
+IF ERRORLEVEL 1 (
+    ECHO Error building missio
+    EXIT /B 1
+)
 
 popd
