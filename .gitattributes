@@ -8,7 +8,7 @@
 Jamroot text
 Jamfile.v2 text
 
+.travis.yml text
+
 *.sh text eol=lf
 *.bat text eol=crlf
-
-.travis.yml text eol=lf
