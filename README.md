@@ -1,4 +1,4 @@
-missio [![Build status](https://travis-ci.org/ilya-golovenko/missio.svg)](https://travis-ci.org/ilya-golovenko/missio)
+missio [![Build status](https://travis-ci.org/missio-cpp/missio.svg)](https://travis-ci.org/missio-cpp/missio)
 =======
 Collection of general purpose C++ libraries: json, format, unicode, logging
 
