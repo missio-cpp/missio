@@ -62,7 +62,7 @@ OLD_PATH=`pwd`
 cd "$MISSIO_ROOT"
 
 echo Starting build of missio
-"$BOOST_JAM" -q
+"$BOOST_JAM" -q $*
 
 if [ $? -ne 0 ]
 then
