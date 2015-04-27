@@ -59,7 +59,7 @@ IF NOT EXIST "%BOOST_JAM%" (
 pushd "%MISSIO_ROOT%"
 
 ECHO Starting build of missio
-"%BOOST_JAM%" -q
+"%BOOST_JAM%" -q %*
 
 IF ERRORLEVEL 1 (
     ECHO Error building missio
