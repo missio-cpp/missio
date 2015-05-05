@@ -2,18 +2,7 @@
 
 MISSIO_ROOT=`cd "$(dirname "$0")/../.." && pwd`
 
-if [ -z "$BOOST_ROOT" ]
-then
-    echo Required environment variable BOOST_ROOT is not set
-    echo Please set it to point to the root of BOOST distribution
-    exit 1
-fi
-
-# Remove trailing slash
-BOOST_ROOT="${BOOST_ROOT%/}"
-
 echo MISSIO_ROOT = $MISSIO_ROOT
-echo BOOST_ROOT = $BOOST_ROOT
 
 if [ ! -e "$MISSIO_ROOT/Jamroot" ]
 then
@@ -21,42 +10,50 @@ then
     exit 1
 fi
 
-if [ ! -e "$BOOST_ROOT/boost-build.jam" ]
+if [ -n "$BOOST_ROOT" ]
 then
-    echo Environment variable BOOST_ROOT does not point to a BOOST distribution
-    exit 1
-fi
+    # Remove trailing slash
+    BOOST_ROOT="${BOOST_ROOT%/}"
 
-BOOST_JAM=$BOOST_ROOT/bjam
-BOOST_JAM_LOG=$BOOST_ROOT/bjam.log
-BOOST_BUILD_PATH=$BOOST_ROOT/tools/build/v2
+    echo BOOST_ROOT = $BOOST_ROOT
 
-if [ ! -x "$BOOST_JAM" ]
-then
-    if [ ! -x "$BOOST_ROOT/bootstrap.sh" ]
+    if [ ! -e "$BOOST_ROOT/boost-build.jam" ]
     then
-        echo Could not find file bootstrap.bat required to build Boost.Jam build engine
+        echo Environment variable BOOST_ROOT does not point to a BOOST distribution
         exit 1
     fi
 
-    OLD_PATH=`pwd`
-    cd "$BOOST_ROOT"
+    BOOST_JAM=$BOOST_ROOT/bjam
+    BOOST_JAM_LOG=$BOOST_ROOT/bjam.log
+    BOOST_BUILD_PATH=$BOOST_ROOT/tools/build/v2
 
-    echo Building Boost.Jam build engine
-    ./bootstrap.sh 1>/dev/null 2>/dev/null
-
-    if [ $? -ne 0 ]
+    if [ ! -x "$BOOST_JAM" ]
     then
-        echo Error building Boost.Jam build engine
-        echo See $BOOST_JAM_LOG for details
-        exit 1
+        if [ ! -x "$BOOST_ROOT/bootstrap.sh" ]
+        then
+            echo Could not find file bootstrap.bat required to build Boost.Jam build engine
+            exit 1
+        fi
+
+        OLD_PATH=`pwd`
+        cd "$BOOST_ROOT"
+
+        echo Building Boost.Jam build engine
+        ./bootstrap.sh 1>/dev/null 2>/dev/null
+
+        if [ $? -ne 0 ]
+        then
+            echo Error building Boost.Jam build engine
+            echo See $BOOST_JAM_LOG for details
+            exit 1
+        fi
+
+        cd $OLD_PATH
     fi
 
-    cd $OLD_PATH
+    export BOOST_ROOT="\"$BOOST_ROOT\""
+    export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 fi
-
-export BOOST_ROOT="\"$BOOST_ROOT\""
-export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 
 OLD_PATH=`pwd`
 cd "$MISSIO_ROOT"

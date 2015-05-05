@@ -11,12 +11,11 @@ unit-test missio_format_test
         ## sources ##
         [ glob-tree *.cpp : .svn ]
         ../build//missio_format
+        /missio//boost-libraries
     :
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
-        <library>/boost/system//boost_system
-        <library>/boost/filesystem//boost_filesystem
         <target-os>windows:<library>ws2_32
     ;
 

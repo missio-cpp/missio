@@ -3,10 +3,8 @@ project missio/logging
     :
         source-location ../src
     :
-        usage-requirements
-        <library>/boost/system//boost_system
-        <library>/boost/thread//boost_thread
-        <library>/boost/filesystem//boost_filesystem
+        requirements
+        <use>/missio//boost-libraries
     ;
 
 lib missio_logging
