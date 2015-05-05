@@ -1,0 +1,36 @@
+os:
+  - Visual Studio 2015 RC
+
+platform:
+  - x86
+  - x64
+
+notifications:
+  - provider: Email
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
+
+environment:
+  BOOST_ROOT: c:\Libraries\boost
+
+  matrix:
+  - BUILD_VARIANT: debug
+    BUILD_ADDRESS_MODEL: 32
+  - BUILD_VARIANT: release
+    BUILD_ADDRESS_MODEL: 32
+  - BUILD_VARIANT: debug
+    BUILD_ADDRESS_MODEL: 32
+  - BUILD_VARIANT: release
+    BUILD_ADDRESS_MODEL: 32
+  - BUILD_VARIANT: debug
+    BUILD_ADDRESS_MODEL: 64
+  - BUILD_VARIANT: release
+    BUILD_ADDRESS_MODEL: 64
+  - BUILD_VARIANT: debug
+    BUILD_ADDRESS_MODEL: 64
+  - BUILD_VARIANT: release
+    BUILD_ADDRESS_MODEL: 64
+
+build_script:
+  - ./build/win/build.bat toolset=msvc boost=source variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
