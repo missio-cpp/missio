@@ -53,6 +53,8 @@ then
 
     export BOOST_ROOT="\"$BOOST_ROOT\""
     export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
+else
+    BOOST_JAM=bjam
 fi
 
 OLD_PATH=`pwd`

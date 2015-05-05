@@ -51,6 +51,8 @@ IF DEFINED BOOST_ROOT (
             EXIT /B 1
         )
     )
+) ELSE (
+    SET BOOST_JAM=bjam
 )
 
 pushd "%MISSIO_ROOT%"
