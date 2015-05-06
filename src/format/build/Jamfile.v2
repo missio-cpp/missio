@@ -8,4 +8,7 @@ lib missio_format
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
+    :
+        ## build requirements ##
+        <use>/missio//boost-libraries
     ;
