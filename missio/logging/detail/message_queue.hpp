@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------  
 #ifndef _missio_logging_detail_message_queue_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // Application headers
 #include <missio/logging/message.hpp>
@@ -28,10 +31,10 @@ namespace logging
 namespace detail
 {
 
-struct message_queue_flushed {};
-struct message_queue_disabled {};
+struct MISSIO_EXPORT message_queue_flushed {};
+struct MISSIO_EXPORT message_queue_disabled {};
 
-class message_queue
+class MISSIO_EXPORT message_queue
 {
 public:
     message_queue();

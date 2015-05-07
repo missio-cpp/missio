@@ -2,6 +2,12 @@
 project missio/logging
     :
         source-location ../src
+    :
+        requirements
+        <threading>multi
+    :
+        usage-requirements
+        <library>/missio/format//missio_format
     ;
 
 lib missio_logging
@@ -9,7 +15,5 @@ lib missio_logging
         ## sources ##
         [ glob-tree *.cpp : .svn ]
         /missio/format//missio_format
-    :
-        ## build requirements ##
-        <use>/missio//boost-libraries
+        /missio//boost-libraries
     ;

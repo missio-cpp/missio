@@ -11,6 +11,9 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+// Common headers
+#include <missio/common/export.hpp>
+
 // STL headers
 #include <iterator>
 #include <cstddef>
@@ -24,7 +27,7 @@ namespace format
 namespace detail
 {
 
-struct null_policy
+struct MISSIO_EXPORT null_policy
 {
     template <typename Char>
     bool operator()(Char) const
@@ -33,7 +36,7 @@ struct null_policy
     }
 };
 
-struct counting_policy
+struct MISSIO_EXPORT counting_policy
 {
     counting_policy() :
         count(0u)
@@ -50,7 +53,7 @@ struct counting_policy
     mutable std::size_t count;
 };
 
-struct lower_case_policy
+struct MISSIO_EXPORT lower_case_policy
 {
     template <typename Char>
     bool operator()(Char& ch) const
@@ -60,7 +63,7 @@ struct lower_case_policy
     }
 };
 
-struct upper_case_policy
+struct MISSIO_EXPORT upper_case_policy
 {
     template <typename Char>
     bool operator()(Char& ch) const
@@ -70,7 +73,7 @@ struct upper_case_policy
     }
 };
 
-struct limit_count_policy
+struct MISSIO_EXPORT limit_count_policy
 {
     explicit limit_count_policy(std::size_t max_count) :
         max_count(max_count),
@@ -115,14 +118,18 @@ public:
     void put(Char ch)
     {
         if(policy_(ch))
+        {
             sink_->put(ch);
+        }
     }
 
     template <typename Char>
     sink_iterator& operator=(Char ch)
     {
         if(policy_(ch))
+        {
             sink_->put(ch);
+        }
 
         return *this;
     }

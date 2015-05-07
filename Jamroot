@@ -17,28 +17,44 @@ if $(BOOST_ROOT)
 }
 
 
+rule boost-libraries-search-path ( properties * )
+{
+    local result = <search>/usr/lib
+                   <search>/usr/local/lib
+                   <search>/opt/local/lib ;
+
+    if <address-model>64 in $(properties)
+    {
+        result += <search>/usr/lib64
+                  <search>/usr/local/lib64
+                  <search>/opt/local/lib64 ;
+    }
+
+    if <target-os>linux in $(properties)
+    {
+        if <address-model>64 in $(properties)
+        {
+            result += <search>/usr/lib/x86_64-linux-gnu ;
+        }
+        else
+        {
+            result += <search>/usr/lib/i386-linux-gnu ;
+        }
+    }
+
+    return $(result) ;
+}
+
+
 # BOOST libraries (pre-installed system version)
 
-local boost-libraries-search-path = <search>/usr/lib <search>/usr/local/lib <search>/opt/local/lib ;
-
-lib boost_system : : <target-os>darwin <name>boost_system-mt $(boost-libraries-search-path) ;
-lib boost_system : : <target-os>solaris <name>boost_system $(boost-libraries-search-path) ;
-lib boost_system : : <name>boost_system ;
-
-lib boost_thread : : <target-os>darwin <name>boost_thread-mt $(boost-libraries-search-path) ;
-lib boost_thread : : <target-os>solaris <name>boost_thread $(boost-libraries-search-path) ;
-lib boost_thread : : <name>boost_thread ;
-
-lib boost_date_time : : <target-os>darwin <name>boost_date_time-mt $(boost-libraries-search-path) ;
-lib boost_date_time : : <target-os>solaris <name>boost_date_time $(boost-libraries-search-path) ;
-lib boost_date_time : : <name>boost_date_time ;
-
-lib boost_filesystem : : <target-os>darwin <name>boost_filesystem-mt $(boost-libraries-search-path) ;
-lib boost_filesystem : : <target-os>solaris <name>boost_filesystem $(boost-libraries-search-path) ;
-lib boost_filesystem : : <name>boost_filesystem ;
+lib boost_system : : <name>boost_system <conditional>@boost-libraries-search-path ;
+lib boost_thread : : <name>boost_thread <conditional>@boost-libraries-search-path ;
+lib boost_date_time : : <name>boost_date_time <conditional>@boost-libraries-search-path ;
+lib boost_filesystem : : <name>boost_filesystem <conditional>@boost-libraries-search-path ;
 
 
-rule building-boost ( properties * )
+rule find-boost-libraries ( properties * )
 {
     local result ;
 
@@ -61,13 +77,17 @@ rule building-boost ( properties * )
                      <library>boost_date_time
                      <library>boost_filesystem ;
 
-        if <link>static in $(properties)
+        if <boost-link>shared in $(properties)
+        {
+            result += $(libs)/<link>shared ;
+        }
+        else if <boost-link>static in $(properties)
         {
             result += $(libs)/<link>static ;
         }
         else
         {
-            result += $(libs)/<link>shared ;
+            result += $(libs) ;
         }
     }
 
@@ -81,9 +101,8 @@ rule building-boost ( properties * )
             exit ;
         }
 
-        result += <include>$(BOOST_ROOT) ;
-
-        result += <define>BOOST_ALL_NO_LIB
+        result += <include>$(BOOST_ROOT)
+                  <define>BOOST_ALL_NO_LIB
                   <define>BOOST_SYSTEM_NO_DEPRECATED
                   <define>BOOST_FILESYSTEM_VERSION=3
                   <define>BOOST_FILESYSTEM_NO_DEPRECATE
@@ -94,13 +113,30 @@ rule building-boost ( properties * )
                      <library>/boost/date_time//boost_date_time
                      <library>/boost/filesystem//boost_filesystem ;
 
-        if <link>static in $(properties)
+        if <boost-link>shared in $(properties)
         {
-            result += $(libs)/<link>static ;
+            result += $(libs)/<link>shared ;
+        }
+        else if <boost-link>static in $(properties)
+        {
+            if <link>shared in $(properties)
+            {
+                result += <define>BOOST_ALL_DYN_LINK ;
+                result += $(libs)/<link>static/<define>BOOST_ALL_DYN_LINK ;
+
+                if <toolset>gcc in $(properties) && ! <target-os>windows in $(properties)
+                {
+                    result += <cflags>-fPIC ;
+                }
+            }
+            else
+            {
+                result += $(libs)/<link>static ;
+            }
         }
         else
         {
-            result += $(libs)/<link>shared ;
+            result += $(libs) ;
         }
     }
 
@@ -115,18 +151,19 @@ alias boost-libraries
         ## sources ##
     :
         ## build requirements ##
-        <conditional>@building-boost
+        <conditional>@find-boost-libraries
     :
         ## default build ##
     :
         ## usage requirements ##
-        <conditional>@building-boost
+        <conditional>@find-boost-libraries
     ;
 
 
-# BOOST libraries usage feature
+# BOOST libraries usage and link features
 
 feature.feature boost : auto system source : link-incompatible propagated ;
+feature.feature boost-link : auto static shared : propagated composite ;
 
 
 # Test coverage target
@@ -135,17 +172,18 @@ rule coverage ( properties * )
 {
     local result ;
 
-    if <toolset>gcc in $(properties) || <toolset>clang in $(properties) || <toolset>darwin in $(properties)
+    if <toolset>gcc in $(properties) || <toolset>clang in $(properties)
     {
-        result += <cxxflags>-fprofile-arcs <cxxflags>-ftest-coverage ;
+        result += <cxxflags>-fprofile-arcs
+                  <cxxflags>-ftest-coverage ;
 
-        if <toolset>gcc in $(properties) || <toolset>darwin in $(properties)
+        if <toolset>clang in $(properties)
         {
-            result += <linkflags>-lgcov ;
+            result += <linkflags>--coverage ;
         }
         else
         {
-            result += <linkflags>--coverage ;
+            result += <linkflags>-lgcov ;
         }
     }
 
@@ -161,7 +199,7 @@ rule building-missio ( properties * )
 {
     local result ;
 
-    if <toolset>gcc in $(properties) || <toolset>clang in $(properties) || <toolset>darwin in $(properties)
+    if <toolset>gcc in $(properties) || <toolset>clang in $(properties)
     {
         result += <cxxflags>-std=c++1y ;
 
@@ -204,11 +242,16 @@ rule building-missio ( properties * )
                   <cxxflags>/wd4800 ;
     }
 
+    if <link>shared in $(properties) && ( <toolset>gcc in $(properties) || <toolset>clang in $(properties) )
+    {
+        result += <cflags>-fvisibility=hidden <cxxflags>-fvisibility-inlines-hidden ;
+    }
+
     return $(result) ;
 }
 
 
-rule linking-missio ( properties * )
+rule building-missio-default ( properties * )
 {
     local result ;
 
@@ -221,7 +264,7 @@ rule linking-missio ( properties * )
         result += <link>shared <runtime-link>shared ;
     }
 
-    return ${result) ;
+    return $(result) ;
 }
 
 
@@ -232,14 +275,17 @@ project missio
         <warnings-as-errors>on
         <include>$(TOP)
         <conditional>@building-missio
+        <link>shared:<define>MISSIO_BUILD_SHARED
     :
         default-build
-        release debug
+        <variant>release
+        <variant>debug
         <threading>multi
-        <conditional>@linking-missio
+        <conditional>@building-missio-default
     :
         usage-requirements
         <include>$(TOP)
+        <link>shared:<define>MISSIO_LINK_SHARED
     :
         build-dir $(OBJ)
     ;

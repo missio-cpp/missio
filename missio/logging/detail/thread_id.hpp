@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_logging_detail_thread_id_hpp
@@ -11,6 +11,9 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+// Common headers
+#include <missio/common/export.hpp>
+
 
 namespace missio
 {
@@ -19,7 +22,7 @@ namespace logging
 namespace detail
 {
 
-class thread_id
+class MISSIO_EXPORT thread_id
 {
 public:
     thread_id();
