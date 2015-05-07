@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_adapters_boost_optional_optional_hpp
@@ -13,6 +13,7 @@
 
 // BOOST headers
 #include <boost/optional.hpp>
+#include <boost/none.hpp>
 
 
 namespace missio
@@ -29,7 +30,23 @@ struct type_adapter<boost::optional<Value>>
     static void format(Sink& sink, boost::optional<Value> const& value)
     {
         if(value)
+        {
             write(sink, *value);
+        }
+        else
+        {
+            write(sink, "--");
+        }
+    }
+};
+
+template <>
+struct type_adapter<boost::none_t>
+{
+    template <typename Sink>
+    static void format(Sink& sink, boost::none_t)
+    {
+        write(sink, "--");
     }
 };
 

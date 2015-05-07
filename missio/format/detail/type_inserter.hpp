@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_type_inserter_hpp
@@ -94,7 +94,9 @@ struct left_align_inserter
         type_adapter<Value>::format(sink_iterator, value);
 
         if(align_ > counter.count)
+        {
             std::fill_n(sink_iterator, align_ - counter.count, pad_);
+        }
     }
 
 private:
@@ -120,7 +122,9 @@ struct right_align_inserter
         sink_iterator<Sink> sink_iterator(sink);
 
         if(align_ > buffer.size())
+        {
             std::fill_n(sink_iterator, align_ - buffer.size(), pad_);
+        }
 
         std::copy(std::begin(buffer), std::end(buffer), sink_iterator);
     }

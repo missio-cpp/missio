@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_adapters_std_chrono_time_point_hpp
@@ -12,8 +12,8 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
+#include <missio/format/detail/inserters_impl.hpp>
 #include <missio/format/detail/time_point.hpp>
-#include <missio/format/inserters.hpp>
 
 
 namespace missio
@@ -31,11 +31,13 @@ struct type_adapter<std::chrono::system_clock::time_point>
     {
         time_point const time_point = convert_time_point(value);
 
-        write(sink, dec(time_point.year, 4), '-', time_point.get_month_name(), '-', dec(time_point.day, 2), ' ');
+        write(sink, dec(time_point.year, 4), '-', time_point.month_name, '-', dec(time_point.day, 2), ' ');
         write(sink, dec(time_point.hours, 2), ':', dec(time_point.minutes, 2), ':', dec(time_point.seconds, 2));
 
         if(time_point.microseconds > 0)
+        {
             write(sink, '.', dec(time_point.microseconds, 6));
+        }
     }
 };
 

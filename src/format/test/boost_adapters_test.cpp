@@ -54,7 +54,7 @@ struct optional_fixture : common_fixture
     template <typename T>
     static std::string make_string(boost::optional<T> const& value)
     {
-        return value ? common_fixture::make_string(*value) : std::string();
+        return value ? common_fixture::make_string(*value) : std::string("--");
     }
 
     boost::optional<int> empty_optional;
@@ -88,13 +88,13 @@ struct smart_ptr_fixture : common_fixture
     template <typename T>
     static std::string make_string(boost::shared_ptr<T> const& value)
     {
-        return value ? common_fixture::make_string(*value) : std::string();
+        return value ? common_fixture::make_string(*value) : std::string("(null)");
     }
 
     template <typename T>
     static std::string make_string(boost::intrusive_ptr<T> const& value)
     {
-        return value ? common_fixture::make_string(*value) : std::string();
+        return value ? common_fixture::make_string(*value) : std::string("(null)");
     }
 
     smart_ptr_fixture() :

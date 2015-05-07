@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_adapters_boost_date_time_date_hpp
@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/format/inserters.hpp>
+#include <missio/format/detail/inserters_impl.hpp>
 
 // BOOST headers
 #include <boost/date_time.hpp>

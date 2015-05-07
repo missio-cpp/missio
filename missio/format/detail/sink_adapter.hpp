@@ -86,7 +86,9 @@ public:
     void put(Char ch)
     {
         if(pos_ < N - 1)
+        {
             sink_[pos_++] = ch;
+        }
     }
 
 private:
