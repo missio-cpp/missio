@@ -203,6 +203,7 @@ rule building-missio ( properties * )
         result += <cxxflags>/wd4100
                   <cxxflags>/wd4127
                   <cxxflags>/wd4244
+                  <cxxflags>/wd4251
                   <cxxflags>/wd4275
                   <cxxflags>/wd4345
                   <cxxflags>/wd4512
