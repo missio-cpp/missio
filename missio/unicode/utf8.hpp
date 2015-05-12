@@ -27,19 +27,19 @@ namespace utf8
 {
 
 // calculates number of UTF32 code points
-std::size_t MISSIO_EXPORT length(std::string const& str);
+MISSIO_EXPORT std::size_t length(std::string const& str);
 
 // replaces invalid (non-UTF8) octets with replacement character
-void MISSIO_EXPORT replace_invalid(std::string& str, std::uint32_t replacement_char);
+MISSIO_EXPORT void replace_invalid(std::string& str, std::uint32_t replacement_char);
 
 // replaces invalid (non-UTF8) octets with default replacement character
-void MISSIO_EXPORT replace_invalid(std::string& str);
+MISSIO_EXPORT void replace_invalid(std::string& str);
 
 // validates UTF8 sequence and throws exception on invalid data
-void MISSIO_EXPORT validate(std::string const& str);
+MISSIO_EXPORT void validate(std::string const& str);
 
 // returns true if string contains valid UTF8 sequence, false otherwise
-bool MISSIO_EXPORT is_valid(std::string const& str);
+MISSIO_EXPORT bool is_valid(std::string const& str);
 
 }   // namespace utf8
 }   // namespace unicode

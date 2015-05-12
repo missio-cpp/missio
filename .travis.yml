@@ -25,10 +25,11 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -qq gcc-4.8-multilib g++-4.8-multilib libstdc++-4.8-dev libboost1.55-tools-dev
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
   - if [ $BUILD_ADDRESS_MODEL -eq 32 ] ; then sudo apt-get install -qq libboost1.55-dev:i386 libboost-system1.55-dev:i386 libboost-date-time1.55-dev:i386 libboost-filesystem1.55-dev:i386 ; fi
   - if [ $BUILD_ADDRESS_MODEL -eq 64 ] ; then sudo apt-get install -qq libboost1.55-dev:amd64 libboost-system1.55-dev:amd64 libboost-date-time1.55-dev:amd64 libboost-filesystem1.55-dev:amd64 ; fi
+
+  - sudo apt-get install -qq gcc-4.8-multilib g++-4.8-multilib libstdc++-4.8-dev libboost1.55-tools-dev
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
 
 script:
   - /bin/sh -e ./build/unix/build.sh toolset=${CC} link=shared boost=system boost-link=shared variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL}
