@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_logging_file_writer_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // Application headers
 #include <missio/logging/writer_options.hpp>
@@ -28,7 +31,7 @@ namespace logging
 
 class file_options;
 
-class file_writer : public writer_base
+class MISSIO_EXPORT file_writer : public writer_base
 {
 public:
     explicit file_writer(file_options const& options);
@@ -52,7 +55,7 @@ private:
     std::size_t max_file_index_;
 };
 
-class file_options : public basic_options<file_writer, file_options>
+class MISSIO_EXPORT file_options : public basic_options<file_writer, file_options>
 {
 friend class file_writer;
 

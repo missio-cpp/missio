@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_time_point_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // STL headers
 #include <cstdint>
@@ -23,7 +26,7 @@ namespace format
 namespace detail
 {
 
-struct time_point
+struct MISSIO_EXPORT time_point
 {
     std::int32_t year;
     std::int32_t month;
@@ -34,10 +37,10 @@ struct time_point
     std::int32_t seconds;
     std::int64_t microseconds;
 
-    char const* get_month_name() const;
+    char const* month_name;
 };
 
-time_point convert_time_point(std::chrono::system_clock::time_point const& value);
+MISSIO_EXPORT time_point convert_time_point(std::chrono::system_clock::time_point const& value);
 
 }   // namespace detail
 }   // namespace format

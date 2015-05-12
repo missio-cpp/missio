@@ -8,4 +8,5 @@ lib missio_unicode
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
+        /missio//boost-libraries
     ;

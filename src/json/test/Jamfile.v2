@@ -11,13 +11,11 @@ unit-test missio_json_test
         ## sources ##
         [ glob-tree *.cpp : .svn ]
         ../build//missio_json
+        /missio//boost-libraries
     :
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
-        <library>/boost/system//boost_system
-        <library>/boost/date_time//boost_date_time
-        <library>/boost/filesystem//boost_filesystem
         <target-os>windows:<library>ws2_32
     ;
 

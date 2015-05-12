@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Logging library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_logging_common_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // Application headers
 #include <missio/logging/scope_tracer.hpp>
@@ -74,19 +77,21 @@ namespace missio
 namespace logging
 {
 
-void initialize();
-void shutdown();
+MISSIO_EXPORT void initialize();
+MISSIO_EXPORT void shutdown();
 
-void start();
-void stop();
+MISSIO_EXPORT void start();
+MISSIO_EXPORT void stop();
 
-void dispatch(message&& message);
+MISSIO_EXPORT void dispatch(message&& message);
 
 template <typename ... Args>
 void dispatch(severity severity, location const& location, Args const& ... args)
 {
     if(severity <= LOG_MAX_SEVERITY)
+    {
         dispatch(message(severity, location, args...));
+    }
 }
 
 }   // namespace logging

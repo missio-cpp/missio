@@ -2,6 +2,9 @@
 project missio/json
     :
         source-location ../src
+    :
+        usage-requirements
+        <library>/missio/unicode//missio_unicode
     ;
 
 lib missio_json
@@ -9,4 +12,5 @@ lib missio_json
         ## sources ##
         [ glob-tree *.cpp : .svn ]
         /missio/unicode//missio_unicode
+        /missio//boost-libraries
     ;

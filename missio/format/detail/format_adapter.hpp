@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_format_adapter_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // Application headers
 #include <missio/format/detail/item_buffer.hpp>
@@ -32,7 +35,7 @@ template <typename Format>
 class format_adapter;
 
 template <>
-class format_adapter<char const*>
+class MISSIO_EXPORT format_adapter<char const*>
 {
 public:
     explicit format_adapter(char const* format);
@@ -47,7 +50,7 @@ private:
 };
 
 template <>
-class format_adapter<std::string>
+class MISSIO_EXPORT format_adapter<std::string>
 {
 public:
     explicit format_adapter(std::string const& format);
@@ -62,7 +65,7 @@ private:
 };
 
 template <>
-class format_adapter<string>
+class MISSIO_EXPORT format_adapter<string>
 {
 public:
     explicit format_adapter(string const& format);

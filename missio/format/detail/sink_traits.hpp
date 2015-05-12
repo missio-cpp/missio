@@ -27,25 +27,25 @@ namespace detail
 template <typename Sink>
 struct sink_traits
 {
-    typedef detail::sink_adapter<Sink> adapter_type;
+    typedef sink_adapter<Sink> adapter_type;
 };
 
 template <typename Sink>
-struct sink_traits<detail::sink_adapter<Sink>>
+struct sink_traits<sink_adapter<Sink>>
 {
-    typedef detail::sink_adapter<Sink>& adapter_type;
+    typedef sink_adapter<Sink>& adapter_type;
 };
 
 template <typename Sink, typename Policy>
-struct sink_traits<detail::sink_iterator<Sink, Policy>>
+struct sink_traits<sink_iterator<Sink, Policy>>
 {
-    typedef detail::sink_iterator<Sink, Policy>& adapter_type;
+    typedef sink_iterator<Sink, Policy>& adapter_type;
 };
 
 template <>
-struct sink_traits<detail::sink_buffer>
+struct sink_traits<sink_buffer>
 {
-    typedef detail::sink_buffer& adapter_type;
+    typedef sink_buffer& adapter_type;
 };
 
 template <typename Sink>

@@ -12,7 +12,7 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 // Application headers
-#include <missio/format/inserters.hpp>
+#include <missio/format/detail/inserters_impl.hpp>
 
 // STL headers
 #include <cstddef>
@@ -26,6 +26,23 @@ namespace format
 namespace detail
 {
 
+template <typename T>
+struct type_adapter<T*>
+{
+    template <typename Sink>
+    static void format(Sink& sink, T const* value)
+    {
+        if(value)
+        {
+            write(sink, *value);
+        }
+        else
+        {
+            write(sink, nullptr);
+        }
+    }
+};
+
 template <>
 struct type_adapter<void*>
 {
@@ -38,10 +55,14 @@ struct type_adapter<void*>
     template <typename Sink>
     static void write_pointer(Sink& sink, std::uintptr_t value)
     {
-        write(sink, '0');
-
         if(value)
-            write(sink, 'x', hex(value));
+        {
+            write(sink, "0x", hex(value));
+        }
+        else
+        {
+            write(sink, nullptr);
+        }
     }
 };
 
@@ -51,7 +72,7 @@ struct type_adapter<std::nullptr_t>
     template <typename Sink>
     static void format(Sink& sink, std::nullptr_t)
     {
-        write(sink, '0');
+        write(sink, "(null)");
     }
 };
 

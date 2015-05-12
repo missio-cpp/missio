@@ -61,22 +61,22 @@ BOOST_FIXTURE_TEST_CASE(pointer_test, common_fixture)
     sink.erase();
 
     missio::format::write(sink, null_pointer);
-    BOOST_CHECK_EQUAL(sink, "0");
+    BOOST_CHECK_EQUAL(sink, "(null)");
 
     sink.erase();
 
     missio::format::print(sink, "{0}", null_pointer);
-    BOOST_CHECK_EQUAL(sink, "0");
+    BOOST_CHECK_EQUAL(sink, "(null)");
 
     sink.erase();
 
     missio::format::write(sink, nullptr);
-    BOOST_CHECK_EQUAL(sink, "0");
+    BOOST_CHECK_EQUAL(sink, "(null)");
 
     sink.erase();
 
     missio::format::print(sink, "{0}", nullptr);
-    BOOST_CHECK_EQUAL(sink, "0");
+    BOOST_CHECK_EQUAL(sink, "(null)");
 }
 
 BOOST_FIXTURE_TEST_CASE(array_of_pointers_test, common_fixture)
@@ -89,12 +89,12 @@ BOOST_FIXTURE_TEST_CASE(array_of_pointers_test, common_fixture)
     std::string sink;
 
     missio::format::write(sink, ptr_array);
-    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, 0]");
+    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, (null)]");
 
     sink.erase();
 
     missio::format::print(sink, "{0}", ptr_array);
-    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, 0]");
+    BOOST_CHECK_EQUAL(sink, "[0x123abc, 0x456def, (null)]");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -90,7 +90,7 @@ struct any_int_generator : boost::spirit::karma::primitive_generator<any_int_gen
         if (!boost::spirit::traits::has_optional_value(attr))
             return false;
 
-        return (generate(sink, boost::spirit::traits::extract_from<T>(attr, context)) && boost::spirit::karma::delimit_out(sink, d));
+        return generate(sink, boost::spirit::traits::extract_from<T>(attr, context)) && boost::spirit::karma::delimit_out(sink, d);
     }
 
     template <typename Context>
@@ -126,10 +126,14 @@ private:
             enable_counting<OutputIterator> counting(sink, buffering.buffer_size());
 
             while(result && static_cast<int>(counting.count()) < precision_)
+            {
                 result = boost::spirit::karma::generate(sink, '0');
+            }
 
-            if(result) 
+            if(result)
+            {
                 buffering.buffer_copy();
+            }
 
             return result;
         }
@@ -162,7 +166,9 @@ private:
     bool insert_int(OutputIterator& sink, Attribute const& attr) const
     {
         if(!upper_case_)
+        {
             return int_inserter<boost::spirit::unused_type, boost::spirit::unused_type>::call(sink, attr);
+        }
 
         return int_inserter<boost::spirit::char_encoding::ascii, boost::spirit::tag::upper>::call(sink, attr);
     }

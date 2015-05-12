@@ -11,6 +11,9 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+// Common headers
+#include <missio/common/export.hpp>
+
 // Application headers
 #include <missio/logging/writer_options.hpp>
 #include <missio/logging/writer_base.hpp>
@@ -36,7 +39,7 @@ namespace logging
 
 class syslog_options;
 
-class syslog_writer : public writer_base
+class MISSIO_EXPORT syslog_writer : public writer_base
 {
 public:
     explicit syslog_writer(syslog_options const& optins);
@@ -57,7 +60,7 @@ private:
     std::string ident_;
 };
 
-class syslog_options : public basic_options<syslog_writer, syslog_options>
+class MISSIO_EXPORT syslog_options : public basic_options<syslog_writer, syslog_options>
 {
 friend class syslog_writer;
 

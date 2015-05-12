@@ -1,5 +1,6 @@
 
 import modules ;
+import feature ;
 
 path-constant TOP : . ;
 path-constant SRC : src ;
@@ -7,17 +8,235 @@ path-constant OBJ : obj ;
 path-constant LIB : lib ;
 path-constant PERF : perf ;
 
+
 BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
 
-if ! $(BOOST_ROOT)
+if $(BOOST_ROOT)
 {
-    echo ;
-    echo "Required environment variable BOOST_ROOT is not set" ;
-    echo "Please set it to point to the root of BOOST distribution" ;
-    exit ;
+    use-project /boost : $(BOOST_ROOT) ;
 }
 
-use-project /boost : $(BOOST_ROOT) ;
+
+rule boost-libraries-search-path ( properties * )
+{
+    local result = <search>/usr/lib <search>/usr/local/lib <search>/opt/local/lib ;
+
+    if <address-model>64 in $(properties)
+    {
+        result += <search>/usr/lib64 <search>/usr/local/lib64 <search>/opt/local/lib64 ;
+    }
+
+    return $(result) ;
+}
+
+
+# BOOST libraries (pre-installed system version)
+
+lib boost_system : : <name>boost_system <conditional>@boost-libraries-search-path ;
+lib boost_date_time : : <name>boost_date_time <conditional>@boost-libraries-search-path ;
+lib boost_filesystem : : <name>boost_filesystem <conditional>@boost-libraries-search-path ;
+
+
+rule find-boost-libraries ( properties * )
+{
+    local result ;
+
+    if <boost>source in $(properties) || ( $(BOOST_ROOT) && <target-os>windows in $(properties) )
+    {
+        if ! $(BOOST_ROOT)
+        { 
+            echo ;
+            echo "Required environment variable BOOST_ROOT is not set" ;
+            echo "Please set it to point to the root of BOOST source distribution" ;
+            exit ;
+        }
+
+        result += <include>$(BOOST_ROOT)
+                  <define>BOOST_ALL_NO_LIB
+                  <define>BOOST_SYSTEM_NO_DEPRECATED
+                  <define>BOOST_FILESYSTEM_VERSION=3
+                  <define>BOOST_FILESYSTEM_NO_DEPRECATED
+                  <define>BOOST_SPIRIT_USE_PHOENIX_V3 ;
+
+        local libs = <library>/boost/system//boost_system
+                     <library>/boost/date_time//boost_date_time
+                     <library>/boost/filesystem//boost_filesystem ;
+
+        if <boost-link>static in $(properties)
+        {
+            if <link>shared in $(properties)
+            {
+                result += <define>BOOST_ALL_DYN_LINK ;
+                result += $(libs)/<link>static/<define>BOOST_ALL_DYN_LINK ;
+
+                if <toolset>gcc in $(properties) && ! <target-os>windows in $(properties)
+                {
+                    result += <cflags>-fPIC ;
+                }
+            }
+            else
+            {
+                result += $(libs)/<link>static ;
+            }
+        }
+        else
+        {
+            result += $(libs)/<link>shared ;
+        }
+    }
+	else
+    {
+        if <target-os>windows in $(properties)
+        {
+            echo ;
+            echo "Building missio using pre-installed system version of BOOST libraries is not supported on Windows" ;
+            echo "Please set BOOST_ROOT environment variable to point to the root of BOOST source distribution" ;
+            exit ;
+        }
+
+        result += <include>/usr/include
+                  <include>/usr/local/include
+                  <include>/opt/local/include ;
+
+        result += <library>boost_system
+                  <library>boost_date_time
+                  <library>boost_filesystem ;
+    }
+
+    return $(result) ;
+}
+
+
+# BOOST libraries target
+
+alias boost-libraries
+    :
+        ## sources ##
+    :
+        ## build requirements ##
+        <conditional>@find-boost-libraries
+    :
+        ## default build ##
+    :
+        ## usage requirements ##
+        <conditional>@find-boost-libraries
+    ;
+
+
+# BOOST libraries usage and link features
+
+feature.feature boost : auto system source : link-incompatible propagated ;
+feature.feature boost-link : auto static shared : propagated composite ;
+
+
+# Test coverage target
+
+rule coverage ( properties * )
+{
+    local result ;
+
+    if <toolset>gcc in $(properties) || <toolset>clang in $(properties)
+    {
+        result += <cxxflags>-fprofile-arcs
+                  <cxxflags>-ftest-coverage ;
+
+        if <toolset>clang in $(properties)
+        {
+            result += <linkflags>--coverage ;
+        }
+        else
+        {
+            result += <linkflags>-lgcov ;
+        }
+    }
+
+    return $(result) ;
+}
+
+
+feature.feature test-coverage : off on : composite propagated ;
+feature.compose <test-coverage>on : <conditional>@coverage ;
+
+
+rule building-missio ( properties * )
+{
+    local result ;
+
+    if <toolset>gcc in $(properties)
+    {
+        result += <cxxflags>-std=c++1y ;
+
+        result += <cxxflags>-Wempty-body
+                  <cxxflags>-Wsign-compare
+                  <cxxflags>-Wtype-limits
+                  <cxxflags>-Wno-unknown-pragmas
+                  <cxxflags>-Wno-unused-variable
+                  <cxxflags>-Wno-unused-parameter
+                  <cxxflags>-Wno-unused-local-typedefs
+                  <cxxflags>-fdiagnostics-show-option ;
+    }
+
+    if <toolset>clang in $(properties)
+    {
+        result += <cxxflags>-std=c++1y ;
+        result += <cxxflags>-Wno-deprecated-register ;
+    }
+
+    if <target-os>windows in $(properties)
+    {
+        result += <define>WIN32
+                  <define>_WIN32
+                  <define>NOMINMAX
+                  <define>WIN32_LEAN_AND_MEAN
+                  <define>_WIN32_WINNT=0x0601
+                  <define>_WINSOCK_DEPRECATED_NO_WARNINGS ;
+    }
+
+    if <toolset>msvc in $(properties)
+    {
+        result += <define>_SCL_SECURE_NO_WARNINGS
+                  <define>_SCL_SECURE_NO_DEPRECATE
+                  <define>_CRT_SECURE_NO_WARNINGS
+                  <define>_CRT_SECURE_NO_DEPRECATE
+                  <define>_CRT_NONSTDC_NO_DEPRECATE ;
+
+        result += <cxxflags>/wd4100
+                  <cxxflags>/wd4127
+                  <cxxflags>/wd4244
+                  <cxxflags>/wd4251
+                  <cxxflags>/wd4275
+                  <cxxflags>/wd4345
+                  <cxxflags>/wd4512
+                  <cxxflags>/wd4702
+                  <cxxflags>/wd4714
+                  <cxxflags>/wd4800 ;
+    }
+
+    if <link>shared in $(properties) && ( <toolset>gcc in $(properties) || <toolset>clang in $(properties) )
+    {
+        result += <cflags>-fvisibility=hidden <cxxflags>-fvisibility-inlines-hidden ;
+    }
+
+    return $(result) ;
+}
+
+
+rule building-missio-default ( properties * )
+{
+    local result ;
+
+    if <target-os>windows in $(properties)
+    {
+        result += <link>static <runtime-link>static ;
+    }
+    else
+    {
+        result += <link>shared <runtime-link>shared ;
+    }
+
+    return $(result) ;
+}
+
 
 project missio
     :
@@ -25,57 +244,23 @@ project missio
         <warnings>on
         <warnings-as-errors>on
         <include>$(TOP)
-        <include>$(BOOST_ROOT)
-        <define>BOOST_ALL_NO_LIB
-        <define>BOOST_SYSTEM_NO_DEPRECATED
-        <define>BOOST_FILESYSTEM_VERSION=3
-        <define>BOOST_FILESYSTEM_NO_DEPRECATE
-        <define>BOOST_SPIRIT_USE_PHOENIX_V3
-        <target-os>windows:<define>WIN32
-        <target-os>windows:<define>_WIN32
-        <target-os>windows:<define>NOMINMAX
-        <target-os>windows:<define>WIN32_LEAN_AND_MEAN
-        <target-os>windows:<define>_WIN32_WINNT=0x0601
-        <toolset>msvc:<runtime-link>static
-        <toolset>msvc:<link>static
-        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
-        <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
-        <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
-        <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
-        <toolset>msvc:<define>_CRT_NONSTDC_NO_DEPRECATE
-        <toolset>msvc:<cxxflags>/wd4100
-        <toolset>msvc:<cxxflags>/wd4127
-        <toolset>msvc:<cxxflags>/wd4244
-        <toolset>msvc:<cxxflags>/wd4345
-        <toolset>msvc:<cxxflags>/wd4512
-        <toolset>msvc:<cxxflags>/wd4702
-        <toolset>msvc:<cxxflags>/wd4714
-        <toolset>msvc:<cxxflags>/wd4800
-        <toolset>gcc:<runtime-link>shared
-        <toolset>gcc:<link>shared
-        <toolset>gcc:<cxxflags>-std=c++1y
-        <toolset>gcc:<cxxflags>-Wempty-body
-        <toolset>gcc:<cxxflags>-Wsign-compare
-        <toolset>gcc:<cxxflags>-Wtype-limits
-        <toolset>gcc:<cxxflags>-Wno-unknown-pragmas
-        <toolset>gcc:<cxxflags>-Wno-unused-variable
-        <toolset>gcc:<cxxflags>-Wno-unused-parameter
-        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
-        <toolset>gcc:<cxxflags>-fdiagnostics-show-option
-        <toolset>clang:<cxxflags>-std=c++1y
-        <toolset>clang:<cxxflags>-Wno-deprecated-register
-        <toolset>clang:<runtime-link>shared
-        <toolset>clang:<link>shared
+        <conditional>@building-missio
+        <link>shared:<define>MISSIO_BUILD_SHARED
+		<toolset>clang,<variant>release:<inlining>on
+    :
+        default-build
+        <variant>release
+        <variant>debug
+        <threading>multi
+        <conditional>@building-missio-default
     :
         usage-requirements
         <include>$(TOP)
-    :
-        default-build
-        release debug
-        <threading>multi
+        <link>shared:<define>MISSIO_LINK_SHARED
     :
         build-dir $(OBJ)
     ;
+
 
 use-project /missio : $(TOP) ;
 
@@ -97,17 +282,18 @@ use-project /missio/format/perf : $(SRC)/format/perf ;
 build-project $(SRC)/logging/build ;
 build-project $(SRC)/unicode/build ;
 build-project $(SRC)/format/build ;
-build-project $(SRC)/json/build ;
+#build-project $(SRC)/json/build ;
 
 build-project $(SRC)/logging/test ;
 build-project $(SRC)/unicode/test ;
 build-project $(SRC)/format/test ;
-build-project $(SRC)/json/test ;
+#build-project $(SRC)/json/test ;
 
 #build-project $(SRC)/logging/perf ;
 #build-project $(SRC)/unicode/perf ;
 build-project $(SRC)/format/perf ;
 #build-project $(SRC)/json/perf ;
+
 
 alias /missio/lib
     :
@@ -115,8 +301,9 @@ alias /missio/lib
         /missio/logging
         /missio/unicode
         /missio/format
-        /missio/json
+        #/missio/json
     ;
+
 
 alias /missio/test
     :
@@ -124,8 +311,9 @@ alias /missio/test
         /missio/logging/test
         /missio/unicode/test
         /missio/format/test
-        /missio/json/test
+        #/missio/json/test
     ;
+
 
 alias /missio/perf
     :
@@ -135,6 +323,7 @@ alias /missio/perf
         /missio/format/perf
         #/missio/json/perf
     ;
+
 
 install missio-lib
     :
@@ -146,6 +335,7 @@ install missio-lib
         <variant>profile:<location>$(LIB)/profile
         <variant>debug:<location>$(LIB)/debug
     ;
+
 
 install missio-perf
     :

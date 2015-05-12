@@ -34,13 +34,13 @@ struct smart_ptr_fixture : common_fixture
     template <typename T>
     static std::string make_string(std::shared_ptr<T> const& value)
     {
-        return value ? common_fixture::make_string(*value) : std::string();
+        return value ? common_fixture::make_string(*value) : std::string("(null)");
     }
 
     template <typename T>
     static std::string make_string(std::unique_ptr<T> const& value)
     {
-        return value ? common_fixture::make_string(*value) : std::string();
+        return value ? common_fixture::make_string(*value) : std::string("(null)");
     }
 
     std::shared_ptr<int> shared_pointer{ new int(-42) };

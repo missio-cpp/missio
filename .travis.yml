@@ -6,37 +6,29 @@ compiler:
   - gcc
   - clang
 
-os:
-  - linux
+os: linux
 
-notifications:
-  email:
-    on_success: change
-    on_failure: always
-    on_start: always
+env:
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_VARIANT=release
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository -y ppa:boost-latest/ppa
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install -qq gcc-4.8 g++-4.8 libstdc++-4.8-dev
+  - if [ $BUILD_ADDRESS_MODEL -eq 32 ] ; then sudo apt-get install -qq libboost1.55-dev:i386 libboost-system1.55-dev:i386 libboost-date-time1.55-dev:i386 libboost-filesystem1.55-dev:i386 ; fi
+  - if [ $BUILD_ADDRESS_MODEL -eq 64 ] ; then sudo apt-get install -qq libboost1.55-dev:amd64 libboost-system1.55-dev:amd64 libboost-date-time1.55-dev:amd64 libboost-filesystem1.55-dev:amd64 ; fi
+
+  - sudo apt-get install -qq gcc-4.8-multilib g++-4.8-multilib libstdc++-4.8-dev lib32stdc++-4.8-dev libboost1.55-tools-dev
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
 
-  - wget http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download -O boost_1_58_0.tar.bz2
-  - tar jxf boost_1_58_0.tar.bz2
-  - export BOOST_ROOT=$PWD/boost_1_58_0
-
 script:
-  - /bin/sh -e ./build.sh /missio/unicode toolset=$CC debug
-  - /bin/sh -e ./build.sh /missio/unicode/test toolset=$CC debug
-
-  - /bin/sh -e ./build.sh /missio/format toolset=$CC debug
-  - /bin/sh -e ./build.sh /missio/format/test toolset=$CC debug
-
-  - /bin/sh -e ./build.sh /missio/logging toolset=$CC debug
-  - /bin/sh -e ./build.sh /missio/logging/test toolset=$CC debug
-
-  #TODO: need to fix clang compilation errors
-  #- /bin/sh -e ./build.sh /missio/json variant=debug toolset=$CC
-  #- /bin/sh -e ./build.sh /missio/json/test variant=debug toolset=$CC
+  - /bin/sh -e ./build/unix/build.sh toolset=gcc link=${BUILD_LINK} boost=system boost-link=${BUILD_LINK} variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL}

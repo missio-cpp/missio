@@ -11,6 +11,9 @@
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+// Application headers
+#include <missio/format/adapters/pointer.hpp>
+
 // BOOST headers
 #include <boost/weak_ptr.hpp>
 

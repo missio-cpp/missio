@@ -15,8 +15,6 @@ unit-test missio_format_test
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
-        <library>/boost/system//boost_system
-        <library>/boost/filesystem//boost_filesystem
         <target-os>windows:<library>ws2_32
     ;
 

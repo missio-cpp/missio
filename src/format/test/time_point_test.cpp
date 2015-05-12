@@ -11,6 +11,9 @@
 // BOOST headers
 #include <boost/test/unit_test.hpp>
 
+// STL headers
+#include <ctime>
+
 
 BOOST_AUTO_TEST_SUITE(format_time_point_test_suite)
 
@@ -28,6 +31,8 @@ BOOST_AUTO_TEST_CASE(unix_epoch_start_time_to_components_test)
     BOOST_CHECK_EQUAL(time_point.seconds, 0);
 
     BOOST_CHECK_EQUAL(time_point.microseconds, 0);
+
+    BOOST_CHECK_EQUAL(std::string(time_point.month_name), std::string("Jan"));
 }
 
 BOOST_AUTO_TEST_CASE(gigasecond_unix_time_to_components_test)
@@ -44,6 +49,8 @@ BOOST_AUTO_TEST_CASE(gigasecond_unix_time_to_components_test)
     BOOST_CHECK_EQUAL(time_point.seconds, 40);
 
     BOOST_CHECK_EQUAL(time_point.microseconds, 0);
+
+    BOOST_CHECK_EQUAL(std::string(time_point.month_name), std::string("Sep"));
 }
 
 BOOST_AUTO_TEST_CASE(unix_time_with_microseconds_test)
@@ -60,6 +67,8 @@ BOOST_AUTO_TEST_CASE(unix_time_with_microseconds_test)
     BOOST_CHECK_EQUAL(time_point.seconds, 40);
 
     BOOST_CHECK_EQUAL(time_point.microseconds, 123456);
+
+    BOOST_CHECK_EQUAL(std::string(time_point.month_name), std::string("Sep"));
 }
 
 BOOST_AUTO_TEST_CASE(current_unix_time_to_components_test)
@@ -79,53 +88,6 @@ BOOST_AUTO_TEST_CASE(current_unix_time_to_components_test)
     BOOST_CHECK_EQUAL(time_point.seconds, tm.tm_sec);
 
     BOOST_CHECK_EQUAL(time_point.microseconds, 0);
-}
-
-BOOST_AUTO_TEST_CASE(get_month_name_test)
-{
-    missio::format::detail::time_point time_point;
-
-    time_point.month = 0;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string(""));
-
-    time_point.month = 1;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Jan"));
-
-    time_point.month = 2;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Feb"));
-
-    time_point.month = 3;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Mar"));
-
-    time_point.month = 4;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Apr"));
-
-    time_point.month = 5;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("May"));
-
-    time_point.month = 6;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Jun"));
-
-    time_point.month = 7;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Jul"));
-
-    time_point.month = 8;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Aug"));
-
-    time_point.month = 9;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Sep"));
-
-    time_point.month = 10;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Oct"));
-
-    time_point.month = 11;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Nov"));
-
-    time_point.month = 12;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string("Dec"));
-
-    time_point.month = 13;
-    BOOST_CHECK_EQUAL(std::string(time_point.get_month_name()), std::string(""));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

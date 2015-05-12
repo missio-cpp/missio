@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_exception_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // STL headers
 #include <exception>
@@ -22,7 +25,7 @@ namespace missio
 namespace unicode
 {
 
-class exception : public std::exception
+class MISSIO_EXPORT exception : public std::exception
 {
 public:
     exception() = default;
@@ -30,7 +33,7 @@ public:
     virtual std::string message() const;
 };
 
-class input_underflow_error : public exception
+class MISSIO_EXPORT input_underflow_error : public exception
 {
 public:
     input_underflow_error() = default;
@@ -38,7 +41,7 @@ public:
     char const* what() const noexcept override;
 };
 
-class invalid_utf32_code_point : public exception
+class MISSIO_EXPORT invalid_utf32_code_point : public exception
 {
 public:
     explicit invalid_utf32_code_point(std::uint32_t code_point);
@@ -53,7 +56,7 @@ private:
     std::uint32_t code_point_;
 };
 
-class invalid_utf16_code_unit : public exception
+class MISSIO_EXPORT invalid_utf16_code_unit : public exception
 {
 public:
     explicit invalid_utf16_code_unit(std::uint16_t code_unit);
@@ -68,7 +71,7 @@ private:
     std::uint16_t code_unit_;
 };
 
-class invalid_utf8_sequence : public exception
+class MISSIO_EXPORT invalid_utf8_sequence : public exception
 {
 public:
     template <typename OctetIterator>

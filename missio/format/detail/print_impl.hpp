@@ -34,9 +34,13 @@ template <std::uint32_t N = 0, typename Sink, typename Value, typename ... Args>
 void insert(Sink& sink, std::uint32_t const index, Value const& value, Args const& ... args)
 {
     if(N == index)
+    {
         type_adapter<Value>::format(sink, value);
+    }
     else
+    {
         insert<N + 1>(sink, index, args...);
+    }
 }
 
 template <typename Sink, typename Format, typename ... Args>

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_sink_buffer_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // STL headers
 #include <iostream>
@@ -23,7 +26,7 @@ namespace format
 namespace detail
 {
 
-class sink_buffer
+class MISSIO_EXPORT sink_buffer
 {
 public:
     typedef char value_type;
@@ -72,7 +75,9 @@ inline void sink_buffer::put(value_type ch)
     buffer_ptr_[size_++] = ch;
 
     if(full())
+    {
         grow_buffer();
+    }
 }
 
 inline std::ostream& operator<<(std::ostream& os, sink_buffer const& buffer)

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_parse_utf8_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Common headers
+#include <missio/common/export.hpp>
 
 // STL headers
 #include <cstdint>
@@ -34,7 +37,22 @@ struct utf8_octet_sequence
     } next[3];
 };
 
-extern utf8_octet_sequence const utf8_octet_sequences[8];
+utf8_octet_sequence const utf8_octet_sequences[8] =
+{
+    // two octets sequences
+    { 0xC2, 0xDF, { { 0x80, 0xBF } } },
+
+    // three octets sequences
+    { 0xE0, 0xE0, { { 0xA0, 0xBF }, { 0x80, 0xBF } } },
+    { 0xE1, 0xEC, { { 0x80, 0xBF }, { 0x80, 0xBF } } },
+    { 0xED, 0xED, { { 0x80, 0x9F }, { 0x80, 0xBF } } },
+    { 0xEE, 0xEF, { { 0x80, 0xBF }, { 0x80, 0xBD } } },
+
+    // four octets sequences
+    { 0xF0, 0xF0, { { 0x90, 0xBF }, { 0x80, 0xBF }, { 0x80, 0xBF } } },
+    { 0xF1, 0xF3, { { 0x80, 0xBF }, { 0x80, 0xBF }, { 0x80, 0xBF } } },
+    { 0xF4, 0xF4, { { 0x80, 0x8F }, { 0x80, 0xBF }, { 0x80, 0xBF } } }
+};
 
 template <typename OctetIterator>
 bool parse_utf8(OctetIterator& pos, OctetIterator end, std::uint32_t& cp)

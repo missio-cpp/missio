@@ -15,7 +15,6 @@ unit-test missio_logging_test
         ## build requirements ##
         <toolset>msvc:<exception-handling>on
         <toolset>msvc:<asynch-exceptions>on
-        <library>/missio/format//missio_format
         <target-os>windows:<library>ws2_32
     ;
 

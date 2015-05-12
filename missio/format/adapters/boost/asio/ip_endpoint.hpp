@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_adapters_boost_asio_ip_endpoint_hpp
@@ -31,9 +31,13 @@ struct type_adapter<boost::asio::ip::basic_endpoint<InternetProtocol>>
         boost::asio::ip::address const address = value.address();
 
         if(address.is_v6())
+        {
             write(sink, '[', address, "]:", value.port());
+        }
         else
+        {
             write(sink, address, ':', value.port());
+        }
     }
 };
 

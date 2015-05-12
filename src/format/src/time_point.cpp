@@ -34,24 +34,24 @@ static char const* const month_names[12] =
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
-static bool is_leap_year(std::uint32_t year)
+static bool is_leap_year(std::int32_t year)
 {
-    return (year % 4u == 0u && year % 100u != 0u) || (year % 400u == 0u);
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-static int get_days_in_year(std::uint32_t year)
+static int get_days_in_year(std::int32_t year)
 {
     return is_leap_year(year) ? 366 : 365;
 }
 
-static int get_days_in_month(std::uint32_t year, std::uint32_t month)
+static int get_days_in_month(std::int32_t year, std::int32_t month)
 {
     return is_leap_year(year) ? days_in_month_leap_year[month] : days_in_month[month];
 }
 
-char const* time_point::get_month_name() const
+static char const* get_month_name(std::int32_t month)
 {
-    return 1 <= month && month <= 12 ? month_names[month - 1] : "";
+    return month < 12 ? month_names[month] : "";
 }
 
 time_point convert_time_point(std::chrono::system_clock::time_point const& value)
@@ -81,6 +81,8 @@ time_point convert_time_point(std::chrono::system_clock::time_point const& value
         day_number -= get_days_in_month(result.year, result.month - 1), ++result.month)
     {
     }
+
+    result.month_name = get_month_name(result.month - 1);
 
     result.day = day_number + 1;
 
