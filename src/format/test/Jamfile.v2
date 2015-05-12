@@ -10,7 +10,7 @@ unit-test missio_format_test
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
-        ../build//missio_format/<link>static
+        ../build//missio_format
     :
         ## build requirements ##
         <toolset>msvc:<exception-handling>on

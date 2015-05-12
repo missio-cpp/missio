@@ -10,7 +10,7 @@ unit-test missio_json_test
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
-        ../build//missio_json/<link>static
+        ../build//missio_json
         /missio//boost-libraries
     :
         ## build requirements ##

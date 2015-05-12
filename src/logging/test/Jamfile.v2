@@ -10,7 +10,7 @@ unit-test missio_logging_test
     :
         ## sources ##
         [ glob-tree *.cpp : .svn ]
-        ../build//missio_logging/<link>static
+        ../build//missio_logging
     :
         ## build requirements ##
         <toolset>msvc:<exception-handling>on

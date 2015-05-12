@@ -13,17 +13,9 @@ environment:
   - BUILD_VARIANT: release
     BUILD_ADDRESS_MODEL: 32
   - BUILD_VARIANT: debug
-    BUILD_ADDRESS_MODEL: 32
-  - BUILD_VARIANT: release
-    BUILD_ADDRESS_MODEL: 32
-  - BUILD_VARIANT: debug
-    BUILD_ADDRESS_MODEL: 64
-  - BUILD_VARIANT: release
-    BUILD_ADDRESS_MODEL: 64
-  - BUILD_VARIANT: debug
     BUILD_ADDRESS_MODEL: 64
   - BUILD_VARIANT: release
     BUILD_ADDRESS_MODEL: 64
 
 build_script:
-  - ./build/win/build.bat toolset=msvc boost=source variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
+  - ./build/win/build.bat toolset=msvc link=static boost=source boost-link=static variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
