@@ -40,7 +40,7 @@ struct MISSIO_EXPORT time_point
     char const* month_name;
 };
 
-time_point MISSIO_EXPORT convert_time_point(std::chrono::system_clock::time_point const& value);
+MISSIO_EXPORT time_point convert_time_point(std::chrono::system_clock::time_point const& value);
 
 }   // namespace detail
 }   // namespace format
