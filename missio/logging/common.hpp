@@ -77,19 +77,21 @@ namespace missio
 namespace logging
 {
 
-void MISSIO_EXPORT initialize();
-void MISSIO_EXPORT shutdown();
+MISSIO_EXPORT void initialize();
+MISSIO_EXPORT void shutdown();
 
-void MISSIO_EXPORT start();
-void MISSIO_EXPORT stop();
+MISSIO_EXPORT void start();
+MISSIO_EXPORT void stop();
 
-void MISSIO_EXPORT dispatch(message&& message);
+MISSIO_EXPORT void dispatch(message&& message);
 
 template <typename ... Args>
 void dispatch(severity severity, location const& location, Args const& ... args)
 {
     if(severity <= LOG_MAX_SEVERITY)
+    {
         dispatch(message(severity, location, args...));
+    }
 }
 
 }   // namespace logging
