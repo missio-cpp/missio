@@ -11,6 +11,9 @@
 // BOOST headers
 #include <boost/test/unit_test.hpp>
 
+// STL headers
+#include <ctime>
+
 
 BOOST_AUTO_TEST_SUITE(format_time_point_test_suite)
 
