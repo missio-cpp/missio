@@ -1,21 +1,42 @@
-os:
-  - Visual Studio 2015 RC
+os: Visual Studio 2015 RC
 
-platform:
-  - x64
+platform: x64
 
 environment:
   BOOST_ROOT: c:\Libraries\boost
 
   matrix:
-  - BUILD_VARIANT: debug
-    BUILD_ADDRESS_MODEL: 32
-  - BUILD_VARIANT: release
-    BUILD_ADDRESS_MODEL: 32
-  - BUILD_VARIANT: debug
-    BUILD_ADDRESS_MODEL: 64
-  - BUILD_VARIANT: release
-    BUILD_ADDRESS_MODEL: 64
+    - BUILD_ADDRESS_MODEL: 32
+      BUILD_VARIANT: debug
+      BUILD_LINK: shared
+
+    - BUILD_ADDRESS_MODEL: 32
+      BUILD_VARIANT: release
+      BUILD_LINK: shared
+
+    - BUILD_ADDRESS_MODEL: 32
+      BUILD_VARIANT: debug
+      BUILD_LINK: static
+
+    - BUILD_ADDRESS_MODEL: 32
+      BUILD_VARIANT: release
+      BUILD_LINK: static
+
+    - BUILD_ADDRESS_MODEL: 64
+      BUILD_VARIANT: debug
+      BUILD_LINK: shared
+
+    - BUILD_ADDRESS_MODEL: 64
+      BUILD_VARIANT: release
+      BUILD_LINK: shared
+
+    - BUILD_ADDRESS_MODEL: 64
+      BUILD_VARIANT: debug
+      BUILD_LINK: static
+
+    - BUILD_ADDRESS_MODEL: 64
+      BUILD_VARIANT: release
+      BUILD_LINK: static
 
 build_script:
-  - ./build/win/build.bat toolset=msvc link=static boost=source boost-link=static variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
+  - ./build/win/build.bat toolset=msvc link=%BUILD_LINK% boost=source boost-link=%BUILD_LINK% variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
