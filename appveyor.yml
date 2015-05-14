@@ -1,6 +1,10 @@
+version: {build}
+
 os: Visual Studio 2015 RC
 
 platform: x64
+
+clone_folder: c:\projects\missio
 
 environment:
   BOOST_ROOT: c:\Libraries\boost
@@ -39,4 +43,4 @@ environment:
       BUILD_LINK: static
 
 build_script:
-  - ./build/win/build.bat toolset=msvc link=%BUILD_LINK% boost=source boost-link=%BUILD_LINK% variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
+  - build/win/build.bat toolset=msvc link=%BUILD_LINK% boost=source boost-link=%BUILD_LINK% variant=%BUILD_VARIANT% address-model=%BUILD_ADDRESS_MODEL%
