@@ -76,20 +76,31 @@ class MISSIO_EXPORT invalid_utf8_sequence : public exception
 public:
     template <typename OctetIterator>
     invalid_utf8_sequence(OctetIterator begin, OctetIterator end) :
-        invalid_utf8_sequence(std::string(begin, end))
+        sequence_length_(0)
     {
+        for(std::uint8_t& octet : sequence_)
+        {
+            if(begin != end)
+            {
+                ++sequence_length_;
+                octet = *begin++;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
-    explicit invalid_utf8_sequence(std::string const& sequence);
-
-    std::string const& sequence() const noexcept;
+    std::string sequence() const;
 
     char const* what() const noexcept override;
 
     std::string message() const override;
 
 private:
-    std::string sequence_;
+    std::size_t sequence_length_;
+    std::uint8_t sequence_[4];
 };
 
 }   // namespace unicode
