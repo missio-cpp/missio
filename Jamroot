@@ -84,7 +84,7 @@ rule find-boost-libraries ( properties * )
             result += $(libs)/<link>shared ;
         }
     }
-	else
+    else
     {
         if <target-os>windows in $(properties)
         {
@@ -246,7 +246,6 @@ project missio
         <include>$(TOP)
         <conditional>@building-missio
         <link>shared:<define>MISSIO_BUILD_SHARED
-		<toolset>clang,<variant>release:<inlining>on
     :
         default-build
         <variant>release
@@ -288,12 +287,6 @@ build-project $(SRC)/logging/test ;
 build-project $(SRC)/unicode/test ;
 build-project $(SRC)/format/test ;
 #build-project $(SRC)/json/test ;
-
-#build-project $(SRC)/logging/perf ;
-#build-project $(SRC)/unicode/perf ;
-build-project $(SRC)/format/perf ;
-#build-project $(SRC)/json/perf ;
-
 
 alias /missio/lib
     :
