@@ -37,7 +37,7 @@ struct utf8_octet_sequence
     } next[3];
 };
 
-utf8_octet_sequence const utf8_octet_sequences[8] =
+utf8_octet_sequence const utf8_octet_sequences[] =
 {
     // two octets sequences
     { 0xC2, 0xDF, { { 0x80, 0xBF } } },

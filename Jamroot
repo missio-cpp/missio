@@ -84,7 +84,7 @@ rule find-boost-libraries ( properties * )
             result += $(libs)/<link>shared ;
         }
     }
-	else
+    else
     {
         if <target-os>windows in $(properties)
         {
@@ -129,7 +129,7 @@ feature.feature boost : auto system source : link-incompatible propagated ;
 feature.feature boost-link : auto static shared : propagated composite ;
 
 
-# Test coverage target
+# Code coverage target
 
 rule coverage ( properties * )
 {
@@ -137,25 +137,15 @@ rule coverage ( properties * )
 
     if <toolset>gcc in $(properties) || <toolset>clang in $(properties)
     {
-        result += <cxxflags>-fprofile-arcs
-                  <cxxflags>-ftest-coverage ;
-
-        if <toolset>clang in $(properties)
-        {
-            result += <linkflags>--coverage ;
-        }
-        else
-        {
-            result += <linkflags>-lgcov ;
-        }
+        result += <cxxflags>--coverage <linkflags>--coverage ;
     }
 
     return $(result) ;
 }
 
 
-feature.feature test-coverage : off on : composite propagated ;
-feature.compose <test-coverage>on : <conditional>@coverage ;
+feature.feature coverage : off on : composite propagated ;
+feature.compose <coverage>on : <conditional>@coverage ;
 
 
 rule building-missio ( properties * )
@@ -246,7 +236,6 @@ project missio
         <include>$(TOP)
         <conditional>@building-missio
         <link>shared:<define>MISSIO_BUILD_SHARED
-		<toolset>clang,<variant>release:<inlining>on
     :
         default-build
         <variant>release
@@ -288,12 +277,6 @@ build-project $(SRC)/logging/test ;
 build-project $(SRC)/unicode/test ;
 build-project $(SRC)/format/test ;
 #build-project $(SRC)/json/test ;
-
-#build-project $(SRC)/logging/perf ;
-#build-project $(SRC)/unicode/perf ;
-build-project $(SRC)/format/perf ;
-#build-project $(SRC)/json/perf ;
-
 
 alias /missio/lib
     :

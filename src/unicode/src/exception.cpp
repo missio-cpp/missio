@@ -90,14 +90,9 @@ std::string invalid_utf16_code_unit::message() const
     return os.str();
 }
 
-invalid_utf8_sequence::invalid_utf8_sequence(std::string const& sequence) :
-    sequence_(sequence.substr(0, 4))
+std::string invalid_utf8_sequence::sequence() const
 {
-}
-
-std::string const& invalid_utf8_sequence::sequence() const noexcept
-{
-    return sequence_;
+    return std::string(sequence_, sequence_ + sequence_length_);
 }
 
 char const* invalid_utf8_sequence::what() const noexcept
@@ -111,7 +106,7 @@ std::string invalid_utf8_sequence::message() const
 
     os << what();
 
-    if(!sequence_.empty())
+    if(sequence_length_ > 0)
     {
         os << ": "
            << std::hex
@@ -119,9 +114,9 @@ std::string invalid_utf8_sequence::message() const
            << std::setfill('0')
            << std::uppercase;
 
-        for(unsigned char const ch : sequence_)
+        for(std::size_t i = 0; i < sequence_length_; ++i)
         {
-            os << "\\x" << static_cast<std::size_t>(ch);
+            os << "\\x" << static_cast<std::size_t>(sequence_[i]);
         }
     }
 
