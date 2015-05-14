@@ -33,7 +33,7 @@ install:
   - if [[ "${BUILD_COVERAGE}" == "on" ]] ; then sudo pip install cpp-coveralls pyyaml ; fi
 
 script:
-  - /bin/sh -e ./build/unix/build.sh toolset=gcc link=${BUILD_LINK} boost=system boost-link=${BUILD_LINK} variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL} test-coverage=${BUILD_COVERAGE}
+  - /bin/sh -e ./build/unix/build.sh toolset=gcc link=${BUILD_LINK} boost=system boost-link=${BUILD_LINK} variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL} coverage=${BUILD_COVERAGE}
 
 after_success:
   - if [[ "${BUILD_COVERAGE}" == "on" ]] ; then coveralls --build-root . --exclude-pattern test --exclude-pattern perf --exclude-pattern boost --gcov-options '\-lp' --gcov 'gcov-4.9'
