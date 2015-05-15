@@ -9,14 +9,19 @@ compiler:
 os: linux
 
 env:
-  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_COVERAGE=on BUILD_VARIANT=debug
-  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_COVERAGE=off BUILD_VARIANT=release
-  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_COVERAGE=off BUILD_VARIANT=debug
-  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_COVERAGE=off BUILD_VARIANT=release
-  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_COVERAGE=off BUILD_VARIANT=debug
-  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_COVERAGE=off BUILD_VARIANT=release
-  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_COVERAGE=off BUILD_VARIANT=debug
-  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_COVERAGE=off BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=shared BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=32 BUILD_LINK=static BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_VARIANT=release
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_VARIANT=debug
+  - BUILD_ADDRESS_MODEL=64 BUILD_LINK=static BUILD_VARIANT=release
+
+matrix:
+  include:
+    - compiler: gcc
+      env: BUILD_ADDRESS_MODEL=64 BUILD_LINK=shared BUILD_VARIANT=coverage
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -30,10 +35,10 @@ install:
   - sudo apt-get install -qq gcc-4.9-multilib g++-4.9-multilib libstdc++-4.9-dev lib32stdc++-4.9-dev libboost1.55-tools-dev
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
 
-  - if [[ "${BUILD_COVERAGE}" == "on" ]] ; then sudo pip install cpp-coveralls pyyaml ; fi
+  - if [[ "${BUILD_VARIANT}" == "coverage" ]] ; then sudo pip install cpp-coveralls pyyaml ; fi
 
 script:
-  - /bin/sh -e ./build/unix/build.sh toolset=gcc link=${BUILD_LINK} boost=system boost-link=${BUILD_LINK} variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL} coverage=${BUILD_COVERAGE}
+  - /bin/sh -e ./build/unix/build.sh toolset=gcc link=${BUILD_LINK} boost=system boost-link=${BUILD_LINK} variant=${BUILD_VARIANT} address-model=${BUILD_ADDRESS_MODEL}
 
 after_success:
-  - if [[ "${BUILD_COVERAGE}" == "on" ]] ; then coveralls --build-root . --exclude-pattern test --exclude-pattern perf --exclude-pattern boost --gcov-options '\-lp' --gcov 'gcov-4.9' ; fi
+  - if [[ "${BUILD_VARIANT}" == "coverage" ]] ; then coveralls --build-root . --exclude-pattern test --exclude-pattern perf --gcov-options '\-lp' --gcov 'gcov-4.9' ; fi

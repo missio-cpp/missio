@@ -107,7 +107,7 @@ rule find-boost-libraries ( properties * )
 }
 
 
-# BOOST libraries target
+# BOOST libraries
 
 alias boost-libraries
     :
@@ -123,29 +123,13 @@ alias boost-libraries
     ;
 
 
-# BOOST libraries usage and link features
-
 feature.feature boost : auto system source : link-incompatible propagated ;
 feature.feature boost-link : auto static shared : propagated composite ;
 
 
-# Code coverage target
+# Code coverage
 
-rule coverage ( properties * )
-{
-    local result ;
-
-    if <toolset>gcc in $(properties) || <toolset>clang in $(properties)
-    {
-        result += <cxxflags>--coverage <linkflags>--coverage ;
-    }
-
-    return $(result) ;
-}
-
-
-feature.feature coverage : off on : composite propagated ;
-feature.compose <coverage>on : <conditional>@coverage ;
+variant coverage : debug : <cxxflags>--coverage <linkflags>--coverage ;
 
 
 rule building-missio ( properties * )
@@ -154,7 +138,7 @@ rule building-missio ( properties * )
 
     if <toolset>gcc in $(properties)
     {
-        result += <cxxflags>-std=c++1y ;
+        result += <cxxflags>-std=c++14 ;
 
         result += <cxxflags>-Wempty-body
                   <cxxflags>-Wsign-compare
@@ -268,15 +252,6 @@ use-project /missio/json/test : $(SRC)/json/test ;
 use-project /missio/format/perf : $(SRC)/format/perf ;
 #use-project /missio/json/perf : $(SRC)/json/perf ;
 
-build-project $(SRC)/logging/build ;
-build-project $(SRC)/unicode/build ;
-build-project $(SRC)/format/build ;
-#build-project $(SRC)/json/build ;
-
-build-project $(SRC)/logging/test ;
-build-project $(SRC)/unicode/test ;
-build-project $(SRC)/format/test ;
-#build-project $(SRC)/json/test ;
 
 alias /missio/lib
     :
@@ -314,6 +289,7 @@ install missio-lib
         /missio/lib
     :
         ## build requirements ##
+        <variant>coverage:<location>$(LIB)/coverage
         <variant>release:<location>$(LIB)/release
         <variant>profile:<location>$(LIB)/profile
         <variant>debug:<location>$(LIB)/debug
@@ -326,6 +302,7 @@ install missio-perf
         /missio/perf
     :
         ## build requirements ##
+        <variant>coverage:<location>$(PERF)/coverage
         <variant>release:<location>$(PERF)/release
         <variant>profile:<location>$(PERF)/profile
         <variant>debug:<location>$(PERF)/debug
