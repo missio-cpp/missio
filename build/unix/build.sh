@@ -57,7 +57,7 @@ else
     BOOST_JAM=bjam
 fi
 
-if [ ! -x "$BOOST_JAM" ]
+if [ ! -x "$(command -v "$BOOST_JAM")" ]
 then
     echo Could not find file \"$BOOST_JAM\" required to build missio
     exit 1
