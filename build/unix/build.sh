@@ -6,7 +6,7 @@ echo MISSIO_ROOT = $MISSIO_ROOT
 
 if [ ! -e "$MISSIO_ROOT/Jamroot" ]
 then
-    echo Could not find file \"Jamroot\" file required to build missio
+    echo Could not find file \"Jamroot\" required to build missio
     exit 1
 fi
 
