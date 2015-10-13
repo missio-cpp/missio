@@ -6,7 +6,7 @@ echo MISSIO_ROOT = $MISSIO_ROOT
 
 if [ ! -e "$MISSIO_ROOT/Jamroot" ]
 then
-    echo Could not find Jamroot file required to build missio
+    echo Could not find file \"Jamroot\" file required to build missio
     exit 1
 fi
 
@@ -31,7 +31,7 @@ then
     then
         if [ ! -x "$BOOST_ROOT/bootstrap.sh" ]
         then
-            echo Could not find file bootstrap.bat required to build Boost.Jam build engine
+            echo Could not find file \"bootstrap.bat\" required to build Boost.Jam build engine
             exit 1
         fi
 
@@ -55,6 +55,12 @@ then
     export BOOST_BUILD_PATH="\"$BOOST_BUILD_PATH\""
 else
     BOOST_JAM=bjam
+fi
+
+if [ ! -x "$BOOST_JAM" ]
+then
+    echo Could not find file \"$BOOST_JAM\" required to build missio
+    exit 1
 fi
 
 OLD_PATH=`pwd`
