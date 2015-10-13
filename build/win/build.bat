@@ -7,7 +7,7 @@ popd
 ECHO MISSIO_ROOT = %MISSIO_ROOT%
 
 IF NOT EXIST "%MISSIO_ROOT%\Jamroot" (
-    ECHO Could not find Jamroot file required to build missio
+    ECHO Could not find file "Jamroot" required to build missio
     EXIT /B 1
 )
 
@@ -34,7 +34,7 @@ IF DEFINED BOOST_ROOT (
 
     IF NOT EXIST "%BOOST_JAM%" (
         IF NOT EXIST "%BOOST_ROOT%\bootstrap.bat" (
-            ECHO Could not find file bootstrap.bat required to build Boost.Jam build engine
+            ECHO Could not find file "bootstrap.bat" required to build Boost.Jam build engine
             EXIT /B 1
         )
 
@@ -52,7 +52,12 @@ IF DEFINED BOOST_ROOT (
         )
     )
 ) ELSE (
-    SET BOOST_JAM=bjam
+    SET BOOST_JAM=bjam.exe
+)
+
+IF NOT EXIST "%BOOST_JAM%" (
+    ECHO Could not find file "%BOOST_JAM%" required to build missio
+    EXIT /B 1
 )
 
 pushd "%MISSIO_ROOT%"

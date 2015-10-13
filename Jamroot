@@ -216,7 +216,7 @@ project missio
     :
         requirements
         <warnings>on
-        <warnings-as-errors>on
+        <toolset>gcc:<warnings-as-errors>on
         <include>$(TOP)
         <conditional>@building-missio
         <link>shared:<define>MISSIO_BUILD_SHARED

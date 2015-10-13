@@ -14,8 +14,6 @@ unit-test missio_json_test
         /missio//boost-libraries
     :
         ## build requirements ##
-        <toolset>msvc:<exception-handling>on
-        <toolset>msvc:<asynch-exceptions>on
         <target-os>windows:<library>ws2_32
     ;
 

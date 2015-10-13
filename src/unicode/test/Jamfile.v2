@@ -8,10 +8,6 @@ unit-test missio_unicode_test
         ## sources ##
         [ glob-tree *.cpp : .svn ]
         ../build//missio_unicode
-    :
-        ## build requirements ##
-        <toolset>msvc:<exception-handling>on
-        <toolset>msvc:<asynch-exceptions>on
     ;
 
 always missio_unicode_test ;
