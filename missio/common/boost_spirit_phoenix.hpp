@@ -12,15 +12,15 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #ifdef _MSC_VER
-
 #pragma warning(push)
 #pragma warning(disable : 4348)
+#endif  // _MSC_VER
 
 // BOOST headers
 #include <boost/spirit/include/phoenix.hpp>
 
+#ifdef _MSC_VER
 #pragma warning(pop)
-
 #endif  // _MSC_VER
 
 #endif  // _missio_common_boost_spirit_phoenix_hpp
