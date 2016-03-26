@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_format_grammar_hpp
@@ -15,7 +15,7 @@
 #include <missio/format/detail/string_view.hpp>
 
 // BOOST headers
-#include <boost/spirit/include/qi.hpp>
+#include <missio/common/boost_spirit_qi.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
 // Implementation headers
