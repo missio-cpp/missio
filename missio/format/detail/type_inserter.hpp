@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_type_inserter_hpp
@@ -18,7 +18,7 @@
 #include <missio/format/detail/type_adapter.hpp>
 
 // BOOST headers
-#include <boost/spirit/include/karma.hpp>
+#include <missio/common/boost_spirit_karma.hpp>
 
 // STL headers
 #include <algorithm>

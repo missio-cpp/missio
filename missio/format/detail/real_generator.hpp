@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Format library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_format_detail_real_generator_hpp
@@ -16,7 +16,7 @@
 #include <missio/format/detail/real_format.hpp>
 
 // BOOST headers
-#include <boost/spirit/include/karma.hpp>
+#include <missio/common/boost_spirit_karma.hpp>
 
 
 namespace missio
