@@ -1,7 +1,7 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -10,6 +10,11 @@
 
 // BOOST headers
 #include <boost/test/unit_test.hpp>
+
+
+#ifdef _MSC_VER
+#pragma execution_character_set("utf-8")
+#endif
 
 
 BOOST_AUTO_TEST_SUITE(unicode_convert_impl_test_suite)

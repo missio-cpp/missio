@@ -1,7 +1,7 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -17,13 +17,18 @@
 #include <string>
 
 
+#ifdef _MSC_VER
+#pragma execution_character_set("utf-8")
+#endif
+
+
 BOOST_AUTO_TEST_SUITE(unicode_utf8_impl_test_suite)
 
 struct utf8_fixture
 {
     utf8_fixture() :
-        hello_world_eng("Hello, world!"),
-        hello_world_rus("\xD0\x9F\xD1\x80\xD0\xB8\xD0\xB2\xD0\xB5\xD1\x82, \xD0\xBC\xD0\xB8\xD1\x80!")   // "Hello, world!" in Russian, in UTF-8
+        hello_world_eng(u8"Hello, world!"),
+        hello_world_rus(u8"Привет, мир!")   // "Hello, world!" in Russian, in UTF-8
     {
     }
 

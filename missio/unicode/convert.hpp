@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
+//    Copyright (C) 2011 - 2016 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_convert_hpp
@@ -35,17 +35,20 @@ MISSIO_EXPORT std::u16string to_utf16(std::u32string const& str);
 MISSIO_EXPORT std::u32string to_utf32(std::string const& str);
 MISSIO_EXPORT std::u32string to_utf32(std::u16string const& str);
 
-// convert UTF8 string to upper / lower case
+// convert UTF8 string to upper / lower / title case
 MISSIO_EXPORT std::string to_upper(std::string const& str);
 MISSIO_EXPORT std::string to_lower(std::string const& str);
+MISSIO_EXPORT std::string to_title(std::string const& str);
 
-// convert UTF16 string to upper / lower case
+// convert UTF16 string to upper / lower / title case
 MISSIO_EXPORT std::u16string to_upper(std::u16string const& str);
 MISSIO_EXPORT std::u16string to_lower(std::u16string const& str);
+MISSIO_EXPORT std::u16string to_title(std::u16string const& str);
 
-// convert UTF32 string to upper / lower case
+// convert UTF32 string to upper / lower / title case
 MISSIO_EXPORT std::u32string to_upper(std::u32string const& str);
 MISSIO_EXPORT std::u32string to_lower(std::u32string const& str);
+MISSIO_EXPORT std::u32string to_title(std::u32string const& str);
 
 // fold case of UTF8 / UTF16 / UTF32 string
 MISSIO_EXPORT std::string fold_case(std::string const& str);
