@@ -12,6 +12,9 @@
 // BOOST headers
 #include <boost/test/unit_test.hpp>
 
+// STL headers
+#include <iterator>
+
 
 #ifdef _MSC_VER
 #pragma execution_character_set("utf-8")
