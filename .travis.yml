@@ -2,30 +2,48 @@ language: cpp
 
 sudo: false
 
+cache: ccache
+
 packages:
   - &boost [ 'libboost1.55-dev', 'libboost1.55-tools-dev', 'libboost-system1.55-dev', 'libboost-date-time1.55-dev', 'libboost-filesystem1.55-dev' ]
 
 addons:
-  - &gcc-5 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest' ], packages: [ *boost, 'g++-5' ] } }
-  - &clang-3_7 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest', 'llvm-toolchain-precise-3.7' ], packages: [ *boost, 'clang-3.7' ] } }
+  - &gcc-5 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest' ], packages: [ *boost, 'g++-5', 'libstdc++-5-dev' ] } }
+  - &gcc-6 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest' ], packages: [ *boost, 'g++-6', 'libstdc++-6-dev' ] } }
+  - &clang-3_7 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest', 'llvm-toolchain-precise-3.7' ], packages: [ *boost, 'clang-3.7', 'libstdc++-5-dev' ] } }
+  - &clang-3_8 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'boost-latest', 'llvm-toolchain-precise-3.8' ], packages: [ *boost, 'clang-3.8', 'libstdc++-5-dev' ] } }
 
 matrix:
+  fast_finish: true
   include:
-    - { os: linux, compiler: gcc, addons: *gcc-5, env: TOOLSET=gcc-5 VARIANT=debug LINK=static }
-    - { os: linux, compiler: gcc, addons: *gcc-5, env: TOOLSET=gcc-5 VARIANT=debug LINK=shared }
-    - { os: linux, compiler: gcc, addons: *gcc-5, env: TOOLSET=gcc-5 VARIANT=release LINK=static }
-    - { os: linux, compiler: gcc, addons: *gcc-5, env: TOOLSET=gcc-5 VARIANT=release LINK=shared }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=debug LINK=static }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=release LINK=static }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=release LINK=shared }
 
-#    - { os: linux, compiler: clang, addons: *clang-3_7, env: TOOLSET=clang-3.7 VARIANT=debug LINK=static }
-#    - { os: linux, compiler: clang, addons: *clang-3_7, env: TOOLSET=clang-3.7 VARIANT=debug LINK=shared }
-#    - { os: linux, compiler: clang, addons: *clang-3_7, env: TOOLSET=clang-3.7 VARIANT=release LINK=static }
-#    - { os: linux, compiler: clang, addons: *clang-3_7, env: TOOLSET=clang-3.7 VARIANT=release LINK=shared }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=debug LINK=static }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=release LINK=static }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=release LINK=shared }
+
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=release LINK=static }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=release LINK=shared }
+
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VAVARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VAVARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VAVARIANT=release LINK=static }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VAVARIANT=release LINK=shared }
 
     - os: linux
-      compiler: gcc
       addons: *gcc-5
-      env: TOOLSET=gcc-5 VARIANT=coverage LINK=static
-      before_script: pip install --user cpp-coveralls
+      install: pip install --user cpp-coveralls
+      env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=coverage LINK=static
       after_success: coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude test --exclude perf
 
-script: /bin/sh -e ./build/unix/build.sh toolset=${TOOLSET} link=${LINK} boost=system boost-link=${LINK} variant=${VARIANT}
+before_script:
+  - export CC=$CC_COMPILER
+  - export CXX=$CXX_COMPILER
+
+script: /bin/sh -e ./build/unix/build.sh --user-config="${TRAVIS_BUILD_DIR}\user-config.jam" toolset=${TOOLSET} link=${LINK} boost=system boost-link=${LINK} variant=${VARIANT}

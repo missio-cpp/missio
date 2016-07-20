@@ -1,0 +1,4 @@
+import os ;
+
+using gcc : : [ os.environ CXX ] ;
+using clang : : [ os.environ CXX ] ;
