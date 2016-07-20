@@ -7,7 +7,7 @@ platform: x64
 clone_folder: c:\projects\missio
 
 environment:
-  BOOST_ROOT: c:\Libraries\boost_1_59_0
+  BOOST_ROOT: c:\Libraries\boost_1_60_0
 
   matrix:
     - BUILD_ADDRESS_MODEL: 32
