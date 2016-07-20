@@ -138,7 +138,7 @@ rule building-missio ( properties * )
 
     if <toolset>gcc in $(properties)
     {
-        result += <cxxflags>-std=c++17 ;
+        result += <cxxflags>-std=c++14 ;
 
         result += <cxxflags>-Wempty-body
                   <cxxflags>-Wsign-compare
@@ -152,7 +152,8 @@ rule building-missio ( properties * )
 
     if <toolset>clang in $(properties)
     {
-        result += <cxxflags>-std=c++1y ;
+        result += <cxxflags>-std=c++14 ;
+
         result += <cxxflags>-Wno-deprecated-register ;
     }
 
