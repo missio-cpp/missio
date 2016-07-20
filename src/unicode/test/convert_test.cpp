@@ -157,12 +157,23 @@ BOOST_FIXTURE_TEST_CASE(utf32_to_wide_string_test, convert_fixture)
     BOOST_CHECK(missio::unicode::to_wide(hello_world_rus_utf32.c_str()) == hello_world_rus_wstr);
 }
 
+namespace
+{
+
+template <typename T, std::size_t N>
+constexpr std::size_t array_size(T const (&array)[N])
+{
+    return N;
+}
+
+} // namespace
+
 static char const* original_utf8[] { u8"eﬃcient",   u8"ﬂour",  u8"poſt", u8"poﬅ",  u8"ﬅop",  u8"tschüß",  u8"weiß",  u8"WEIẞ",  u8"ʀᴀʀᴇ" };
 static char const* casefold_utf8[] { u8"efficient", u8"flour", u8"post", u8"post", u8"stop", u8"tschüss", u8"weiss", u8"weiss", u8"ʀᴀʀᴇ" };
 
 BOOST_AUTO_TEST_CASE(utf8_fold_string_case_test)
 {
-    for(std::size_t i = 0; i < std::size(original_utf8); ++i)
+    for(std::size_t i = 0; i < array_size(original_utf8); ++i)
     {
         BOOST_CHECK(missio::unicode::fold_case(std::string(original_utf8[i])) == std::string(casefold_utf8[i]));
     }
@@ -173,7 +184,7 @@ static char16_t const* casefold_utf16[] { u"efficient", u"flour", u"post", u"pos
 
 BOOST_AUTO_TEST_CASE(utf16_fold_string_case_test)
 {
-    for(std::size_t i = 0; i < std::size(original_utf16); ++i)
+    for(std::size_t i = 0; i < array_size(original_utf16); ++i)
     {
         BOOST_CHECK(missio::unicode::fold_case(std::u16string(original_utf16[i])) == std::u16string(casefold_utf16[i]));
     }
@@ -184,7 +195,7 @@ static char32_t const* casefold_utf32[] { U"efficient", U"flour", U"post", U"pos
 
 BOOST_AUTO_TEST_CASE(utf32_fold_string_case_test)
 {
-    for(std::size_t i = 0; i < std::size(original_utf32); ++i)
+    for(std::size_t i = 0; i < array_size(original_utf32); ++i)
     {
         BOOST_CHECK(missio::unicode::fold_case(std::u32string(original_utf32[i])) == std::u32string(casefold_utf32[i]));
     }
