@@ -138,9 +138,8 @@ rule building-missio ( properties * )
 
     if <toolset>gcc in $(properties)
     {
-        result += <cxxflags>-std=c++14 ;
-
-        result += <cxxflags>-Wempty-body
+        result += <cxxflags>-std=c++14
+                  <cxxflags>-Wempty-body
                   <cxxflags>-Wsign-compare
                   <cxxflags>-Wtype-limits
                   <cxxflags>-Wno-unknown-pragmas
@@ -152,9 +151,14 @@ rule building-missio ( properties * )
 
     if <toolset>clang in $(properties)
     {
-        result += <cxxflags>-std=c++14 ;
-
-        result += <cxxflags>-Wno-deprecated-register ;
+        result += <cxxflags>-std=c++14
+                  <cxxflags>-Wno-deprecated-register
+                  <define>BOOST_ASIO_HAS_STD_CHRONO
+                  <define>BOOST_ASIO_HAS_STD_SHARED_PTR
+                  <define>BOOST_ASIO_HAS_STD_ATOMIC
+                  <define>BOOST_ASIO_HAS_VARIADIC_TEMPLATES
+                  <define>BOOST_ASIO_HAS_STD_ARRAY
+                  <define>BOOST_ASIO_HAS_MOVE ;
     }
 
     if <target-os>windows in $(properties)
