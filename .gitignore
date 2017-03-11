@@ -2,3 +2,6 @@
 /lib
 /obj
 /perf
+
+# Ignore MAC specific files
+.DS_Store
