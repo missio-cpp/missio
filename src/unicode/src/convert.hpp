@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011 - 2016 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_convert_hpp
@@ -79,33 +79,29 @@ void utf32_to_utf16(UTF32Iterator first, UTF32Iterator last, OutputIterator dest
 }
 
 template <typename OctetIterator, typename OutputIterator>
-void fold_case_utf8(OctetIterator first, OctetIterator last, OutputIterator dest)
+void fold_case_utf8(OctetIterator first, OctetIterator last, OutputIterator dest, std::locale const& loc)
 {
-    auto output_iterator = utf8::make_output_iterator(dest);
-
     while(first != last)
     {
-        fold_code_point_case(utf8::next(first, last), output_iterator);
+        fold_code_point_case(utf8::next(first, last), utf8::make_output_iterator(dest), locale_helper(loc));
     }
 }
 
 template <typename UTF16Iterator, typename OutputIterator>
-void fold_case_utf16(UTF16Iterator first, UTF16Iterator last, OutputIterator dest)
+void fold_case_utf16(UTF16Iterator first, UTF16Iterator last, OutputIterator dest, std::locale const& loc)
 {
-    auto output_iterator = utf16::make_output_iterator(dest);
-
     while(first != last)
     {
-        fold_code_point_case(utf16::next(first, last), output_iterator);
+        fold_code_point_case(utf16::next(first, last), utf16::make_output_iterator(dest), locale_helper(loc));
     }
 }
 
 template <typename UTF32Iterator, typename OutputIterator>
-void fold_case_utf32(UTF32Iterator first, UTF32Iterator last, OutputIterator dest)
+void fold_case_utf32(UTF32Iterator first, UTF32Iterator last, OutputIterator dest, std::locale const& loc)
 {
     while(first != last)
     {
-        fold_code_point_case(*first++, dest);
+        fold_code_point_case(*first++, dest, locale_helper(loc));
     }
 }
 

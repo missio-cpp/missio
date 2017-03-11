@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011 - 2016 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_utf8_iterator_hpp

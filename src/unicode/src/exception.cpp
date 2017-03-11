@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -49,10 +49,12 @@ std::string invalid_utf32_code_point::message() const
 {
     std::ostringstream os;
 
+    os.imbue(std::locale::classic());
+
     os << what()
-       << ": \\U"
+       << ": U+"
        << std::hex
-       << std::setw(8)
+       << std::setw(4)
        << std::setfill('0')
        << std::uppercase
        << code_point_;
@@ -79,8 +81,10 @@ std::string invalid_utf16_code_unit::message() const
 {
     std::ostringstream os;
 
+    os.imbue(std::locale::classic());
+
     os << what()
-       << ": \\u"
+       << ": 0x"
        << std::hex
        << std::setw(4)
        << std::setfill('0')
@@ -104,19 +108,20 @@ std::string invalid_utf8_sequence::message() const
 {
     std::ostringstream os;
 
+    os.imbue(std::locale::classic());
+
     os << what();
 
     if(sequence_length_ > 0)
     {
-        os << ": "
+        os << ':'
            << std::hex
-           << std::setw(2)
            << std::setfill('0')
            << std::uppercase;
 
         for(std::size_t i = 0; i < sequence_length_; ++i)
         {
-            os << "\\x" << static_cast<std::size_t>(sequence_[i]);
+            os << " 0x" << std::setw(2) << static_cast<int>(sequence_[i]);
         }
     }
 

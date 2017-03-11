@@ -1,7 +1,7 @@
 ﻿//---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011 - 2016 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //--------------------------------------------------------------------------- 
 
@@ -198,6 +198,91 @@ BOOST_AUTO_TEST_CASE(utf32_fold_string_case_test)
     for(std::size_t i = 0; i < array_size(original_utf32); ++i)
     {
         BOOST_CHECK(missio::unicode::fold_case(std::u32string(original_utf32[i])) == std::u32string(casefold_utf32[i]));
+    }
+}
+
+namespace
+{
+
+char const* turkish_locale_names[] { "tr_TR.UTF-8", "tr_TR.utf8", "turkish" };
+char const* english_locale_names[] { "en_US.UTF-8", "en_US.utf8", "english" };
+
+template <std::size_t N>
+bool try_set_global_locale(char const* (&locale_names)[N])
+{
+    for(char const* locale_name : locale_names)
+    {
+        try
+        {
+            std::locale::global(std::locale(locale_name));
+        }
+        catch(std::runtime_error const&)
+        {
+            continue;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+} // namespace
+
+BOOST_AUTO_TEST_CASE(utf8_fold_string_case_turkish_i_test)
+{
+    if(try_set_global_locale(turkish_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-8 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::string(u8"İ")) == std::string(u8"i"));
+        BOOST_CHECK(missio::unicode::fold_case(std::string(u8"I")) == std::string(u8"ı"));
+    }
+
+    if(try_set_global_locale(english_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-8 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::string(u8"İ")) == std::string(u8"i̇"));
+        BOOST_CHECK(missio::unicode::fold_case(std::string(u8"I")) == std::string(u8"i"));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(utf16_fold_string_case_turkish_i_test)
+{
+    if(try_set_global_locale(turkish_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-16 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::u16string(u"İ")) == std::u16string(u"i"));
+        BOOST_CHECK(missio::unicode::fold_case(std::u16string(u"I")) == std::u16string(u"ı"));
+    }
+
+    if(try_set_global_locale(english_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-16 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::u16string(u"İ")) == std::u16string(u"i̇"));
+        BOOST_CHECK(missio::unicode::fold_case(std::u16string(u"I")) == std::u16string(u"i"));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(utf32_fold_string_case_turkish_i_test)
+{
+    if(try_set_global_locale(turkish_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-32 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::u32string(U"İ")) == std::u32string(U"i"));
+        BOOST_CHECK(missio::unicode::fold_case(std::u32string(U"I")) == std::u32string(U"ı"));
+    }
+
+    if(try_set_global_locale(english_locale_names))
+    {
+        BOOST_TEST_MESSAGE("Test UTF-32 case folding using locale: " << std::locale().name());
+
+        BOOST_CHECK(missio::unicode::fold_case(std::u32string(U"İ")) == std::u32string(U"i̇"));
+        BOOST_CHECK(missio::unicode::fold_case(std::u32string(U"I")) == std::u32string(U"i"));
     }
 }
 

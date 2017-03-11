@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_utf8_hpp
@@ -41,8 +41,8 @@ std::uint8_t const byte_order_mark[] { 0xEF, 0xBB, 0xBF };
 template <typename UTF8>
 bool is_continuation_octet(UTF8 octet)
 {
-    return continuation_octet_min <= static_cast<std::uint8_t>(octet) &&
-           continuation_octet_max >= static_cast<std::uint8_t>(octet);
+    return continuation_octet_min <= static_cast<std::uint8_t>(octet)
+        && continuation_octet_max >= static_cast<std::uint8_t>(octet);
 }
 
 template <typename OutputIterator>
@@ -188,7 +188,7 @@ void write(std::uint32_t cp, OutputIterator dest)
 }
 
 template <typename OctetIterator, typename OutputIterator>
-void replace_invalid(OctetIterator begin, OctetIterator end, OutputIterator dest, std::uint32_t replacement_char)
+void replace_invalid(OctetIterator begin, OctetIterator end, OutputIterator dest, char32_t replacement_char)
 {
     while(begin != end)
     {

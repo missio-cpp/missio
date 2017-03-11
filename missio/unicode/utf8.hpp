@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_utf8_hpp
@@ -26,19 +26,19 @@ namespace unicode
 namespace utf8
 {
 
-// calculate number of UTF32 code points
+// Calculate number of UTF-32 code points
 MISSIO_EXPORT std::size_t length(std::string const& str);
 
-// replace invalid (non-UTF8) octets with replacement character
-MISSIO_EXPORT void replace_invalid(std::string& str, std::uint32_t replacement_char);
+// Replace invalid (non-UTF-8) octets with replacement character
+MISSIO_EXPORT void replace_invalid(std::string& str, char32_t replacement_char);
 
-// replace invalid (non-UTF8) octets with default replacement character
+// Replace invalid (non-UTF-8) octets with default replacement character
 MISSIO_EXPORT void replace_invalid(std::string& str);
 
-// validate UTF8 string and throws exception on invalid data
+// Validate UTF-8 string and throws exception on invalid data
 MISSIO_EXPORT void validate(std::string const& str);
 
-// return true if string contains valid UTF8 string, false otherwise
+// Return true if string contains valid UTF-8 string, false otherwise
 MISSIO_EXPORT bool is_valid(std::string const& str);
 
 }   // namespace utf8

@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011 - 2016 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_case_folding_hpp
@@ -10,6 +10,9 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
+
+// Implementation headers
+#include "locale_helper.hpp"
 
 // STL headers
 #include <algorithm>
@@ -33,9 +36,6 @@ struct code_point_case_folding
     }
 };
 
-//    { 0x0049, 0x0131 }, // LATIN CAPITAL LETTER I
-//    { 0x0130, 0x0069 }, // LATIN CAPITAL LETTER I WITH DOT ABOVE
-
 code_point_case_folding const case_folding[]
 {
     { 0x0041, { 0x0061 } }, // LATIN CAPITAL LETTER A
@@ -47,6 +47,7 @@ code_point_case_folding const case_folding[]
     { 0x0047, { 0x0067 } }, // LATIN CAPITAL LETTER G
     { 0x0048, { 0x0068 } }, // LATIN CAPITAL LETTER H
     { 0x0049, { 0x0069 } }, // LATIN CAPITAL LETTER I
+    { 0x0049, { 0x0131 } }, // LATIN CAPITAL LETTER I - SPECIAL CASE FOR TURKIC LANGUAGES
     { 0x004A, { 0x006A } }, // LATIN CAPITAL LETTER J
     { 0x004B, { 0x006B } }, // LATIN CAPITAL LETTER K
     { 0x004C, { 0x006C } }, // LATIN CAPITAL LETTER L
@@ -121,6 +122,7 @@ code_point_case_folding const case_folding[]
     { 0x012C, { 0x012D } }, // LATIN CAPITAL LETTER I WITH BREVE
     { 0x012E, { 0x012F } }, // LATIN CAPITAL LETTER I WITH OGONEK
     { 0x0130, { 0x0069, 0x0307 } }, // LATIN CAPITAL LETTER I WITH DOT ABOVE
+    { 0x0130, { 0x0069 } }, // LATIN CAPITAL LETTER I WITH DOT ABOVE - SPECIAL CASE FOR TURKIC LANGUAGES
     { 0x0132, { 0x0133 } }, // LATIN CAPITAL LIGATURE IJ
     { 0x0134, { 0x0135 } }, // LATIN CAPITAL LETTER J WITH CIRCUMFLEX
     { 0x0136, { 0x0137 } }, // LATIN CAPITAL LETTER K WITH CEDILLA
@@ -1362,14 +1364,28 @@ code_point_case_folding const case_folding[]
     { 0x118BF, { 0x118DF } } // WARANG CITI CAPITAL LETTER VIYO
 };
 
+constexpr bool is_turkic_language_special_case_folding(char32_t code_point)
+{
+  return code_point == 0x0049   // LATIN CAPITAL LETTER I
+      || code_point == 0x0130;  // LATIN CAPITAL LETTER I WITH DOT ABOVE
+}
+
 template <typename OutputIterator>
-void fold_code_point_case(char32_t code_point, OutputIterator dest)
+void fold_code_point_case(char32_t code_point, OutputIterator dest, locale_helper const& locale_helper)
 {
     auto result = std::lower_bound(std::begin(case_folding), std::end(case_folding), code_point);
 
     if(result != std::end(case_folding) && code_point == result->code_point)
     {
-        for(char32_t const fold_case_code_point : result->fold_case)
+        if(is_turkic_language_special_case_folding(code_point))
+        {
+            if(locale_helper.is_turkic_language())
+            {
+                ++result;
+            }
+        }
+
+        for(char32_t fold_case_code_point : result->fold_case)
         {
             if(fold_case_code_point)
             {

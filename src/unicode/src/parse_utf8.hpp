@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2015 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 #ifndef _missio_unicode_impl_parse_utf8_hpp
@@ -24,6 +24,8 @@ namespace unicode
 {
 namespace impl
 {
+
+// Parse UTF-8 byte sequences according to RFC 3629 (http://www.ietf.org/rfc/rfc3629.txt)
 
 struct utf8_octet_sequence
 {

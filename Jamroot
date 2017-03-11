@@ -69,7 +69,7 @@ rule find-boost-libraries ( properties * )
                 result += <define>BOOST_ALL_DYN_LINK ;
                 result += $(libs)/<link>static/<define>BOOST_ALL_DYN_LINK ;
 
-                if <toolset>gcc in $(properties) && ! <target-os>windows in $(properties)
+                if ( <toolset>gcc in $(properties) || <toolset>darwin in $(properties) ) && ! <target-os>windows in $(properties)
                 {
                     result += <cflags>-fPIC ;
                 }
@@ -136,7 +136,7 @@ rule building-missio ( properties * )
 {
     local result ;
 
-    if <toolset>gcc in $(properties)
+    if <toolset>gcc in $(properties) || <toolset>darwin in $(properties)
     {
         result += <cxxflags>-std=c++14
                   <cxxflags>-Wempty-body
@@ -191,7 +191,7 @@ rule building-missio ( properties * )
                   <cxxflags>/wd4800 ;
     }
 
-    if <link>shared in $(properties) && ( <toolset>gcc in $(properties) || <toolset>clang in $(properties) )
+    if <link>shared in $(properties) && ( <toolset>gcc in $(properties) || <toolset>darwin in $(properties) || <toolset>clang in $(properties) )
     {
         result += <cflags>-fvisibility=hidden <cxxflags>-fvisibility-inlines-hidden ;
     }
@@ -222,6 +222,7 @@ project missio
         requirements
         <warnings>on
         <toolset>gcc:<warnings-as-errors>on
+        <toolset>darwin:<warnings-as-errors>on
         <include>$(TOP)
         <conditional>@building-missio
         <link>shared:<define>MISSIO_BUILD_SHARED

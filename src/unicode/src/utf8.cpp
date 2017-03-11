@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 //
 //    This file is part of Missio.Unicode library
-//    Copyright (C) 2011, 2012, 2014 Ilya Golovenko
+//    Copyright (C) 2011 - 2017 Ilya Golovenko
 //
 //---------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ std::size_t length(std::string const& str)
     return impl::utf8::length(str.begin(), str.end());
 }
 
-void replace_invalid(std::string& str, std::uint32_t replacement_char)
+void replace_invalid(std::string& str, char32_t replacement_char)
 {
     std::string result;
 
