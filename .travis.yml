@@ -16,34 +16,34 @@ addons:
 matrix:
   fast_finish: true
   include:
-    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=debug LINK=static }
-    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=release LINK=static }
-    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=release LINK=shared }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC=gcc-5 CXX=g++-5 VARIANT=debug LINK=static }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC=gcc-5 CXX=g++-5 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC=gcc-5 CXX=g++-5 VARIANT=release LINK=static }
+    - { os: linux, addons: *gcc-5, env: TOOLSET=gcc CC=gcc-5 CXX=g++-5 VARIANT=release LINK=shared }
 
-    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=debug LINK=static }
-    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=release LINK=static }
-    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC_COMPILER=gcc-6 CXX_COMPILER=g++-6 VARIANT=release LINK=shared }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC=gcc-6 CXX=g++-6 VARIANT=debug LINK=static }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC=gcc-6 CXX=g++-6 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC=gcc-6 CXX=g++-6 VARIANT=release LINK=static }
+    - { os: linux, addons: *gcc-6, env: TOOLSET=gcc CC=gcc-6 CXX=g++-6 VARIANT=release LINK=shared }
 
-    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=debug LINK=static }
-    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=release LINK=static }
-    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 VARIANT=release LINK=shared }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC=clang-3.7 CXX=clang++-3.7 VARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC=clang-3.7 CXX=clang++-3.7 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC=clang-3.7 CXX=clang++-3.7 VARIANT=release LINK=static }
+    - { os: linux, addons: *clang-3_7, env: TOOLSET=clang CC=clang-3.7 CXX=clang++-3.7 VARIANT=release LINK=shared }
 
-    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VARIANT=debug LINK=static }
-    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VARIANT=release LINK=static }
-    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 VARIANT=release LINK=shared }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC=clang-3.8 CXX=clang++-3.8 VARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC=clang-3.8 CXX=clang++-3.8 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC=clang-3.8 CXX=clang++-3.8 VARIANT=release LINK=static }
+    - { os: linux, addons: *clang-3_8, env: TOOLSET=clang CC=clang-3.8 CXX=clang++-3.8 VARIANT=release LINK=shared }
 
     - os: linux
       addons: *gcc-5
       install: pip install --user cpp-coveralls
-      env: TOOLSET=gcc CC_COMPILER=gcc-5 CXX_COMPILER=g++-5 VARIANT=coverage LINK=static
+      env: TOOLSET=gcc CC=gcc-5 CXX=g++-5 VARIANT=coverage LINK=static
       after_success: coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude test --exclude perf
 
-before_script:
-  - export CC=$CC_COMPILER
-  - export CXX=$CXX_COMPILER
+before_install:
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
 
 script: /bin/sh -e ./build/unix/build.sh --user-config="${TRAVIS_BUILD_DIR}\user-config.jam" toolset=${TOOLSET} link=${LINK} boost=system boost-link=${LINK} variant=${VARIANT}
