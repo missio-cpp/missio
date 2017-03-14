@@ -25,7 +25,7 @@ namespace unicode
 {
 
 // Unicode Normalization Forms
-enum class normalization
+enum normalization
 {
   nfd,  // Normalization Form D (canonical decomposition)
   nfc,  // Normalization Form C (canonical decomposition followed by canonical composition)
@@ -46,9 +46,9 @@ MISSIO_EXPORT std::u32string to_utf32(std::string const& str);
 MISSIO_EXPORT std::u32string to_utf32(std::u16string const& str);
 
 // Normalize UTF-8 / UTF-16 / UTF-32 string
-MISSIO_EXPORT std::string normalize(std::string const& str, normalization norm = normalization::nfc, std::locale const& loc = std::locale());
-MISSIO_EXPORT std::u16string normalize(std::u16string const& str, normalization norm = normalization::nfc, std::locale const& loc = std::locale());
-MISSIO_EXPORT std::u32string normalize(std::u32string const& str, normalization norm = normalization::nfc, std::locale const& loc = std::locale());
+MISSIO_EXPORT std::string normalize(std::string const& str, normalization norm = nfc, std::locale const& loc = std::locale());
+MISSIO_EXPORT std::u16string normalize(std::u16string const& str, normalization norm = nfc, std::locale const& loc = std::locale());
+MISSIO_EXPORT std::u32string normalize(std::u32string const& str, normalization norm = nfc, std::locale const& loc = std::locale());
 
 // Convert UTF-8 string to upper / lower / title case
 MISSIO_EXPORT std::string to_upper(std::string const& str, std::locale const& loc = std::locale());
