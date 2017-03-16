@@ -72,7 +72,7 @@ build()
 
   if [ "${VARIANT}" = "coverage" ]
   then
-    coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude obj --exclude deps --exclude test --exclude perf
+    coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude deps --exclude test --exclude perf
   fi
 }
 
