@@ -1,14 +1,14 @@
 #!/bin/sh
 
 
-if [ -z "$TRAVIS" ]
+if [ -z "${TRAVIS}" ]
 then
   echo "This script is designed to run in Travis CI environment"
   exit 1
 fi
 
 
-if [ -z "$BOOST_VERSION" ]
+if [ -z "${BOOST_VERSION}" ]
 then
   BOOST_VERSION=1.63.0
 fi
@@ -19,13 +19,13 @@ DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
 
 install_boost()
 {
-  BOOST_NAME="boost_$(echo $BOOST_VERSION | sed "s/\./_/g")"
+  BOOST_NAME="boost_$(echo ${BOOST_VERSION} | sed "s/\./_/g")"
 
   BOOST_DIR="${DEPS_DIR}/${BOOST_NAME}"
 
   mkdir -p "${BOOST_DIR}"
 
-  if [ -z "$(ls -A "$BOOST_DIR")" ]
+  if [ -z "$(ls -A "${BOOST_DIR}")" ]
   then
     echo "Downloading and preparing Boost ${BOOST_VERSION}"
 
@@ -40,9 +40,9 @@ install_boost()
 
 install()
 {
-  if [ "$VARIANT" = "coverage" ]
+  if [ "${VARIANT}" = "coverage" ]
   then
-    pip install --user cpp-coveralls
+    pip install --user git+https://github.com/eddyxu/cpp-coveralls@master
   fi
 
   mkdir -p "${DEPS_DIR}" && cd "${DEPS_DIR}"
@@ -56,7 +56,7 @@ build()
   export CC=$TRAVIS_CC
   export CXX=$TRAVIS_CXX
 
-  case "$CC" in
+  case "${CC}" in
     clang*) TOOLSET="clang";;
     gcc*) TOOLSET="gcc";;
   esac
@@ -70,9 +70,9 @@ build()
     return $?
   fi
 
-  if [ "$VARIANT" = "coverage" ]
+  if [ "${VARIANT}" = "coverage" ]
   then
-    coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude test --exclude perf
+    coveralls --gcov gcov-5 --gcov-options '\-lp' --exclude obj --exclude deps --exclude test --exclude perf
   fi
 }
 
