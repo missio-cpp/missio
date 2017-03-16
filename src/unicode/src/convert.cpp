@@ -76,21 +76,21 @@ std::u32string to_utf32(std::u16string const& str)
     return result;
 }
 
-std::string normalize(std::string const& str, normalization norm, std::locale const& loc)
+std::string normalize(std::string const& str, normalization norm)
 {
     std::string result;
 
     return result;
 }
 
-std::u16string normalize(std::u16string const& str, normalization norm, std::locale const& loc)
+std::u16string normalize(std::u16string const& str, normalization norm)
 {
     std::u16string result;
 
     return result;
 }
 
-std::u32string normalize(std::u32string const& str, normalization norm, std::locale const& loc)
+std::u32string normalize(std::u32string const& str, normalization norm)
 {
     std::u32string result;
 
