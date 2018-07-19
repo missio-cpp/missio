@@ -1,6 +1,7 @@
 language: cpp
 
 sudo: false
+dist: trusty
 
 cache:
   directories:
@@ -9,36 +10,37 @@ cache:
 addons:
   - &gcc-5 { apt: { sources: [ 'ubuntu-toolchain-r-test' ], packages: [ 'g++-5', 'libstdc++-5-dev', 'language-pack-tr' ] } }
   - &gcc-6 { apt: { sources: [ 'ubuntu-toolchain-r-test' ], packages: [ 'g++-6', 'libstdc++-6-dev', 'language-pack-tr' ] } }
-  - &clang-3_7 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7' ], packages: [ 'clang-3.7', 'libstdc++-5-dev', 'language-pack-tr' ] } }
-  - &clang-3_8 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8' ], packages: [ 'clang-3.8', 'libstdc++-5-dev', 'language-pack-tr' ] } }
+  - &gcc-7 { apt: { sources: [ 'ubuntu-toolchain-r-test' ], packages: [ 'g++-7', 'libstdc++-7-dev', 'language-pack-tr' ] } }
+  - &clang-5_0 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0' ], packages: [ 'clang-5.0', 'libstdc++-5-dev', 'language-pack-tr' ] } }
+  - &clang-6_0 { apt: { sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0' ], packages: [ 'clang-6.0', 'libstdc++-5-dev', 'language-pack-tr' ] } }
 
 env:
   global:
-    - BOOST_VERSION=1.63.0
+    - BOOST_VERSION=1.67.0
 
 matrix:
   fast_finish: true
 
   include:
-    - { os: linux, addons: *gcc-5, env: TRAVIS_CC=gcc-5 TRAVIS_CXX=g++-5 VARIANT=debug LINK=static }
-    - { os: linux, addons: *gcc-5, env: TRAVIS_CC=gcc-5 TRAVIS_CXX=g++-5 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *gcc-5, env: TRAVIS_CC=gcc-5 TRAVIS_CXX=g++-5 VARIANT=release LINK=static }
-    - { os: linux, addons: *gcc-5, env: TRAVIS_CC=gcc-5 TRAVIS_CXX=g++-5 VARIANT=release LINK=shared }
-
     - { os: linux, addons: *gcc-6, env: TRAVIS_CC=gcc-6 TRAVIS_CXX=g++-6 VARIANT=debug LINK=static }
     - { os: linux, addons: *gcc-6, env: TRAVIS_CC=gcc-6 TRAVIS_CXX=g++-6 VARIANT=debug LINK=shared }
     - { os: linux, addons: *gcc-6, env: TRAVIS_CC=gcc-6 TRAVIS_CXX=g++-6 VARIANT=release LINK=static }
     - { os: linux, addons: *gcc-6, env: TRAVIS_CC=gcc-6 TRAVIS_CXX=g++-6 VARIANT=release LINK=shared }
 
-    - { os: linux, addons: *clang-3_7, env: TRAVIS_CC=clang-3.7 TRAVIS_CXX=clang++-3.7 VARIANT=debug LINK=static }
-    - { os: linux, addons: *clang-3_7, env: TRAVIS_CC=clang-3.7 TRAVIS_CXX=clang++-3.7 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *clang-3_7, env: TRAVIS_CC=clang-3.7 TRAVIS_CXX=clang++-3.7 VARIANT=release LINK=static }
-    - { os: linux, addons: *clang-3_7, env: TRAVIS_CC=clang-3.7 TRAVIS_CXX=clang++-3.7 VARIANT=release LINK=shared }
+    - { os: linux, addons: *gcc-7, env: TRAVIS_CC=gcc-7 TRAVIS_CXX=g++-7 VARIANT=debug LINK=static }
+    - { os: linux, addons: *gcc-7, env: TRAVIS_CC=gcc-7 TRAVIS_CXX=g++-7 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *gcc-7, env: TRAVIS_CC=gcc-7 TRAVIS_CXX=g++-7 VARIANT=release LINK=static }
+    - { os: linux, addons: *gcc-7, env: TRAVIS_CC=gcc-7 TRAVIS_CXX=g++-7 VARIANT=release LINK=shared }
 
-    - { os: linux, addons: *clang-3_8, env: TRAVIS_CC=clang-3.8 TRAVIS_CXX=clang++-3.8 VARIANT=debug LINK=static }
-    - { os: linux, addons: *clang-3_8, env: TRAVIS_CC=clang-3.8 TRAVIS_CXX=clang++-3.8 VARIANT=debug LINK=shared }
-    - { os: linux, addons: *clang-3_8, env: TRAVIS_CC=clang-3.8 TRAVIS_CXX=clang++-3.8 VARIANT=release LINK=static }
-    - { os: linux, addons: *clang-3_8, env: TRAVIS_CC=clang-3.8 TRAVIS_CXX=clang++-3.8 VARIANT=release LINK=shared }
+    - { os: linux, addons: *clang-5_0, env: TRAVIS_CC=clang-5.0 TRAVIS_CXX=clang++-5.0 VARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-5_0, env: TRAVIS_CC=clang-5.0 TRAVIS_CXX=clang++-5.0 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-5_0, env: TRAVIS_CC=clang-5.0 TRAVIS_CXX=clang++-5.0 VARIANT=release LINK=static }
+    - { os: linux, addons: *clang-5_0, env: TRAVIS_CC=clang-5.0 TRAVIS_CXX=clang++-5.0 VARIANT=release LINK=shared }
+
+    - { os: linux, addons: *clang-6_0, env: TRAVIS_CC=clang-6.0 TRAVIS_CXX=clang++-6.0 VARIANT=debug LINK=static }
+    - { os: linux, addons: *clang-6_0, env: TRAVIS_CC=clang-6.0 TRAVIS_CXX=clang++-6.0 VARIANT=debug LINK=shared }
+    - { os: linux, addons: *clang-6_0, env: TRAVIS_CC=clang-6.0 TRAVIS_CXX=clang++-6.0 VARIANT=release LINK=static }
+    - { os: linux, addons: *clang-6_0, env: TRAVIS_CC=clang-6.0 TRAVIS_CXX=clang++-6.0 VARIANT=release LINK=shared }
 
     - { os: linux, addons: *gcc-5, env: TRAVIS_CC=gcc-5 TRAVIS_CXX=g++-5 VARIANT=coverage LINK=static }
 
