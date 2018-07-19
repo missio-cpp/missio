@@ -42,7 +42,7 @@ install()
 {
   if [ "${VARIANT}" = "coverage" ]
   then
-    pip install --user git+https://github.com/eddyxu/cpp-coveralls@master
+    pip install --user --upgrade cpp-coveralls
   fi
 
   mkdir -p "${DEPS_DIR}" && cd "${DEPS_DIR}"
